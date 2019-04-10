@@ -69,3 +69,40 @@ public function getMenu()
     </li>
 @endforeach
 
+//передаем переменную в макет
+$menu = $this->getMenu();
+$this->vars['navigation'] = view(env('THEME').'.navigation')->with('menu', $menu)->render();
+return view($this->template)->with($this->vars);
+//макет для формирования страницы
+@extends(env('THEME').'.layouts.site')
+@section('navigation')
+    {!! $navigation !!} //получаем переменную с рендеринными данными
+@endsection
+
+if($sliders->isEmpty()) return false; //проверка на существования
+
+$sliders->transform(function($item, $key){
+    $item->img = Config::get('settings.slider_path').'/'.$item->img;
+    return $item;
+}); //функция transform обращается к каждой коллекции и отправляет ее в callback, первый аргемент это сама коллекция, а второй ключ
+
+//создаем директиву в AppServiceProvider
+Blade::directive('set', function($exp){
+    list($name, $val) = explode(',', $exp);
+    return "<?php $name = $val ?>";
+});
+@set($i, 1) //вызов
+
+//строим связь один ко многим
+public function filter()
+{
+    return $this->belongsTo('Corp\Filter', 'filter_alias', 'alias'); //связываемся с моделью Filter, указываем имя поля связи  (portfolio, filter)
+}
+
+@continue //директива для перехода на следующую итерацию
+
+{{ $item->filter->title }} //обращение к связем в представлении
+
+Str::limit($item->text,200) //сокращаем строку до 200 символов
+
+
