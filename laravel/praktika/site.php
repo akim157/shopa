@@ -105,4 +105,6 @@ public function filter()
 
 Str::limit($item->text,200) //сокращаем строку до 200 символов
 
+json_last_error() == JSON_ERROR_NONE //проверка на ошибку формирования json строки
+{{ $article->created_at->format('F d, Y') }} //дата передается в виде объекта Carbon https://carbon.nesbot.com/docs/
 
