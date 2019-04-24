@@ -111,3 +111,6 @@ json_last_error() == JSON_ERROR_NONE //проверка на ошибку фор
 //Локализация проекта
 Lang::get() //получаем данные локализации с помощью фасада Lang
 trans('ru.latest_projects') //можно также использовать хелпер
+//пагинация
+$this->check($builder->paginate(Config::get('settings.paginate'))); //прописываем метод paginate где параметром идет число с количеством строк
+$articles->load(); //подгружает данные
