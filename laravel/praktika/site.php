@@ -114,3 +114,27 @@ trans('ru.latest_projects') //можно также использовать х�
 //пагинация
 $this->check($builder->paginate(Config::get('settings.paginate'))); //прописываем метод paginate где параметром идет число с количеством строк
 $articles->load(); //подгружает данные
+//отрисовка пагинации
+{{ $articles->links() }}
+//если пагинация не стандартная, то ее можно сформировать
+<div class="general-pagination group" >
+    @if ($articles->lastPage() > 1) //получаем номер последней страницы записи
+        @if ($articles->currentPage() !== 1) //получаем номер текущей страницы
+            <a href = "{{ $articles->url(($articles->currentPage() - 1)) }}" >{!!Lang::get('pagination.previous') !!}</a >
+        @endif
+        @for ($i = 1; $i <= $articles->lastPage(); $i++)
+            @if ($articles->currentPage() == $i)
+                <a class="selected" disabled >{{ $i }}</a >
+            @else
+                <a href = "{{ $articles->url($i) }}" >{{ $i }}</a >
+            @endif
+        @endfor
+        @if ($articles->currentPage() !== $articles->lastPage())
+            <a href = "{{ $articles->url(($articles->currentPage() + 1)) }}" >{!! Lang::get('pagination.next') !!}</a >
+        @endif
+    @endif
+</div >
+
+//сервис граватар
+@set($hash, ($comment->email) ?  md5($comment->email) : md5($comment->user->email))
+<img alt="" src="https://www.gravatar.com/avatar/{{ $hash }}?d=mm%s=55" class="avatar"/>
