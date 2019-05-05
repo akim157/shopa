@@ -138,3 +138,13 @@ $articles->load(); //подгружает данные
 //сервис граватар
 @set($hash, ($comment->email) ?  md5($comment->email) : md5($comment->user->email))
 <img alt="" src="https://www.gravatar.com/avatar/{{ $hash }}?d=mm%s=55" class="avatar"/>
+
+//Защита от инъекций запрсов
+<meta name="csrf-token" content="{{ csrf_token() }}">//размещаем в заголовке страницы мета тег с ключом
+
+ headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+    //размещаем где формируется заголовок запроса ключ
+//таким образом мы защитились от иньъекций ссылка: https://laravel.com/docs/5.8/csrf#csrf-x-xsrf-token
+//
