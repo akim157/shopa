@@ -147,4 +147,26 @@ $articles->load(); //подгружает данные
     }
     //размещаем где формируется заголовок запроса ключ
 //таким образом мы защитились от иньъекций ссылка: https://laravel.com/docs/5.8/csrf#csrf-x-xsrf-token
-//
+//404
+//Для формирования страницы 404 нужно создать директорию errors в views, а там файл с названием 404
+//Класс, который отвечает за исключение (404Б 503) Handler, распологается данный класс app/Exceptions/Handler.php
+//метод report служит для предварительной обработки исключений, используется логирования (отправка) на удаленный сервис
+if($this->isHttpException($exception)){} //проверка на http исключений
+$exception->getStatusCode(); //метод getStatusCode возвращает код исключения (404...)
+//проверяем код и перенаправлем
+//response() - хелпер, дает доступ к объекту Response, который формирует ответ пользователю
+switch($statusCode)
+{
+    case '404':
+        return response()->view(env('THEME').'.404');
+}
+//формируем навигацию
+switch($statusCode)
+{
+    case '404':
+        $ob = new \Corp\Http\Controllers\SiteController(new \Corp\Repositories\MenusRepository(new \Corp\Menu)); //получаем объект класса SiteController
+        $navigation = view(env('THEME').'.navigation')->with('menu', $ob->getMenu())->render(); //формируем навигацию и получаем меню из объекта
+        return response()->view(env('THEME').'.404', ['bar' => 'no', 'title' => 'Страница не найдена','navigation' => $navigation]);
+}
+//добавляем логи
+\Log::alert('Страница не найдена - ' . $request->url()); //$request->url() - страница, которая запрашивалась
