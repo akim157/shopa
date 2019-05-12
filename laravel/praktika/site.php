@@ -170,3 +170,289 @@ switch($statusCode)
 }
 //добавляем логи
 \Log::alert('Страница не найдена - ' . $request->url()); //$request->url() - страница, которая запрашивалась
+
+//Проверку прав пользователя можно реализовать как в AuthProvider так же и в классах политик безопасности
+//данная конструкция прописывается в конструкторе контроллера
+if(Gate::denies('VIEW_ADMIN'))
+{
+    abort(403);
+}
+//данная конструкция прописывается в AuthServiceProvider
+public function boot()
+{
+    $this->registerPolicies();
+
+    Gate::define('VIEW_ADMIN', function($user){  //проверка на права, $user объект пользователя
+        return $user->canDo('VIEW_ADMIN'); //вызываем собстевенный метод canDo, который прописан в модели User
+    });
+    //
+}
+//прописываем метод CanDo
+public function canDo($permission, $require = false)
+{
+    if(is_array($permission))
+    {
+        foreach($permission as $permName)
+        {
+            $permName = $this->canDo($permName);
+            if($permName && !$require)
+            {
+                return true;
+            }
+            elseif(!$permName && $require)
+            {
+                return false;
+            }
+        }
+        return $require;
+    }
+    else
+    {
+        foreach($this->roles as $role)
+        {
+            foreach($role->perms as $perm)
+            {
+                if(Str::is($permission, $perm->name)) //матрица проверки строки
+                {
+                    return true;
+                }
+            }
+        }
+    }
+}
+
+//проверка роли
+    public function hasRole($name, $require = false)
+{
+    if(is_array($name))
+    {
+        foreach($name as $roleName)
+        {
+            $hasRole = $this->hasRole($roleName);
+            if($hasRole && !$require)
+            {
+                return true;
+            }
+            elseif(!$hasRole && $require)
+            {
+                return false;
+            }
+        }
+        return $require;
+    }
+    else
+    {
+        foreach($this->roles as $role)
+        {
+            if($role->name == $name)
+            {
+                return true;
+            }
+
+        }
+        return false;
+    }
+}
+
+//использование класса политики безопасности
+if(Gate::denies('save', new \Corp\Article)) //вторым агрументом передаем объект модели, где будет опредлять класс политики безопасности
+{
+    abort(403);
+}
+//через консоль создаем политику безопасности
+//php artisan make:policy ArticlePolicy
+//В созданной политеке прописываем метод
+public function save(User $user) //он должен быть одноименным с первым аргементом метода denies
+{
+    return $user->canDo('ADD_ARTICLES');
+}
+//после этого регистрируем политику в классе Providers\AuthServiceProvider
+protected $policies = [
+// 'Corp\Model' => 'Corp\Policies\ModelPolicy',
+    Article::class => ArticlePolicy::class, //::class - прописывает полный путь к файлу
+];
+
+//создаем класс request для валидации данных
+//php artisan make:request ArticleRequest
+//указываем данный класс как зависимость
+public function store(ArticleRequest $request) {}
+//в классе ArticleRequest есть метод authorize, который отвечает за проверку авторизации мы можем прописать там следующие:
+public function authorize()
+{
+    return \Auth::user()->canDo('ADD_ARTICLES'); //обращаемся к объекту аутифицированного пользователя и проверяем
+}
+//создаем метод в репозитории для добавлении статьи
+public function addArticle($request)
+{
+    if(Gate::denies('save', $this->model)) //проверка на право сохранения
+    {
+        abort(403);
+    }
+    $data = $request->except('_token','image'); //исключаем не нужные поля
+    if(empty($data)) return ['error' => 'Нет данных'];
+    if(empty($data['alias']))
+    {
+        $data['alias'] = $this->transliterate($data['title']); //если не указан alias то формируем его из title при этом используем функцияю transliterate для перевода кириллистических символов в латиницу
+    }
+}
+//в классе родителе репозитория реализуем метод transliterate
+public function transliterate($string)
+{
+    $str = mb_strtolower($string, 'UTF-8'); //приводим строку к нижнему регистру
+    $leter_array = [ //объявляем массив где ключи это латинские буквы, а значение являются кирилицой
+        'a' => 'а',
+        'b' => 'б',
+        'v' => 'в',
+        'g' => 'г',
+        'd' => 'д',
+        'e' => 'е,э',
+        'jo' => 'ё',
+        'zh' => 'ж',
+        'z' => 'з',
+        'i' => 'и',
+        'j' => 'й',
+        'k' => 'к',
+        'l' => 'л',
+        'm' => 'м',
+        'n' => 'н',
+        'o' => 'о',
+        'p' => 'п',
+        'r' => 'р',
+        's' => 'с',
+        't' => 'т',
+        'u' => 'у',
+        'f' => 'ф',
+        'kh' => 'х',
+        'ts' => 'ц',
+        'ch' => 'ч',
+        'sh' => 'ш',
+        'shch' => 'щ',
+        '' => 'ъ',
+        'y' => 'ы',
+        '' => 'ь',
+        'yu' => 'ю',
+        'ya' => 'я',
+    ];
+    foreach($leter_array as $leter => $kyr)
+    {
+        $kyr = explode(',', $kyr); //в значении кирилице где несколько букв, создаем массив
+        $str = str_replace($kyr, $leter, $str); //заменяем букву кирилицы на латиницу в строке, первым параметром может быть массив
+    }
+    $str = preg_replace('/(\s|[^A-Za-z0-9\-])+/','-',$str); //с помощью регулярного вырожения заменяем ненжуные символы на знак -
+    $str = trim($str,'-'); //убираем по краям строки пробел и удаляем с концов знак -
+    return $str; //возвращаем готовую строку
+}
+//для добавления правил валидации нам понадобится переобъявить метод
+protected function getValidatorInstance()
+{
+    $validator = parent::getValidatorInstance();
+
+    $validator->sometimes('alias','unique:articles|max:255', function($input){
+        return !empty($input->alias);
+    });
+
+    return $validator;
+}
+//продолжаем прописывать метод addArticle
+public function addArticle($request)
+{
+    if(Gate::denies('save', $this->model)) //проверка на права пользователя для сохранения
+    {
+        abort(403);
+    }
+    $data = $request->except('_token','image'); //убираем не нежуные поля
+    if(empty($data)) return ['error' => 'Нет данных'];
+    if(empty($data['alias']))
+    {
+        $data['alias'] = $this->transliterate($data['title']); //формируем alias из title
+    }
+
+    if($this->one($data['alias'], false)) //проверяем alias на уникальность
+    {
+        $request->merge(['alias' => $data['alias']]); //добавляем в объект свойство alias
+        $request->flash(); //сохраняем данные объекта в сессию
+        return ['error' => 'Данный псевдоним уже используется']; //возвращаем ошибку
+    }
+
+
+}
+
+//ресайз изображения (изменение размера полученного изображения) http://image.intervention.io/getting_started/installation#laravel
+//composer self-update - команда для обнавления композера
+//crop() - обрезает изображение
+//resize() - изменения размера изображения
+//fit() - объединяет два выше метода
+
+//прописываем дальше метод addArticle
+public function addArticle($request)
+{
+    if(Gate::denies('save', $this->model))
+    {
+        abort(403);
+    }
+    $data = $request->except('_token','image');
+    if(empty($data)) return ['error' => 'Нет данных'];
+    if(empty($data['alias']))
+    {
+        $data['alias'] = $this->transliterate($data['title']);
+    }
+
+    if($this->one($data['alias'], false))
+    {
+        $request->merge(['alias' => $data['alias']]);
+        $request->flash();
+        return ['error' => 'Данный псевдоним уже используется'];
+    }
+    if($request->hasFile('image')) //проверка на существование изображения
+    {
+        $image = $request->file('image'); //\\получаем объек UploaderFile для работы
+        if($image->isValid()) // проверка на валидность файла
+        {
+            $str = Str::random(8); //формируем рандомную строку из 8 символов
+            $obj = new \stdClass(); //создаем объект из вшитого класса php
+            $obj->mini = $str.'_mini.jpg';
+            $obj->max = $str.'_max.jpg';
+            $obj->path = $str.'.jpg';
+
+            $img = Image::make($image); //используем расширение для создания объекта Image
+            //с помощью метода fit редактируем файл
+            $img->fit(Config::get('settings.image')['width'],
+                Config::get('settings.image')['height'])->save(public_path().'/'.env('THEME').'/images/articles/'.$obj->path);
+            $img->fit(Config::get('settings.articles_img')['max']['width'],
+                Config::get('settings.articles_img')['max']['height'])->save(public_path().'/'.env('THEME').'/images/articles/'.$obj->max);
+            $img->fit(Config::get('settings.articles_img')['mini']['width'],
+                Config::get('settings.articles_img')['mini']['height'])->save(public_path().'/'.env('THEME').'/images/articles/'.$obj->mini);
+
+            $data['img'] = json_encode($obj); //формируем json
+            $this->model->fill($data); //в объект article добавляем данные из массива
+            if($request->user()->articles()->save($this->model)) //запрос пользователя для добавления статьи сохраняем модель
+            {
+                return ['status' => 'Материал добавлен'];
+            }
+        }
+    }
+}
+//для редактирования статьи мы можем использовать метод edit в контроллере, и для получения конкретных данных из БД используем зависимисти (Article $article)
+//но так как мы передаем alias а не id то мы получим пустой объект, чтобы это изменить в RouteServiceProvider пропишем следующие
+public function boot()
+{
+    //
+    Route::pattern('alias', '[\w-]+');
+    parent::boot();
+
+    Route::bind('articles', function($value) {//метод bind связывает свойства с действием, articles это имя маршрута, $value передаваемый alias
+        return \Corp\Article::where('alias', $value)->first(); //получаем данные по alias
+    });
+}
+
+//!Но этот метод у меня не отработал возвращается 404 ошибка, по этому в моделе я прописал следующее:
+//переназначаем метод resolveRouteBinding, который переводится как (разрешить привязку маршрута)
+//$value - это значение alias, которое передается по маршруту  admin/articles/{article}/edit
+//$this->getRouteKeyName() - этот метод возвращает имя ключа по, которому идет поиск данных в нашем случае ID
+//strtolower($value) - приводит значение
+//ссылка на решение https://stackoverflow.com/questions/52746883/can-i-change-the-resolution-logic-for-route-model-binding-to-always-lowercase-th
+public function resolveRouteBinding($value)
+{
+//        return $this->where($this->getRouteKeyName(), strtolower($value))->first();
+    return $this->where('alias', $value)->first();
+}
