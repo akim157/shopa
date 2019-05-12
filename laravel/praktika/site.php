@@ -456,3 +456,21 @@ public function resolveRouteBinding($value)
 //        return $this->where($this->getRouteKeyName(), strtolower($value))->first();
     return $this->where('alias', $value)->first();
 }
+//формируем пароль
+dd(\Hash::make('12345678'));
+
+//В классе ArticleRequest поправим проверку alias на уникальность при редактировании статьи
+$validator->sometimes('alias','unique:articles|max:255', function($input){
+    if($this->route()->hasParameter('articles')) //получаем доступ к маршруту и проверяем есть ли параметр articles
+    {
+        $model = $this->route()->parameter('articles'); //получаем модель редактируемых данных
+        return ($model->alias !== $input->alias) && !empty($input->alias); //если alias не совподают то проверяем на уникальность
+    }
+    return !empty($input->alias);
+});
+
+$this->perms()->sync(); //метод sync организуют работу связанных моделей через таблицу
+$this->perms()->sync($inputPermissions);
+//
+$this->perms()->detach(); //метод detach осуществляет отвязку от определенной записи
+
