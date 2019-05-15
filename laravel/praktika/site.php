@@ -484,6 +484,14 @@ $menus = $tmp->reduce(function($returnMenus, $menu){
     return $returnMenus;
 }, ['0' => 'Родительский пункт меню']);
 
+app('router') //хелпер, который предоставляет доступ к глобальному классу фреймворка, параметром получаем объект класса машрутов
+//getRoutes - получаем коллекцию маршрутов
+//match - получаем конкретный маршрут
+//создаем запрос данного пути
+app('router')->getRoutes()->match(app('request')->create($menu->path));
+$route->getName() //возвращает имя маршрута
+$route->parameters() //параметры маршрута
+
 
 
 
