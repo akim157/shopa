@@ -491,7 +491,12 @@ app('router') //хелпер, который предоставляет дост
 app('router')->getRoutes()->match(app('request')->create($menu->path));
 $route->getName() //возвращает имя маршрута
 $route->parameters() //параметры маршрута
-
+//переопределяем метод delete() для удаления дочерних пунктов меню
+public function delete(array $options = [])
+{
+    self::where('parent_id', $this->id)->delete(); //обращаеся к классу Menu c помощью self, вызываем все дочерные элементы из таблицы и удаляем их
+    return parent::delete($options); //обращаемся к родителю и удаляем родительский пункт меню
+}
 
 
 
