@@ -6,10 +6,15 @@ console.log(name);
 //Cannot start with a number (1name)
 //Cannot contain a space or hyphen (-)
 // Are case-sensitive
-
-let firstName;
-let FirstName;
+//
+// let firstName;
+// let FirstName;
 
 let firstName = 'Maxim', lastName = 'Fedorov';
 console.log(firstName);
 console.log(lastName);
+
+let interestRate = 0.3;
+interestRate = 1;
+console.log(interestRate);
+
