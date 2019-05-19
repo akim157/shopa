@@ -159,3 +159,116 @@ console.log('Eligible', eligibleForLoan); //true
 //NOT - ! (Нет - не)
 let applicationRefused = !eligibleForLoan;
 console.log('Application Refused', applicationRefused); //false
+//Logical Operators with Non-booleans
+//false || true - true
+//false || 'Mosh' - Mosh
+//false || 1 - 1
+////////////////////////
+//Falsy (false)
+//undefined
+//null
+//0
+//false
+//''
+//NaN
+//Anything that is not Falsy -> Truthy (Все, что не является ложью -> Истина)
+//false || 1 || 2 - 1
+//Short-circuiting (Короткое замыкание)
+let userColor = 'red';
+let defaultColor = 'blue';
+let currentColor = userColor || defaultColor;
+console.log(currentColor); //red
+///////////////////////
+let userColor = undefined;
+let defaultColor = 'blue';
+let currentColor = userColor || defaultColor;
+console.log(currentColor); //blue
+//BitWise (Побитовое)
+//1 = 00000001
+//2 = 00000010
+//3 = 00000011
+//R = 00000000
+
+//Read, Write, Execute (Читать, писать, выполнять)
+//00000100
+//00000110
+//00000111
+console.log(1 | 2); //Bitwise OR (Побитовое или)
+console.log(1 & 2); //Bitwise AND (Побитовое и)
+
+const readPermission = 4;
+const writePermission = 2;
+const executePermission = 1;
+let myPermission = 0;
+myPermission = myPermission | readPermission | writePermission;
+console.log(myPermission);
+
+let message = (myPermission & readPermission) ? 'yes' : 'no';
+console.log(message); //yes
+//Operator Precedence (оператор старшинства)
+let x = 2 + 3 * 4;
+console.log(x); //14
+let x = (2 + 3) * 4;
+console.log(x); //20
+//Exercise-Swapping Variables (Переменные с заменой упражнений - Обмен местами)
+let a = 'red';
+let b = 'blue';
+
+let c = a;
+a = b;
+b = c;
+
+console.log(a); //blue
+console.log(b); //red
+//if...else (Если...еще)
+//conditional statements (условные заявления)
+//if...else | switch...case
+// Hour (час)
+//If hour is between 6am and 12pm: Good morning! (Если час между 6 утра и 12 дня: Доброе утро!)
+//If it is between 12pm and 6pm: Good afternoon! (Если между 12 дня и 6 вечера: Добрый день!)
+//Otherwise: Good evening! (Иначе: Добрый вечер!)
+if (condition) {
+    statement
+}
+else if (anotherCondition) {
+    statement
+}
+else if (yetAnotherCondition) {
+    statement
+}
+else
+    statement
+//////////////////////////////
+let hour = 10;
+if(hour >= 6 && hour < 12) {
+    console.log('Good morning!');
+}
+else if (hour >= 12 && hour < 18) {
+    console.log('Good afternoon!');
+}
+else
+    console.log('Good evening!');
+//Switch...case
+let role = 'guest';
+switch (role) {
+    case 'guest':
+        console.log('Guest User');
+        break;
+    case 'moderator':
+        console.log('Moderator User');
+        break;
+    default:
+        console.log('Unknown User');
+}
+/////////////////////
+if(role === 'guest') console.log('Guest');
+else if(role === 'moderator') console.log('Moderator');
+else console.log('Unknown User');
+//For
+
+
+
+
+
+
+
