@@ -17,8 +17,8 @@
       <file leaf-file-name="theory.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="654">
-              <caret line="264" column="26" selection-start-line="264" selection-start-column="26" selection-end-line="264" selection-end-column="26" />
+            <state relative-caret-position="480">
+              <caret line="287" column="10" lean-forward="true" selection-start-line="287" selection-start-column="10" selection-end-line="287" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -50,7 +50,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="width" value="960" />
     <option name="height" value="1040" />
   </component>
@@ -59,7 +59,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -76,6 +75,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -116,7 +116,8 @@
       <workItem from="1555258110311" duration="2467000" />
       <workItem from="1558040510002" duration="731000" />
       <workItem from="1558127443874" duration="1847000" />
-      <workItem from="1558211765328" duration="6220000" />
+      <workItem from="1558211765328" duration="6283000" />
+      <workItem from="1558374662756" duration="2501000" />
     </task>
     <task id="LOCAL-00001" summary="v1.0.4">
       <created>1555270941898</created>
@@ -132,23 +133,29 @@
       <option name="project" value="LOCAL" />
       <updated>1557956362068</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="v1.0.15">
+      <created>1558299911134</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1558299911135</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12753000" />
+    <option name="totallyTimeSpent" value="15317000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="960" height="1040" extended-state="0" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26333332" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12899786" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.34108528" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.3405876" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
@@ -172,9 +179,20 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="v1.0.4" />
     <MESSAGE value="v1.0.12" />
-    <option name="LAST_COMMIT_MESSAGE" value="v1.0.12" />
+    <MESSAGE value="v1.0.15" />
+    <option name="LAST_COMMIT_MESSAGE" value="v1.0.15" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4165">
+          <caret line="245" column="35" lean-forward="true" selection-start-line="245" selection-start-column="35" selection-end-line="245" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/laravel/praktika/site.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8041">
@@ -271,8 +289,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="654">
-          <caret line="264" column="26" selection-start-line="264" selection-start-column="26" selection-end-line="264" selection-end-column="26" />
+        <state relative-caret-position="480">
+          <caret line="287" column="10" lean-forward="true" selection-start-line="287" selection-start-column="10" selection-end-line="287" selection-end-column="10" />
         </state>
       </provider>
     </entry>
