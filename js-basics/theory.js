@@ -264,18 +264,6 @@ switch (role) {
 if(role === 'guest') console.log('Guest');
 else if(role === 'moderator') console.log('Moderator');
 else console.log('Unknown User');
-//For
-
-
-
-
-
-
-
-
-
-/*CODE*/
-
 //For (Циклы)
 //Loops (Петли)
 //For / While / Do...while / For...in / For...of
@@ -497,3 +485,38 @@ function showStars(rows) {
     }
 }
 //Exercise - Prime Numbers (Упражнение - простые числа)
+//Prime (whose factors are only 1 and itself) (Премьер (чьи факторы только 1 и сам))
+//Composite (композитный)
+//12 = 1,2,3,4,6,12
+//Can be divided evenly by its factors (Может быть разделен равномерно по факторам)
+//11 = 1,11
+//13 = 1,13
+showPrimes(20);
+function showPrimes(limit) {
+    for (let number = 2; number <= limit; number++) {
+        //2 - current (i)
+        let isPrime = true;
+        for (let factor = 2; factor < number; factor++) {
+            if (number % factor === 0) {
+                isPrime = false;
+                break;
+            }
+        }
+        if (isPrime) console.log(number);
+    }
+}
+/////////////////////////
+showPrimes(20);
+function showPrimes(limit) {
+    for (let number = 2; number <= limit; number++) {
+        if (isPrime(number)) console.log(number);
+    }
+}
+
+function isPrime(number) {
+    for (let factor = 2; factor < number; factor++)
+        if (number % factor === 0)
+            return false;
+    return true;
+}
+//Basics (основы)
