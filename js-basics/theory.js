@@ -520,3 +520,195 @@ function isPrime(number) {
     return true;
 }
 //Basics (основы)
+let radius = 1;
+let x = 1;
+let y = 1;
+//Object-oriented Programming (OOP) (Объектно ориентированное программирование)
+const circle = {
+    radius: 1,
+    location: {
+        x: 1,
+        y: 1
+    },
+    isVisible: true,
+    draw: function () {
+        console.log('draw');
+    }
+};
+
+function draw() {}
+function move() {}
+
+circle.draw(); //draw
+//Factory Functions (Фабрика Функции)
+function createCircle(radius) {
+    return {
+        radius, //radius : radius
+        draw() {
+            console.log('draw');
+        }
+    };
+}
+
+const circle1 = createCircle(1);
+console.log(circle1);
+
+const circle2 = createCircle(2);
+console.log(circle2);
+//Constructor Functions (Функции конструктора)
+//Camel Notation: oneTwoThreeFour (Обозначение верблюда: 1234)
+//Pascal Notation: OneTwoThreeFour (Нотация Паскаль: 1234)
+function Circle(radius) {
+    this.radius = radius; //пустой объект
+    this.draw = function(){
+        console.log('draw');
+    }
+    // return this;
+}
+
+const circle = new Circle(1);
+const x = {};
+//Dynamic Nature of Objects (Динамическая природа объектов)
+const circle = {
+    radius: 1
+};
+circle.color = 'yellow';
+circle.draw = function(){};
+delete circle.color; //удаление свойства
+delete circle.draw;
+console.log(circle);
+//Constructor Property (Свойство конструктора)
+function createCircle(radius) {
+    return {
+        radius,
+        draw: function() {
+            console.log('draw');
+        }
+    };
+}
+const circle = createCircle(1);
+circle.constructor; //Object
+
+let x = {};
+//let x = new Object();
+new String(); // '',"",``
+new Boolean(); // true, false
+new Number(); //1,2,3,...
+//Functions are Objects (Функции являются объектами)
+function Circle(radius) {
+    this.radius = radius;
+    this.draw = function() {
+        console.log('draw');
+    }
+}
+Circle.name //Circle
+Circle.length //1
+Circle.constructor //function
+
+const Circle1 = new Function('radius', `
+    this.radius = radius;
+    this.draw = function() {
+        console.log('draw');
+    }
+`);
+const circle = new Circle1(1);
+const another = new Circle(1);
+
+Circle.call({}, 1);
+Circle.apply({}, [1,2,3]);
+//Value vs. Reference Types (Соотношение типов и ссылок)
+//Value Types (Типы значений) / Reference Types (Типы ссылок)
+//Number / Object
+//String / Function
+//Boolean / Array
+//Symbol
+//undefined
+//null
+//////////////////////////////////
+let x = 10;
+let y = x;
+x = 20;
+// x - 20, y - 10
+let x = { value: 10 };
+let y = x;
+x.value = 20;
+// x - {value: 20}, y - {value: 20}
+//Primitives are copied by their value (Примитивы копируются по их стоимости)
+//Objects are copied by their reference (Объекты копируются по их ссылке)
+let number = 10;
+function increase(number) {
+    number++;
+}
+increase(number);
+console.log(number); //10
+////////////////////////
+let obj = { value: 10 };
+function increase(obj) {
+    obj.value++;
+}
+increase(obj);
+console.log(obj); //{value: 11}
+//Enumerating Properties of an Object (Перечисление свойств объекта)
+const circle = {
+    radius: 1,
+    draw() {
+        console.log('draw');
+    }
+};
+for (let key in circle)
+    console.log(key, circle[key]);
+for (let key of circle)
+    console.log(key); //error
+for (let key of Object.keys(circle))
+    console.log(key);
+
+// Object.keys()
+for (let key of Object.keys(circle))
+    console.log(key);
+    for (let entry of Object.entries(circle))
+        console.log(entry);
+//entry - запись
+if( 'radius' in circle) console.log('yes'); //yes
+if( 'color' in circle) console.log('yes'); //
+//Cloning an Object (Клонирование объекта)
+const circle = {
+    radius: 1,
+    draw() {
+        console.log('draw');
+    }
+};
+const another = {};
+for(let key in circle)
+    another[key] = circl[key];
+// another['radius'] = circle['radius'];
+console.log(another);
+//////////////////
+const another = Object.assign({
+    color: 'yellow'
+}, circle);
+console.log(another);
+/////////////////
+const another = { ...circle };
+console.log(another);
+//Garbage Collection (Вывоз мусора)
+let circle = {};
+console.log(circle);
+//Math (математический)
+console.log(Math.PI); //https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math
+//String (строка)
+//String primitive (примитивная строка)
+const message = 'This is my first message'; //typeof message "string"
+message.length; //24
+message[0]; //T - ECMAScript 5 доступ к символам
+message.includes('my') //true
+message.startsWith('This') //true
+message.indexOf('my') //8
+message.replace('first', 'second') //This is my second message
+message.toUpperCase() // THIS IS MY FIRST MESSAGE
+message.trim() //
+message.split(' ') // []
+
+//String object (строка объект)
+const another = new String('hi'); //typeof another "object"
+//https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String
+//Template Literals (Шаблонные литералы)
