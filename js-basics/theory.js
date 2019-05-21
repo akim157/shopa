@@ -712,3 +712,98 @@ message.split(' ') // []
 const another = new String('hi'); //typeof another "object"
 //https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String
 //Template Literals (Шаблонные литералы)
+//String primitive (Примитивная строка)
+const message =
+    'This is my\n' +
+    ' \'first\' message';
+//Object {}
+//Boolean true, false
+//String '', ""
+//Template ``
+const another =
+    `This is my
+    first message`;
+
+const another =
+    `Hi John,
+    
+    Thank you for joining my mailing list.
+    
+    Regards,
+    Maxim`;
+//(Привет Джон, Спасибо тебе за присоединения к моему списку рассылки. С уважением, Максим)
+const name = 'John';
+const message = 'Hi ' + name + ',\n';
+const another =
+    `Hi ${name} ${2 + 3},
+    
+    Thank you for joining my mailing list.
+    
+    Regards,
+    Maxim`;
+//Date
+const now = new Date();
+const date1 = new Date('May 11 2018 09:00');
+//https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Date
+const date2 = new Date(2018, 4, 11, 9);
+now.setFullYear(2017);
+now.toDateString(); //Thu May 11 2017
+now.toTimeString() //11:35:01 GMT-0700 (PDT)
+now.toISOString(); //2017-05-11T18:35:01.212Z
+//Exercise 1 - Address Object (Упражнение 1 - Адрес объекта)
+//street (улица)
+//city (город)
+//zipCode (Почтовый индекс)
+//showAddress(address) (Показать адрес)
+let address = {
+    street: 'a',
+    city: 'b',
+    zipCode: 'c'
+};
+function showAddress(address) {
+    for (let key in address)
+        console.log(key, address[key]);
+}
+showAddress(address);
+//Exercise - Factory and Constructor (Упражнение - Фабрика и Конструктор)
+let address = createAddress('a', 'b', 'c');
+console.log(address);
+//Factory function (Фабричная функция)
+function createAddress(street, city, zipCode) {
+    return {
+        street,
+        city,
+        zipCode
+    };
+}
+//Constructor function (Функция конструктора)
+let address = new Address('a', 'b', 'c');
+console.log(address);
+function Address(street, city, zipCode) {
+    this.street = street;
+    this.city = city;
+    this.zipCode = zipCode;
+}
+//Exercise 3 - Object Equality (Упражнение 3 - Объект равенство)
+let address1 = new Address('a', 'b', 'c');
+let address2 = new Address('a', 'b', 'c');
+let address3 = address1;
+
+console.log(areEqual(address1, address2)); //true
+console.log(areSame(address1, address2)); //false
+console.log(areSame(address1, address3)); //true
+
+function Address(street, city, zipCode) {
+    this.street = street;
+    this.city = city;
+    this.zipCode = zipCode;
+}
+
+function areEqual(address1, address2) {
+    return address1.street === address2.street &&
+            address1.city === address2.city &&
+            address1.zipCode === address2.zipCode;
+}
+function areSame(address1, address2) {
+    return address1 === address2;
+}
