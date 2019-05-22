@@ -1039,3 +1039,94 @@ console.log(filtered); //[1,2,3]
 const filtered = numbers.filter(n => n >= 0);
 console.log(filtered); //[1,2,3]
 //Mapping an Array (Картирование массива)
+const numbers = [1, -1, 2, 3];
+const filtered = numbers.filter(n => n >= 0);
+const items = filtered.map(n => '<li>' + n + '</li>');
+console.log(items); //[<li>1</li>,<li>2</li>,<li>3</li>]
+const html = items.join();
+console.log(html); //<li>1</li>,<li>2</li>,<li>3</li>
+const html = items.join('');
+console.log(html); //<li>1</li><li>2</li><li>3</li>
+const html = '<ul>' + items.join() + '</ul>';
+console.log(html); //<ul><li>1</li>,<li>2</li>,<li>3</li></ul>
+//////////////////////////////////
+const items = filtered.map(n => {
+    const obj = { value: n };
+    return obj;
+});
+console.log(items); //[{ value: 1 }, { value: 2 }, { value: 3 }]
+const items = filtered.map(n => {
+    return { value: n };
+});
+const items = filtered.map(n => { value: n });
+console.log(items); //[undefined, undefined, undefined]
+const items = filtered.map(n => ({ value: n }) );
+console.log(items); //[{ value: 1 }, { value: 2 }, { value: 3 }]
+const items = numbers.filter(n => n >= 0).map(n => ({ value: n }) );
+console.log(items); //[{ value: 1 }, { value: 2 }, { value: 3 }]
+const items = numbers.filter(n => n >= 0).map(n => ({ value: n }) ).filter(obj => obj.value > 1);
+console.log(items); //[{ value: 2 }, { value: 3 }]
+const items = numbers.filter(n => n >= 0).map(n => ({ value: n }) ).filter(obj => obj.value > 1).map(obj => obj.value);
+console.log(items); //[2,3]
+//Reducing an Array (Уменьшение массива)
+const numbers = [1, -1, 2, 3];
+let sum = 0;
+for (let n of numbers)
+    // sum = sum + n;
+    sum += n;
+console.log(sum); //5
+//a = 0, c = 1 => a = 1
+//a = 1, c = -1 => a = 0
+//a = 0, c = 2 => a = 2
+//a = 2, c = 3 => a = 5
+const sum = numbers.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+}, 0);
+//a = 1, c = -1 => a = 0
+//a = 0, c = 2 => a = 2
+//a = 2, c = 3 => a = 5
+const sum = numbers.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+});
+console.log(sum); //5
+const sum = numbers.reduce((accumulator, currentValue) => accumulator + currentValue);
+let sum = 0;
+for (let n of numbers)
+    sum += n;
+//Exercise 1 - Array from Range (Упражнение 1 - Массив из диапазона)
+const numbers = arrayFromRange(1, 4);
+console.log(numbers); //[1,2,3,4]
+function arrayFromRange(min, max) {
+    const output = [];
+    for (let i = min; i <= max; i++)
+        output.push(i);
+    return output;
+}
+//Exercise 2 - Includes (Упражнение 2 - Включает в себя)
+const numbers = [1,2,3,4];
+constole.log(numbers.includes(1)); //true
+function includes(array, searchElement) {
+    for (let element of array)
+        if (element === searchElement)
+            return true;
+    return false;
+}
+constole.log(includes(numbers, 1)); //true
+//Exercise 3 - Except (Упражнение 3 - Кроме)
+const numbers = [1,2,3,4];
+const output = except(numbers, [1]);
+console.log(output); //[2,3,4]
+function except(array, excluded) {
+    const output = [];
+    for (let element of array)
+        if(!excluded.includes(element))
+            output.push(element);
+    return output;
+}
+//Exercise 4 - Moving an Element (Перемещение элемента)
+
+
+
+
+
+
