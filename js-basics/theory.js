@@ -807,3 +807,235 @@ function areEqual(address1, address2) {
 function areSame(address1, address2) {
     return address1 === address2;
 }
+//Exercise 4 - Blog Post Object (Упражнение 4 - Объект блога)
+//title (Заголовок)
+//body (Тело)
+//author (автор)
+//views (Просмторы)
+//comments (Комментарии)
+// (author, body) (автор, тело)
+//isLive (в прямом эфире)
+let post = {
+    title: 'a',
+    body: 'b',
+    author: 'c',
+    views: 10,
+    comments: [
+        { author: 'a', body: 'b' },
+        { author: 'c', body: 'd' },
+    ],
+    isLive: true
+};
+console.log(post);
+//Exercise 5 - Constructor Functions (Упражнение 5 - Функции конструктора)
+let post = new Post('a', 'b', 'c');
+console.log(post);
+
+function Post(title, body, author) {
+    this.title = title;
+    this.body = body;
+    this.author = author;
+    this.views = 0;
+    this.comments = [];
+    this.isLive = false;
+}
+//Exercise 6 - Price Range Objects (Упражнение 6 - Диапазон цен объекта)
+let priceRanges = [
+    { label: '$', tooltip: 'Inexpensive', minPerPerson: 0, maxPerPerson: 10 },
+    { label: '$$', tooltip: 'Moderate', minPerPerson: 11, maxPerPerson: 20 },
+    { label: '$$$', tooltip: 'Expensive', minPerPerson: 20, maxPerPerson: 50 }
+];
+//( tooltip (Подсказка), min per person (мин на человека), Inexpensive (Недорогой), Moderate (Умеренный), Expensive (Дорого))
+let restaurants = [
+    { averagePerPerson: 5}
+];
+//( average per person (в среднем на человека))
+//Introduction (Вступление)
+//Array (массив)
+//Adding new elements (Добавление новых элементов)
+//Finding elements (Поиск элементов)
+//Removing elements (Удаление элементов)
+//Splitting arrays (Расщепление массивов)
+//Combining arrays (Объединение массивов)
+////////////////////////////////////////
+//Adding Elements (добавление элементов)
+const numbers = [3,4];
+//End (Конец)
+numbers.push(5,6);
+console.log(numbers); //[3,4,5,6]
+//Beginning (начало)
+numbers.unshift(1,2);
+console.log(numbers); //[1,2,3,4,5,6]
+//Middle (средний)
+numbers.splice(2,0, 'a', 'b');
+console.log(numbers); //[1,2,'a','b',3,4,5,6]
+//Finding Elements (Primitives) (Поиск элементов (Примитивный))
+const numbers = [1,2,3,4];
+console.log(numbers.indexOf('a')); //-1
+console.log(numbers.indexOf(1)); //0
+console.log(numbers.indexOf('1')); //-1
+const numbers2 = [1,2,3,4,1,5];
+console.log(numbers2.lastIndexOf(1)); //4
+
+console.log(numbers2.indexOf(1) !== -1);
+console.log(numbers2.includes(1)); //true
+//Finding Elements (Reference Types) (Поиск элементов (Ссылочный тип))
+const courses = [
+    { id: 1, name: 'a' },
+    { id: 2, name: 'b' },
+];
+console.log(courses.includes({ id: 1, name: 'a' })); //false - потому что объект
+//https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+const course = courses.find(function(course) {
+    return course.name === 'a';
+});
+console.log(course); //{ id: 1, name: 'a' }
+const course = courses.find(function(course) {
+    return course.name === 'zyx';
+});
+console.log(course); //undefined
+const course = courses.findIndex(function(course) {
+    return course.name === 'zyx';
+});
+console.log(course); //-1
+const course = courses.find(function(course) {
+    return course.name === 'a';
+});
+console.log(course); //0
+//Arrow Functions (Стрелочная функция)
+const courses = [
+    { id: 1, name: 'a' },
+    { id: 2, name: 'b' },
+];
+const course = courses.find(course => course.name === 'a');
+console.log(course); //0
+//Removing Elements (Удаление элементов)
+const numbers = [1,2,3,4];
+//end
+const last = numbers.pop();
+console.log(numbers); //[1,2,3]
+console.log(last); //4
+//beginning
+const first = numbers.shift();
+console.log(numbers); //[2,3]
+console.log(first); //1
+//middle
+numbers.splice(2,1);
+console.log(numbers);//[1,2,4]
+//Emptying an Array (Очистка массива)
+let numbers = [1,2,3,4];
+let another = numbers;
+//Solution 1 (Решение 1)
+numbers = []; //!
+console.log(numbers) //[]
+console.log(another) //[1,2,3,4]
+//Solution 2 (Решение 2)
+numbers.length = 0; //!
+console.log(numbers) //[]
+console.log(another) //[]
+//Solution 3 (Решение 3)
+numbers.splice(0, numbers.length);
+console.log(numbers) //[]
+console.log(another) //[]
+//Solution 4 (Решение 4)
+while (numbers.length > 0)
+    numbers.pop();
+console.log(numbers) //[]
+console.log(another) //[]
+//Combining and Slicing Arrays (Объединение и нарезка массивов)
+const first = [1,2,3];
+const second = [4,5,6];
+const combined = first.concat(second);
+console.log(combined);//[1,2,3,4,5,6]
+const slice = combined.slice(2,4);
+console.log(combined);//[1,2,3,4,5,6]
+console.log(slice);//[3,4]
+/////////////////////////
+const first = [{ id: 1 }];
+const second = [4,5,6];
+const combined = first.concat(second);
+first[0].id = 10;
+console.log(combined); //[{id:10},4,5,6]
+//The Spread Operator (Оператор спреда)
+const first = [1,2,3];
+const second = [4,5,6];
+const combined = [...first, 'a', ...second, 'b'];
+const copy = [...combined];
+//Iterating an Array (Итерация массива)
+const numbers = [1,2,3];
+for (let number of numbers)
+    console.log(number); //1,2,3
+numbers.forEach(function(number){
+    console.log(number); //1,2.3
+});
+numbers.forEach(number => console.log(number)); //1,2.3
+numbers.forEach((number, index) => console.log(index, number)); //0 1,1 2,2 3
+//Joining Arrays (Объединение массивов)
+const numbers = [1,2,3];
+const joined = numbers.join(',');
+console.log(joined); //1,2,3
+
+const message = 'This is my first message';
+const parts = message.split(' ');
+console.log(parts); //[This, is, my, first, message]
+const combined = parts.join('-');
+console.log(combined); //This-is-my-first-message
+//Creating arrays in Javascript (Создание массивов в Javascript)
+//https://stackoverflow.com/questions/9543518/creating-arrays-in-javascript
+//Sorting Arrays (Сортировка массивов)
+const numbers = [3,2,1];
+numbers.sort();
+console.log(numbers); //[1,2,3]
+
+numbers.reverse();
+console.log(numbers); //[3,2,1]
+///////////////
+const courses = [
+    { id: 1, name: 'Node.js' },
+    { id: 2, name: 'JavaScript' }
+];
+courses.sort();
+console.log(courses);// [{ id: 1, name: 'Node.js' },{ id: 2, name: 'JavaScript' }]
+courses.sort(function(a, b){
+    // a < b => -1
+    //a > b => 1
+    //a === b => 0
+    // const nameA = a.name.toUpperCase();
+    // const nameB = b.name.toUpperCase();
+    // const nameA = a.name.toLowerCase();
+    // const nameB = b.name.toLowerCase();
+    //
+    // if (nameA < nameB) return -1;
+    // if (nameA > nameB) return 1;
+
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
+});
+console.log(courses);// [{ id: 2, name: 'JavaScript' },{ id: 1, name: 'Node.js' }]
+//ascii table
+//https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html
+//Testing the Elements of an Array (Тестирование элементов массива)
+const numbers = [1,2,3,-3];
+const allPositive = numbers.every(function(value) {
+    return value >= 0;
+});
+console.log(allPositive); //false
+///////////////////////
+const numbers = [1,2,3,-3];
+//every()
+//some()
+const atLeastOnePositive = numbers.some(function(value) {
+    return value >= 0;
+});
+console.log(atLeastOnePositive); //false
+//Filtering an Array (Фильтрация массива)
+const numbers = [1, -1, 2, 3];
+const filtered = numbers.filter(function(value){
+    return value >= 0;
+});
+console.log(filtered); //[1,2,3]
+//////
+const filtered = numbers.filter(n => n >= 0);
+console.log(filtered); //[1,2,3]
+//Mapping an Array (Картирование массива)
