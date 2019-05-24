@@ -1140,8 +1140,116 @@ function move(array, index, offset) {
     return output;
 }
 //Exercise 5 - Count Occurrences (Количество вхождений)
+const numbers = [1,2,3,4,1];
+const count = countOuccurrences(numbers, -1);
+const count2 = countOuccurrences(numbers, 1);
+console.log(count);
+console.log(count2);
+function countOccurrences(array, searchElement) {
+    // let count = 0;
+    // for (let element of array)
+    //     if (element === searchElement)
+    //         count++;
+    // return count;
 
+    return array.reduce((accumulator, current) => {
+        const occurrence = (current === searchElement) ? 1 : 0;
+        //0 1 -1
+        //0 2 -1
+        //0 3 -1
+        //0 4 -1
+        //0 1 -1
+        //0
 
+        //0 1 1
+        //1 2 1
+        //1 3 1
+        //1 4 1
+        //1 1 1
+        //2
+        console.log(accumulator, current, searchElement);
+        return accumulator + occurrence;
+    }, 0)
+}
+//Exercise 6 - Get Max (Упражнение 6 - Получить макс)
+const numbers = [1,2,3,4];
+const max = getMax(numbers); //4
+console.log(max);
+function getMax(array) {
+    if (array.length === 0) return undefined;
+    // let max = array[0];
+    // for (let i = 1; i < array.length; i++)
+    //     if (array[i] > max)
+    //         max = array[i];
+    // return max;
 
+    return array.reduce((accumulator, current) => {
+        // if (current > accumulator) return current;
+        // return accumulator;
 
+        return (current > accumulator) ? current : accumulator;
+    }, 0);
+
+    return array.reduce((a, b) => {
+        return (a > b) ? a : b;
+    }, 0);
+
+    return array.reduce((a, b) => (a > b) ? a : b);
+}
+//Exercise 7 - Movies (Упражнение 7 - Фильмы)
+const movies = [
+    { title: 'a', year: 2018, rating: 4.5 },
+    { title: 'b', year: 2018, rating: 4.7 },
+    { title: 'c', year: 2018, rating: 3 },
+    { title: 'd', year: 2017, rating: 4.5 },
+];
+
+//All the movies in 2018 with rating > 4 (Все фильмы 2018 с рейтингом больше 4)
+//Sort them by their rating (Сортировать их по рейтингу)
+//Descending order (В порядке убывания)
+//Pick their title (Выберите их название)
+
+// a < b => -1
+// a === b => 0
+// a > b => 1
+const titles = movies
+    .filter(m => m.year === 2018 && m.rating >= 4)
+    .sort((a,b) => a.rating - b.rating)
+    .reverse()
+    .map(m => m.title);
+console.log(titles);
+
+//a = 4.5
+//b = 4.5
+//0 => a === b
+//Function Declarations vs. Expressions (Объявления функций и выражения)
+//Function Declarations (Объявление функции)
+function walk() {
+    console.log('walk');
+}
+//Anonymous Function Expression (Выражение анонимной функции)
+let run = function() {
+    console.log('run');
+};
+let x = 1;
+//Named Function Expression (Выражение именованной функции)
+let run = function walk() {
+    console.log('run');
+}
+run(); //run
+let move = run;
+move(); //run
+//Hoisting (Подъемно)
+//Function Declarations (Объявление функции)
+walk();
+function walk() {
+    console.log('walk');
+}
+//Anonymous Function Expression (Выражение анонимной функции)
+console.log(x); //Uncaought ReferenceError: x is not defined at
+let x = 1;
+run(); //Uncaought ReferenceError: run is not defined at
+const run = function() {
+    console.log('run');
+};
 
