@@ -1252,4 +1252,313 @@ run(); //Uncaought ReferenceError: run is not defined at
 const run = function() {
     console.log('run');
 };
+//Arguments (аргументы)
+let x = 1;
+x = 'a';
 
+function sum (a,b) {
+    return a + b; //1 + undefined
+}
+console.log(sum(1)); //NaN (не хватает аргумента)
+console.log(sum(1,2,3,4,5)); //3 (используется первые два аргумента)
+
+function sum2 (a,b) {
+    console.log(arguments); // Arguments(5) [1,2,3,4,5]
+    return a + b;
+}
+console.log(sum2(1,2,3,4,5));
+
+function sum3 (a,b) {
+    let total = 0;
+    for (let value of arguments) {
+        total += value;
+    }
+    return total;
+}
+console.log(sum3(1,2,3,4,5,10)); //25
+//The Rest Operator (Оператор отдыха)
+function sum(...args) {
+    console.log(args);
+}
+console.log(sum(1,2,3,4,5,10));//[1,2,3,4,5,10]
+function sum2(...args) {
+    return args.reduce((a,b) => a + b);
+}
+console.log(sum2(1,2,3,4,5,10)); //25
+function sum3(discount, ...prices) {
+    const total =  prices.reduce((a,b) => a + b);
+    return total * (1 - discount);
+}
+console.log(sum3(0.1, 20, 30)); //45
+function sum4(discount, ...prices, someValue) {
+    const total =  prices.reduce((a,b) => a + b);
+    return total * (1 - discount);
+}
+console.log(sum4(0.1, 20, 30, 1)); //Uncaught SyntaxError: Rest parameter must be last formal parameter (Rest параметр должен быть последним)
+//Default Parameters (Параметры по умолчанию)
+function interest(principal, rate = 3.5, years = 5) {
+    // rate = rate || 3.5;
+    // years = years || 5;
+    return principal * rate / 100 * years;
+}
+console.log(interest(10000));//1750
+//Getters and Setters (Добытчики и сеттеры)
+const person = {
+    firstName: 'Maxim',
+    lastName: 'Fedorov',
+    // fullName: function() {},
+    get fullName() {
+        return `${person.firstName}` `${person.lastName}`;
+    },
+    set fullName(value) {
+        const parts = value.split(' ');
+        this.firstName = parts[0];
+        this.lastName = parts[1];
+    }
+};
+// console.log(`${person.firstName}` `${person.lastName}`);
+console.log(person.fullName()); //Maxim Fedorov
+person.fullName = 'John Smith';
+//getters => access properties (добытчики => доступ к свойствам)
+//setters => change (mutate) them (setters => изменить (изменить) их)
+//Try and Catch (Попробуй и поймай)
+const person = {
+    firstName: 'Maxim',
+    lastName: 'Fedorov',
+    set fullName(value) {
+        // if (typeof value !== 'string') return;
+        // const e = new Error();
+        // throw e;
+        if (typeof value !== 'string')
+            throw new Error('value is not a string');
+        const parts = value.split(' ');
+        if (parts.length !== 2)
+            throw new Error('Enter a first and last name.');
+        this.firstName = parts[0];
+        this.lastName = parts[1];
+    }
+};
+try {
+    person.fullName = null;
+}
+catch (e) {
+    alert(e);
+}
+// person.fullName = true;
+console.log(person); //Uncaught TypeError: value.splt is not a function at Object.set fullName
+//Local vs. Global Scope (Местный и глобальный охват)
+{
+  const message = 'hi';
+}
+console.log(message); //Uncaught ReferenceError: message is not defined
+function start() {
+    const message = 'hi';
+    if (true) {
+        const another = 'bye';
+    }
+    // console.log(another); //Uncaught ReferenceError: another is not defined at start
+    for (let i = 0; i < 5; i++) {
+        console.log(i);
+    }
+    console.log(i); //Uncaught ReferenceError: i is not defined
+}
+start();
+const color = 'red';
+function stop() {
+    const message = 'bye';
+    const color = 'blue';
+    // console.log(color); //red
+    console.log(color); //blue
+}
+stop();
+//Let vs Var (Пусть против вар)
+let x = 0;
+var y = 0;
+function start() {
+    for (let i = 0; i < 5; i++) {
+        console.log(i); //0,1,2,3,4
+    }
+    console.log(i); //Uncaught ReferenceError: i is not defined
+}
+start();
+///////////////////
+function start() {
+    for (var i = 0; i < 5; i++) {
+        console.log(i); //0,1,2,3,4
+    }
+    console.log(i); //5
+}
+start();
+//var => function-scoped (функция - область видимости)
+//ES6 (ES2015): let, const => block-scoped (блок - область видимости)
+function start() {
+    for (var i = 0; i < 5; i++) {
+        if (true) {
+            var color = 'red';
+        }
+    }
+    console.log(color); //red
+}
+start();
+//////////////////
+var color = 'red';
+let age = 30;
+//window.color //red
+//window.age //undefined
+
+function sayHi() {
+    console.log('hi');
+}
+//window.sayHi() //hi
+//The This Keyword (Это ключевое слово)
+//The object that is executing the current function (Объект, который выполняет текущую функцию)
+//method -> obj
+//function -> global (window, global)
+const video = {
+    title: 'a',
+    play() {
+        console.log(this);
+    }
+};
+video.stop = function() {
+    console.log(this);
+};
+
+video.play(); //{title: 'a', play: f}
+video.stop(); //{title: 'a', play: f, stop: f}
+
+function Video() {
+    console.log(this);
+}
+Video(); // Window {...}
+
+function Video(title) {
+    this.title = title;
+    console.log(this);
+}
+const v = new Video('a'); //Video {title: 'a'}
+
+const video = {
+    title: 'a',
+    tags: ['a', 'b', 'c'],
+    showTags() {
+        this.tags.forEach(function(tag){
+            console.log(this.title, tag);
+        });
+    }
+};
+video.showTags(); //undefined a, undefined b, undefined c
+
+const video = {
+    title: 'a',
+    tags: ['a', 'b', 'c'],
+    showTags() {
+        this.tags.forEach(function(tag){
+            console.log(this, tag);
+        }, { firstName: 'Maxim' });
+    }
+};
+video.showTags(); //{firstName: Maxim} a, {firstName: Maxim} b, {firstName: Maxim} c
+
+const video = {
+    title: 'a',
+    tags: ['a', 'b', 'c'],
+    showTags() {
+        this.tags.forEach(function(tag){
+            console.log(this, tag);
+        }, this);
+    }
+};
+video.showTags(); //{title: a, tags: [...], showTags: f} a, {title: a, tags: [...], showTags: f} b, {title: a, tags: [...], showTags: f} c
+//Changing This (Изменение этого)
+const video = {
+    title: 'a',
+    tags: ['a', 'b', 'c'],
+    showTags() {
+        const self = this;
+        this.tags.forEach(function(tag){
+            console.log(self.title, tag);
+        });
+    }
+};
+video.showTags(); // a a, a b, a c
+
+function playVideo() {
+    console.log(this);
+}
+playVideo.call({ name: 'Maxim' }); //{name: "Maxim"}
+playVideo(); //Window {...}
+playVideo.apply({name: 'Maxim'}); //{name: 'Maxim'}
+
+playVideo.call({ name: 'Maxim' }, 1, 2); //{name: "Maxim"}
+playVideo.apply({name: 'Maxim'}, [1,2]); //{name: 'Maxim'}
+const fn = playVideo.bind({name: 'Maxim'});
+fn();
+/////////////////////
+const video = {
+    title: 'a',
+    tags: ['a', 'b', 'c'],
+    showTags() {
+        this.tags.forEach(function(tag){
+            console.log(this.title, tag);
+        }.bind(this));
+    }
+};
+video.showTags(); // a a, a b, a c
+
+const video = {
+    title: 'a',
+    tags: ['a', 'b', 'c'],
+    showTags() {
+        this.tags.forEach(tag => {
+            console.log(this.title, tag);
+        });
+    }
+};
+video.showTags(); // a a, a b, a c
+//Exercise 1 - Sum of Arguments (Упражнение 1 - Сумма аргументов)
+//sum([1,2,3,4]) => 10
+
+Array.isArray([]); //true
+Array.isArray({}); //false
+
+console.log(sum(1,2,3,4)); //10
+console.log(sum([1,2,3,4])); //[1,2,3,4]
+function sum(...items) {
+    console.log(items); //[array(4)]
+    items.reduce((a,b) => a + b);
+}
+console.log(sum([1,2,3,4])); //10
+function sum(...items) {
+    if (items.length === 1 && Array.isArray(items[0]))
+        items = [...items[0]];
+    items.reduce((a,b) => a + b);
+}
+//Exercise 2 - Area of Circle (Упражнение 2 - Площадь круга)
+//circle.radius = 2;
+//console.log(circle.area);
+const circle = {
+    radius: 1,
+    get area() {
+        return Math.PI * this.radius * this.radius;
+    }
+};
+console.log(circle.area); //3.14592...
+//Exercise 3 - Error Handling (Упражнение 3 - Обработка ошибок)
+try {
+    const numbers = [1,2,3,4];
+    const count = countOccurrences(numbers, 1);
+    console.log(count);
+}
+catch (e) {
+    console.log(e.message);
+}
+
+function countOuccurrences(array, searchElement) {
+    if (!Array.isArray(array))
+        throw new Error('Invalid array.');
+    return array.reduce((accumulator, current) => {
+        const occurrence = (current === searchElement) ? 1 : 0;
+        return accumulator + occurrence;
+    }, 0);
+}
