@@ -10,6 +10,7 @@ node index.js
 let firstName = 'Maxim', lastName = 'Fedorov';
 console.log(firstName);
 console.log(lastName);
+"use strict"; //(использовать строгий)
 
 //Primitive Types (Примитивные типы)/reference types(ссылочные типы)
 //String / Object
