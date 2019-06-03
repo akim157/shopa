@@ -39,7 +39,7 @@ let person = {
 };
 //Dot Notation
 console.log(person);
-//Dot Notation (Тотечная запись)
+//Dot Notation (Точечная запись)
 person.name = 'John';
 console.log(person.name);
 //Bracket Notation (Обозначение скобки)
@@ -53,6 +53,23 @@ console.log(selectedColors[0]); //red
 selectedColors[2] = 'green';
 console.log(selectedColors.length); //3
 //Functions
+function f() {
+    var fun = arguments.callee; //ссылка на себя
+    fun.test++;
+    alert(fun.test);
+}
+
+f.test = 1;
+f();
+f();
+//////
+function a(){
+    var args = Array.prototype.slice.call(arguments); //превщаем параметры функции в массив
+}
+a(1,2,3,4,5);
+//////
+var f = function(a,b) { alert(a+b) };
+f.apply(null,[1,2]); //Вызвать функцию для массива аргументов можно при помощи apply
 function greet() {
     console.log('Hello world');
 }
