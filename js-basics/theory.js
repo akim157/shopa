@@ -1513,6 +1513,49 @@ playVideo.apply({name: 'Maxim'}, [1,2]); //{name: 'Maxim'}
 const fn = playVideo.bind({name: 'Maxim'});
 fn();
 /////////////////////
+function print() {
+    arguments.join = [].join;
+    var arg = arguments.join(':');
+    console.log(arg);
+}
+print(1,2,3);
+/////////////////////
+function print() {
+    let arg = [].join.call(arguments, ':');
+    console.log(arg);
+}
+print(1,2,3);
+/////////////////////
+function print() {
+    let arg = [].slice.call(arguments);
+    console.log(arg);
+}
+print(1,2,3);
+/////////////////////
+function sumArg(...arg) {
+    let sount = [].slice.call(arguments).reduce((a,b) => a + b);
+    let sount2 = arg.reduce((a,b) => a + b);
+    console.log(sount);
+    console.log(sount2);
+
+}
+sumArg(1,2,3,4);
+
+function sumArg2() {
+    return [].reduce.call(arguments, (a,b) => a +b);
+}
+console.log(sumArg2(5,5,5));
+/////////////////////
+function applyAll(obj) {
+    let arg = [].slice.call(arguments, 1);
+    return obj.apply(null,arg);
+}
+
+let itog = applyAll(Math.max, 2,3,8,1);
+let itog2 = applyAll(Math.min, 2,3,8,1);
+console.log(itog);
+console.log(itog2);
+/////////////////////
 const video = {
     title: 'a',
     tags: ['a', 'b', 'c'],
