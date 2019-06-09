@@ -345,4 +345,331 @@ teacher.teach();
 //cd counter-app (переходим в директорию проекта)
 //npm start (запускаем)
 //npm i bootstrap@4.1.1 (устанавливаем модель boostrap)
+//src/index.js -> import "bootstrap/dist/css/bootstrap.css";
+/*=============== 24.Your first React Component ==================*/
+//components/counter.jsx
+//JSX – это препроцессор, который добавляет синтаксис XML к JavaScript. Вы можете использовать React без JSX, но JSX делает React более элегантным.
+import React, { Component } from 'react';
+class Counter extends Component {
+    render() {
+        // React.createElement()
+        return <h1>Hello World</h1>
+    }
+}
 
+export default Counter;
+//index.js
+import Counter from './components/counter';
+ReactDOM.render(<Counter />, document.getElementById('root'));
+/*=============== 25.Specifying Children (Указание детей) ==================*/
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    render() {
+        return (
+            <div>
+                <h1>Hello World</h1>
+                <button>Increment</button>
+            </div>
+        );
+    }
+}
+
+export default Counter;
+/////////////////////////
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    render() {
+        return (
+            <React.Fragment>
+                <h1>Hello World</h1>
+                <button>Increment</button>
+            </React.Fragment>
+        );
+    }
+}
+
+export default Counter;
+/*=============== 26.Embedding Expressons (Встраивание экспрессонов) ==================*/
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 1
+        // address: {
+        //     street: ''
+        // }
+    };
+    render() {
+        return (
+            <div>
+                <span>{this.state.count}</span>
+                <button>Increment</button>
+            </div>
+        );
+    }
+}
+
+export default Counter;
+//////////////////////////
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0
+        // address: {
+        //     street: ''
+        // }
+    };
+    render() {
+        return (
+            <div>
+                <span>{this.formatCount()}</span>
+                <button>Increment</button>
+            </div>
+        );
+    }
+    formatCount() {
+        const { count } = this.state;
+        // return this.state.count === 0 ? 'Zero' : this.state.count;
+        // return count === 0 ? 'Zero' : count;
+        return count === 0 ? <h1>Zero</h1> : count;
+    }
+}
+
+export default Counter;
+/*=============== 27.Setting Attributes ==================*/
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0,
+        imageUrl: 'https://picsum.photos/200'
+    };
+    render() {
+        return (
+            <div>
+                <img src={this.state.imageUrl} alt=""/>
+                <span>{this.formatCount()}</span>
+                <button>Increment</button>
+            </div>
+        );
+    }
+    formatCount() {
+        const { count } = this.state;
+        return count === 0 ? <h1>Zero</h1> : count;
+    }
+}
+
+export default Counter;
+///////////////////////////////
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0
+    };
+    styles = {
+        fontSize: 50,
+        fontWeight: 'bold',
+    };
+    render() {
+        return (
+            <div>
+                <span style={this.styles} className="badge badge-primary m-2">{this.formatCount()}</span>
+                <button className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    formatCount() {
+        const { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+}
+
+export default Counter;
+//////////////////////////////
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0
+    };
+    render() {
+        return (
+            <div>
+                <span style={{ fontSize: 30,fontWeight: 'bold'}} className="badge badge-primary m-2">{this.formatCount()}</span>
+                <button className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    formatCount() {
+        const { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+}
+
+export default Counter;
+/*=============== 28.Rendering Classes Dynamically (Динамическое рендеринг классов) ==================*/
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0
+    };
+    render() {
+        let classes = "badge m-2 badge-";
+        classes += (this.state.count === 0) ? 'warning' : 'primary';
+        return (
+            <div>
+                <span className={classes}>{this.formatCount()}</span>
+                <button className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    formatCount() {
+        const { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+}
+
+export default Counter;
+/////////////////////////
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0
+    };
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    formatCount() {
+        const { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+    getBadgeClasses() {
+        let classes = 'badge m-2 badge-';
+        classes += (this.state.count === 0) ? 'warning' : 'primary';
+        return classes;
+    }
+}
+
+export default Counter;
+/*=============== 29.Rendering Lists (Списки рендеринга) ==================*/
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0,
+        tags: ['tag1', 'tag2', 'tag3']
+    };
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button className="btn btn-secondary btn-sm">Increment</button>
+                <ul>
+                    { this.state.tags.map( tag => <li>{ tag }</li>) }
+                </ul>
+            </div>
+        );
+    }
+    formatCount() {
+        const { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+    getBadgeClasses() {
+        let classes = 'badge m-2 badge-';
+        classes += (this.state.count === 0) ? 'warning' : 'primary';
+        return classes;
+    }
+}
+
+export default Counter;
+/*=============== 30.Conditional Rendering (Условный рендеринг) ==================*/
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0,
+        tags: ['tag1', 'tag2', 'tag3']
+    };
+    renderTags() {
+        if (this.state.tags.length === 0) return <p>There are no tags!</p>;
+        return <ul>{ this.state.tags.map( tag => <li key={tag}>{ tag }</li>) }</ul>;
+    }
+    render() {
+        return (
+            <div>
+                {this.renderTags()}
+            </div>
+        );
+    }
+}
+
+export default Counter;
+////////////////////////////
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0,
+        tags: []
+    };
+    renderTags() {
+        if (this.state.tags.length === 0) return <p>There are no tags!</p>;
+        return <ul>{ this.state.tags.map( tag => <li key={tag}>{ tag }</li>) }</ul>;
+    }
+    render() {
+        return (
+            <div>
+                {this.state.tags.length === 0 && 'Please create a new tag!'}
+                {this.renderTags()}
+            </div>
+        );
+    }
+}
+
+export default Counter;
+/*=============== 31.Handling Events (Обработка событий) ==================*/
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0
+    };
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={this.handleIncrement} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.count === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+    handleIncrement() {
+        console.log('Increment Clicked', this.state.count); //undefined
+    }
+}
+
+export default Counter;
+/*=============== 32.Binding Event Handlers (Обязательные обработчики событий) ==================*/
