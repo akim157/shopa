@@ -1,5 +1,7 @@
-import React from 'react';
-import ReactDom from 'react-dom';
+import Teacher, { promote } from './teacher';
+// import React, { Component } from 'react';
 
-const element = <h1>Hello World</h1>;
-ReactDom.render(element, document.getElementById('root'));
+//Default -> import ... from '';
+//Named -> import {...} from '';
+const teacher = new Teacher('Maxim', 'MSc');
+teacher.teach();

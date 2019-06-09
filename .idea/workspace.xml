@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="94bfdfcf-5e0a-4660-b7f9-216511d95c51" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react/react-app/src/person.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react/react-app/src/teacher.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/react-app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/react/react-app/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/react-app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/react/react-app/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/react-app/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/react-app/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/theory.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/theory.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,20 +19,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="theory.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="theory.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/react/theory.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/react/react-app/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="23" column="6" lean-forward="true" selection-start-line="23" selection-start-column="6" selection-end-line="23" selection-end-column="6" />
+            <state relative-caret-position="85">
+              <caret line="323" column="20" lean-forward="true" selection-start-line="323" selection-start-column="20" selection-end-line="323" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -65,6 +61,8 @@
         <option value="$PROJECT_DIR$/laravel/praktika/site.php" />
         <option value="$PROJECT_DIR$/js-basics/method.js" />
         <option value="$PROJECT_DIR$/js-basics/theory.js" />
+        <option value="$PROJECT_DIR$/react/react-app/src/person.js" />
+        <option value="$PROJECT_DIR$/react/react-app/src/teacher.js" />
         <option value="$PROJECT_DIR$/react/react-app/src/index.js" />
         <option value="$PROJECT_DIR$/react/theory.js" />
       </list>
@@ -83,10 +81,12 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/react/counter-app/node_modules" />
     <handled-path value="$PROJECT_DIR$/react/react-app/node_modules" />
   </component>
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths>
+      <path value="$PROJECT_DIR$/react/counter-app/package.json" />
       <path value="$PROJECT_DIR$/react/react-app/package.json" />
     </packageJsonPaths>
   </component>
@@ -111,26 +111,6 @@
               <item name="shopa" type="b2602c69:ProjectViewProjectNode" />
               <item name="shopa" type="462c0819:PsiDirectoryNode" />
               <item name="react" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="shopa" type="b2602c69:ProjectViewProjectNode" />
-              <item name="shopa" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="react-app" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="shopa" type="b2602c69:ProjectViewProjectNode" />
-              <item name="shopa" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="react-app" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="shopa" type="b2602c69:ProjectViewProjectNode" />
-              <item name="shopa" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="react-app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -191,7 +171,7 @@
       <workItem from="1559850670923" duration="7985000" />
       <workItem from="1559940515761" duration="14036000" />
       <workItem from="1560032310597" duration="111000" />
-      <workItem from="1560032433442" duration="6963000" />
+      <workItem from="1560032433442" duration="16886000" />
     </task>
     <task id="LOCAL-00001" summary="v1.0.4">
       <created>1555270941898</created>
@@ -260,7 +240,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84512000" />
+    <option name="totallyTimeSpent" value="94435000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="960" y="0" width="960" height="1040" extended-state="0" />
@@ -305,26 +285,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="v1.2.29" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/method.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="36" lean-forward="true" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" column="83" selection-start-line="28" selection-start-column="83" selection-end-line="28" selection-end-column="83" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="24395">
@@ -593,27 +553,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/react-app/src/index.js">
+    <entry file="file://$PROJECT_DIR$/react/react-app/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1751">
+          <caret line="103" column="17" selection-start-line="103" selection-start-column="17" selection-end-line="103" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/react-app/config/webpack.config.dev.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/react-app/src/person.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret selection-end-line="4" selection-end-column="58" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
+          <caret selection-end-line="7" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/react-app/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="16" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/react-app/src/teacher.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" selection-end-line="13" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/react/theory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/react-app/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="23" column="6" lean-forward="true" selection-start-line="23" selection-start-column="6" selection-end-line="23" selection-end-column="6" />
+        <state relative-caret-position="85">
+          <caret line="323" column="20" lean-forward="true" selection-start-line="323" selection-start-column="20" selection-end-line="323" selection-end-column="20" />
         </state>
       </provider>
     </entry>
