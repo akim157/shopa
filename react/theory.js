@@ -673,3 +673,373 @@ class Counter extends Component {
 
 export default Counter;
 /*=============== 32.Binding Event Handlers (Обязательные обработчики событий) ==================*/
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 1
+    };
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={this.handleIncrement} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.count === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+    constructor() {
+        super();
+        this.handleIncrement = this.handleIncrement.bind(this);
+    }
+    handleIncrement() {
+        console.log('Increment Clicked', this.state.count); //1
+        //obj.method();
+        //function();
+    }
+}
+
+export default Counter;
+///////////////////////////
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 1
+    };
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={this.handleIncrement} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.count === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+    // constructor() {
+    //     super();
+    //     this.handleIncrement = this.handleIncrement.bind(this);
+    // }
+    handleIncrement = () => {
+        console.log('Increment Clicked', this.state.count);
+        //obj.method();
+        //function();
+    }
+}
+
+export default Counter;
+/*=============== 33.Updating the State (Объявление состояния) ==================*/
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 1
+    };
+    handleIncrement = () => {
+        // this.state.count++;
+        this.setState({ count: this.state.count + 1 });
+    }
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={this.handleIncrement} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.count === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+}
+
+export default Counter;
+/*=============== 34.What Happens When State Changes (Что происходит, когда меняется состояние) ==================*/
+//VIRTUAL DOM (Виртуальный DOM)
+//New Tree (Новое дерево) | Old Tree (Старое дерево)
+//div -> span | button -- div -> span | button
+/*=============== 35.Passing Event Arguments (Аргументы прохождения событий) ==================*/
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 1
+    };
+    handleIncrement = (product) => {
+        console.log(product);
+        this.setState({ count: this.state.count + 1 });
+    }
+    doHandleIncrement = () => {
+        this.handleIncrement({ id: 1});
+    }
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={this.doHandleIncrement} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.count === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+}
+
+export default Counter;
+////////////////////////
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 1
+    };
+    handleIncrement = (product) => {
+        console.log(product);
+        this.setState({ count: this.state.count + 1 });
+    }
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={ () => this.handleIncrement({ id: 1})} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.count === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+}
+
+export default Counter;
+/*=============== 36.Setting Up the Vidly Project (Настройка проекта Vidly) ==================*/
+//create-react-app vidly
+//npm i bootstrap font-awesome
+//src/index.js
+//import 'bootstrap/dist/css/bootstrap.css';
+// import 'font-awesome/css/font-awesome.css';
+/*=============== 37.Exercises (Упражнение) ==================*/
+/*=============== 38.Building the Movies Component (Компонент «Фильмы») ==================*/
+//App.js
+import React, { Component } from 'react';
+import Movies from './components/movies';
+import './App.css';
+
+class App extends Component {
+    render() {
+        return (
+            <main className="container">
+                <Movies/>
+            </main>
+        );
+    }
+}
+
+export default App;
+//movies.jsx
+import React, { Component } from 'react';
+import { getMovies } from '../services/fakeMovieService';
+
+class Movies extends Component {
+    state = {
+        movies: getMovies()
+    };
+    render() {
+        return <table className="table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Stock</th>
+                <th>Rate</th>
+            </tr>
+            </thead>
+            <tbody>
+            { this.state.movies.map(movie => (
+                <tr>
+                    <td>{movie.title}</td>
+                    <td>{movie.genre.name}</td>
+                    <td>{movie.numberInStock}</td>
+                    <td>{movie.dailyRentalRate}</td>
+                </tr>
+            ))}
+            </tbody>
+        </table>;
+    }
+}
+
+export default Movies;
+/*=============== 39.Deleting a Movie (Удаление фильмов) ==================*/
+//movies.jsx
+import React, { Component } from 'react';
+import { getMovies } from '../services/fakeMovieService';
+
+class Movies extends Component {
+    state = {
+        movies: getMovies()
+    };
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies: movies});
+    };
+    render() {
+        return <table className="table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Stock</th>
+                <th>Rate</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            { this.state.movies.map(movie => (
+                <tr key={movie._id}>
+                    <td>{movie.title}</td>
+                    <td>{movie.genre.name}</td>
+                    <td>{movie.numberInStock}</td>
+                    <td>{movie.dailyRentalRate}</td>
+                    <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                </tr>
+            ))}
+            </tbody>
+        </table>;
+    }
+}
+
+export default Movies;
+/*=============== 40.Conditional Rendering (Условный рендеринг) ==================*/
+//movies.jsx
+import React, { Component } from 'react';
+import { getMovies } from '../services/fakeMovieService';
+
+class Movies extends Component {
+    state = {
+        movies: getMovies()
+    };
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    render() {
+
+        if(this.state.movies.length === 0)
+            return <p>There are no movies the database.</p>;
+
+        return (
+            <React.Fragment>
+                <p>Showing {this.state.movies.length} movies in the database.</p>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Stock</th>
+                        <th>Rate</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { this.state.movies.map(movie => (
+                        <tr key={movie._id}>
+                            <td>{movie.title}</td>
+                            <td>{movie.genre.name}</td>
+                            <td>{movie.numberInStock}</td>
+                            <td>{movie.dailyRentalRate}</td>
+                            <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </React.Fragment>
+        );
+    }
+}
+
+export default Movies;
+/////////////////////
+import React, { Component } from 'react';
+import { getMovies } from '../services/fakeMovieService';
+
+class Movies extends Component {
+    state = {
+        movies: getMovies()
+    };
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+
+        return (
+            <React.Fragment>
+                <p>Showing {this.state.movies.length} movies in the database.</p>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Stock</th>
+                        <th>Rate</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { this.state.movies.map(movie => (
+                        <tr key={movie._id}>
+                            <td>{movie.title}</td>
+                            <td>{movie.genre.name}</td>
+                            <td>{movie.numberInStock}</td>
+                            <td>{movie.dailyRentalRate}</td>
+                            <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </React.Fragment>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 41.Summary (Резюме) ==================*/
+
+
