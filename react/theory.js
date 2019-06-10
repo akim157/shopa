@@ -1041,5 +1041,286 @@ class Movies extends Component {
 
 export default Movies;
 /*=============== 41.Summary (Резюме) ==================*/
+//JSX
+//Rendering Lists (Списки рендеринга)
+//Conditional Rendering (Условный рендеринг)
+//Handling Events (Обработка событий)
+//Updating the State (Обновление состояния)
+/*=============== 42.Introduction (Вступление) ==================*/
+//Composing Componennts (Составление компонентов)
+//Pass Data (Передать данные)
+//Raise and Handle Events (Поднимать и обрабатывать события)
+//Multiple Components in Sync (Синхронизация нескольких компонентов)
+//Functional Components (Функциональные компоненты)
+//Lifecycle Hooks (Крючки жизненного цикла)
+/*=============== 43.Composing Componennts (Составление компонентов) ==================*/
+//Components (Компоненты)
+//Counters (Счетчики)
+//Counter (Счетчик)
+//index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import * as serviceWorker from './serviceWorker';
+import "bootstrap/dist/css/bootstrap.css";
+import Counters from './components/counters';
+
+ReactDOM.render(<Counters />, document.getElementById('root'));
+
+serviceWorker.unregister();
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    state = {}
+    render() {
+        return (
+            <div>
+                <Counter />
+                <Counter />
+                <Counter />
+                <Counter />
+                <Counter />
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 0 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    render() {
+        return (
+            <div>
+                { this.state.counters.map(counter => <Counter key={counter.id} />)}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+/*=============== 44.Passing Data to Components (Передача данных в компоненты) ==================*/
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 0 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    render() {
+        return (
+            <div>
+                { this.state.counters.map(counter =>
+                    <Counter key={counter.id} value={counter.value} selected={true} />)}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: 0
+    };
+    handleIncrement = (product) => {
+        console.log(product);
+        this.setState({ count: this.state.count + 1 });
+    }
+    render() {
+        console.log('props', this.props);
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={ () => this.handleIncrement({ id: 1})} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.count === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+}
+
+export default Counter;
+//conuter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        count: this.props.value
+    };
+    handleIncrement = (product) => {
+        this.setState({ count: this.state.count + 1 });
+    }
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={ () => this.handleIncrement({ id: 1})} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.count === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { count } = this.state;
+        return count === 0 ? 'Zero' : count;
+    }
+}
+
+export default Counter;
+////////////////
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        value: this.props.value
+    };
+    handleIncrement = (product) => {
+        this.setState({ value: this.state.value + 1 });
+    }
+    render() {
+        return (
+            <div>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={ () => this.handleIncrement({ id: 1})} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.value === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { value } = this.state;
+        return value === 0 ? 'Zero' : value;
+    }
+}
+
+export default Counter;
+/*=============== 45.Passing Children (Проходящие дети) ==================*/
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 4 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    render() {
+        return (
+            <div>
+                { this.state.counters.map(counter =>
+                    <Counter key={counter.id} value={counter.value}>
+                        <h4>Title</h4>
+                    </Counter>
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        value: this.props.value
+    };
+    handleIncrement = (product) => {
+        this.setState({ value: this.state.value + 1 });
+    }
+    render() {
+        console.log(this.props);
+        return (
+            <div>
+                {this.props.children}
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={ () => this.handleIncrement({ id: 1})} className="btn btn-secondary btn-sm">Increment</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.value === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { value } = this.state;
+        return value === 0 ? 'Zero' : value;
+    }
+}
+
+export default Counter;
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 4 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    render() {
+        return (
+            <div>
+                { this.state.counters.map(counter =>
+                    <Counter key={counter.id} value={counter.value}>
+                        <h4>Counter #{counter.id}</h4>
+                    </Counter>
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+/*=============== 46.Debugging React Apps (Отладка приложений React) ==================*/
+//install React Developer Tools
+//$r | $r.render() | $0.click()
+/*=============== 47.Props vs State (Реквизит против состояния) ==================*/
+
+
+
 
 
