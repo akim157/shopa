@@ -1319,7 +1319,513 @@ export default Counters;
 //install React Developer Tools
 //$r | $r.render() | $0.click()
 /*=============== 47.Props vs State (Реквизит против состояния) ==================*/
+// this.props.value = 0; (Будет ошибка)
+/*=============== 48.Raising and Handling Events (Повышение и обработка событий) ==================*/
+//The component that owns a piece of the state, should be the one modifying it. (Компонент, которому принадлежит кусок состояния, должен быть тем, кто его модифицирует.)
+//Counter -> (onDelete) -> Counters (handleDelete())
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
 
+class Counters extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 4 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    handleDelete = () => {
+        console.log('Event Handler Called');
+    };
+    render() {
+        return (
+            <div>
+                { this.state.counters.map(counter =>
+                    <Counter key={counter.id} onDelete={this.handleDelete} value={counter.value} id={counter.id} />
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        value: this.props.value
+    };
+    handleIncrement = (product) => {
+        // this.props.value = 0;
+        this.setState({ value: this.state.value + 1 });
+    };
+    render() {
+        console.log(this.props);
+        return (
+            <div>
+                <h4>{this.props.value}</h4>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={ () => this.handleIncrement({ id: 1})} className="btn btn-secondary btn-sm">Increment</button>
+                <button onClick={this.props.onDelete} className="btn btn-danger btn-sm m-2">Delete</button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.value === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { value } = this.state;
+        return value === 0 ? 'Zero' : value;
+    }
+}
+
+export default Counter;
+/*=============== 49.Updating the State (Обнавления состояния) ==================*/
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        value: this.props.value
+    };
+    handleIncrement = (product) => {
+        // this.props.value = 0;
+        this.setState({ value: this.state.value + 1 });
+    };
+    render() {
+        console.log(this.props);
+        return (
+            <div>
+                <h4>{this.props.value}</h4>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={ () => this.handleIncrement({ id: 1})} className="btn btn-secondary btn-sm">Increment</button>
+                <button
+                    onClick={() => this.props.onDelete(this.props.id)}
+                    className="btn btn-danger btn-sm m-2"
+                >
+                    Delete
+                </button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.value === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { value } = this.state;
+        return value === 0 ? 'Zero' : value;
+    }
+}
+
+export default Counter;
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 4 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    handleDelete = (counterId) => {
+        console.log('Event Handler Called', counterId);
+    };
+    render() {
+        return (
+            <div>
+                { this.state.counters.map(counter =>
+                    <Counter key={counter.id} onDelete={this.handleDelete} value={counter.value} id={counter.id} />
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 4 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    handleDelete = (counterId) => {
+        const counters = this.state.counters.filter(counter => counter.id !== counterId);
+        this.setState({ counters });
+    };
+    render() {
+        return (
+            <div>
+                { this.state.counters.map(counter =>
+                    <Counter
+                        key={counter.id}
+                        onDelete={this.handleDelete}
+                        value={counter.value}
+                        counter={counter}
+                    />
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    state = {
+        value: this.props.counter.value
+    };
+    handleIncrement = () => {
+        this.setState({ value: this.state.value + 1 });
+    };
+    render() {
+        return (
+            <div>
+                <h4>{this.props.value}</h4>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button onClick={ () => this.handleIncrement({ id: 1})} className="btn btn-secondary btn-sm">Increment</button>
+                <button
+                    onClick={() => this.props.onDelete(this.props.counter.id)}
+                    className="btn btn-danger btn-sm m-2"
+                >
+                    Delete
+                </button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.state.value === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { value } = this.state;
+        return value === 0 ? 'Zero' : value;
+    }
+}
+
+export default Counter;
+/*=============== 50.Single Source of Truth (Единый Источник Истины) ==================*/
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 4 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    handleReset = () => {
+        const counters = this.state.counters.map(c => {
+            c.value = 0;
+            return c;
+        });
+        this.setState({ counters });
+    };
+    handleDelete = (counterId) => {
+        const counters = this.state.counters.filter(counter => counter.id !== counterId);
+        this.setState({ counters });
+    };
+    render() {
+        return (
+            <div>
+                <button
+                    onClick={this.handleReset}
+                    className="btn btn-primary btn-sm m-2"
+                >
+                    Reset
+                </button>
+                { this.state.counters.map(counter =>
+                    <Counter
+                        key={counter.id}
+                        onDelete={this.handleDelete}
+                        value={counter.value}
+                        counter={counter}
+                    />
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//Counters (counters[]) -> Counter
+/*=============== 51.Removing the Local State (Удаление местного состояния) ==================*/
+//[] -> (Data) <--> (Events) <- Controlled Component
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 4 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    handleIncrement = counter => {
+        const counters = [...this.state.counters];
+        const index = counters.indexOf(counter);
+        counters[index] = { ...counter };
+        counters[index].value++;
+        this.setState({ counters });
+    };
+    handleReset = () => {
+        const counters = this.state.counters.map(c => {
+            c.value = 0;
+            return c;
+        });
+        this.setState({ counters });
+    };
+    handleDelete = (counterId) => {
+        const counters = this.state.counters.filter(counter => counter.id !== counterId);
+        this.setState({ counters });
+    };
+    render() {
+        return (
+            <div>
+                <button
+                    onClick={this.handleReset}
+                    className="btn btn-primary btn-sm m-2"
+                >
+                    Reset
+                </button>
+                { this.state.counters.map(counter =>
+                    <Counter
+                        key={counter.id}
+                        onDelete={this.handleDelete}
+                        onIncrement={this.handleIncrement}
+                        counter={counter}
+                    />
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    // state = {
+    //     value: this.props.counter.value
+    // };
+    // handleIncrement = () => {
+    //     this.setState({ value: this.state.value + 1 });
+    // };
+    render() {
+        return (
+            <div>
+                <h4>{this.props.value}</h4>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button
+                    // onClick={ () => this.handleIncrement({ id: 1})}
+                    onClick={ () => this.props.onIncrement(this.props.counter) }
+                    className="btn btn-secondary btn-sm"
+                >
+                    Increment
+                </button>
+                <button
+                    onClick={() => this.props.onDelete(this.props.counter.id)}
+                    className="btn btn-danger btn-sm m-2"
+                >
+                    Delete
+                </button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        // classes += this.state.value === 0 ? "warning" : "primary";
+        classes += this.props.counter.value === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        // let { value } = this.state;
+        let { value } = this.props.counter;
+        return value === 0 ? 'Zero' : value;
+    }
+}
+
+export default Counter;
+/*=============== 52.Multiple Components in Sync (Синхронизация нескольких компонентов) ==================*/
+//Components (Компоненты)
+//App
+//NavBar | Counters (counters[]) -> (props) Counter
+//App (counters[])
+//NavBar | Counters (counters[]) -> (props) Counter
+//index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+import "bootstrap/dist/css/bootstrap.css";
+
+ReactDOM.render(<App />, document.getElementById('root'));
+serviceWorker.unregister();
+//App.js
+import React from 'react';
+import NavBar from './components/navbar';
+import Counters from './components/counters';
+import './App.css';
+
+function App() {
+    return (
+        <React.Fragment>
+            <NavBar />
+            <main className="container">
+                <Counters />
+            </main>
+        </React.Fragment>
+    );
+}
+
+export default App;
+//navbar.jsx
+import React, { Component } from 'react';
+
+class NavBar extends Component {
+    state = {}
+    render() {
+        return (
+            <nav className="navbar navbar-light bg-light">
+                <a className="navbar-brand" href="#">
+                    Navbar
+                </a>
+            </nav>
+        );
+    }
+}
+
+export default NavBar;
+/*=============== 53.Lifting the State Up (Поднимая состояние) ==================*/
+//App.js
+import React, { Component } from 'react';
+import NavBar from './components/navbar';
+import Counters from './components/counters';
+import './App.css';
+
+class App extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 0 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    handleIncrement = counter => {
+        const counters = [...this.state.counters];
+        const index = counters.indexOf(counter);
+        counters[index] = { ...counter };
+        counters[index].value++;
+        this.setState({ counters });
+    };
+    handleReset = () => {
+        const counters = this.state.counters.map(c => {
+            c.value = 0;
+            return c;
+        });
+        this.setState({ counters });
+    };
+    handleDelete = (counterId) => {
+        const counters = this.state.counters.filter(counter => counter.id !== counterId);
+        this.setState({ counters });
+    };
+    render() {
+        return (
+            <React.Fragment>
+                <NavBar
+                    totalCounters={this.state.counters.filter(c => c.value > 0).length}
+                />
+                <main className="container">
+                    <Counters
+                        counters={this.state.counters}
+                        onReset={this.handleReset}
+                        onIncrement={this.handleIncrement}
+                        onDelete={this.handleDelete}
+                    />
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    render() {
+        return (
+            <div>
+                <button
+                    onClick={this.props.onReset}
+                    className="btn btn-primary btn-sm m-2"
+                >
+                    Reset
+                </button>
+                { this.props.counters.map(counter =>
+                    <Counter
+                        key={counter.id}
+                        onDelete={this.props.onDelete}
+                        onIncrement={this.props.onIncrement}
+                        counter={counter}
+                    />
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//navbar.jsx
+import React, { Component } from 'react';
+
+class NavBar extends Component {
+    state = {}
+    render() {
+        return (
+            <nav className="navbar navbar-light bg-light">
+                <a className="navbar-brand" href="#">
+                    Navbar
+                    <span className="badge badge-pill badge-secondary ml-2">{this.props.totalCounters}</span>
+                </a>
+            </nav>
+        );
+    }
+}
+
+export default NavBar;
+/*=============== 54.Stateless Functional Components (Функциональные компоненты без состояния) ==================*/
 
 
 
