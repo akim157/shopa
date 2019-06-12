@@ -1826,6 +1826,1456 @@ class NavBar extends Component {
 
 export default NavBar;
 /*=============== 54.Stateless Functional Components (Функциональные компоненты без состояния) ==================*/
+//navbar.jsx
+import React, { Component } from 'react';
+
+const NavBar = (props) => {
+    return (
+        <nav className="navbar navbar-light bg-light">
+            <a className="navbar-brand" href="#">
+                Navbar{" "}
+                <span className="badge badge-pill badge-secondary ml-2">
+                        {props.totalCounters}
+                    </span>
+            </a>
+        </nav>
+    );
+};
+
+export default NavBar;
+/*=============== 55.Destructuring Arguments (Разрушительные аргументы) ==================*/
+//navbar.jsx
+import React, { Component } from 'react';
+
+const NavBar = ({ totalCounters }) => {
+    return (
+        <nav className="navbar navbar-light bg-light">
+            <a className="navbar-brand" href="#">
+                Navbar{" "}
+                <span className="badge badge-pill badge-secondary ml-2">
+                    {totalCounters}
+                </span>
+            </a>
+        </nav>
+    );
+};
+
+export default NavBar;
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    render() {
+        const { onReset, counters, onDelete, onIncrement } = this.props;
+        return (
+            <div>
+                <button
+                    onClick={onReset}
+                    className="btn btn-primary btn-sm m-2"
+                >
+                    Reset
+                </button>
+                { counters.map(counter =>
+                    <Counter
+                        key={counter.id}
+                        onDelete={onDelete}
+                        onIncrement={onIncrement}
+                        counter={counter}
+                    />
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+/*=============== 56.Lifecycle Hooks (Крючки жизненного цикла) ==================*/
+//Mount (Гора, крепление) -> Constructor (Конструктор) | render (оказывать) | componentDidMount (компонент сделал крепление)
+//Update (Обнавить) -> render | componentDidUpdate
+//Unmount (Размонтируйте) -> componentWillUnmount (Компонент будет размонтирован)
+/*=============== 57.Mounting Phase (Фаза монтажа) ==================*/
+// App - Constructor {}
+// App - Rendered
+// NavBar - Rendered
+// Counters Rendered
+// Counter - Rendered 4
+// App - Mounted
+/*=============== 58.Updating Phase (Фаза обнавления) ==================*/
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    componentDidUpdate(prevProps, prevState){
+        console.log('prevProps', prevProps);
+        console.log('prevState', prevState);
+        if (prevProps.counter.value !== this.props.counter.value) {
+            //Ajax call and get new data from the server (Ajax позвони и получи новые данные с сервера)
+        }
+    }
+    render() {
+        console.log('Counter - Rendered');
+        return (
+            <div>
+                <h4>{this.props.value}</h4>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button
+                    onClick={ () => this.props.onIncrement(this.props.counter) }
+                    className="btn btn-secondary btn-sm"
+                >
+                    Increment
+                </button>
+                <button
+                    onClick={() => this.props.onDelete(this.props.counter.id)}
+                    className="btn btn-danger btn-sm m-2"
+                >
+                    Delete
+                </button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        classes += this.props.counter.value === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        let { value } = this.props.counter;
+        return value === 0 ? 'Zero' : value;
+    }
+}
+
+export default Counter;
+//App - Rendered
+// NavBar - Rendered
+// Counters Rendered
+// Counter - Rendered
+// prevProps {onDelete: ƒ, onIncrement: ƒ, counter: {…}}
+// prevState null
+// prevProps {onDelete: ƒ, onIncrement: ƒ, counter: {…}}
+// prevState null
+// prevProps {onDelete: ƒ, onIncrement: ƒ, counter: {…}}
+// prevState null
+// prevProps {onDelete: ƒ, onIncrement: ƒ, counter: {…}}
+// prevState null
+/*=============== 59.Unmounthing Phase (Фаза размонтирования) ==================*/
+// App - Rendered
+// NavBar - Rendered
+// Counters Rendered
+// Counter - Rendered
+// Counter - Unmount
+// prevProps {onDelete: ƒ, onIncrement: ƒ, counter: {…}}
+// prevState null
+// prevProps {onDelete: ƒ, onIncrement: ƒ, counter: {…}}
+// prevState null
+// prevProps {onDelete: ƒ, onIncrement: ƒ, counter: {…}}
+// prevState null
+/*=============== 60.Exercise - Decrement Button (Упражнение - кнопка декремента) ==================*/
+//Zero + - X
+/*=============== 61.Solution - Decrement Button (Решение - Кнопка уменьшения) ==================*/
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    componentDidUpdate(prevProps, prevState){
+        // console.log('Counter - Updated');
+        console.log('prevProps', prevProps);
+        console.log('prevState', prevState);
+        if (prevProps.counter.value !== this.props.counter.value) {
+            //Ajax call and get new data from the server (Ajax позвони и получи новые данные с сервера)
+
+        }
+    }
+    componentWillUnmount() {
+        console.log('Counter - Unmount');
+    }
+    render() {
+        console.log('Counter - Rendered');
+        return (
+            <div>
+                <h4>{this.props.value}</h4>
+                <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                <button
+                    // onClick={ () => this.handleIncrement({ id: 1})}
+                    onClick={ () => this.props.onIncrement(this.props.counter) }
+                    className="btn btn-secondary btn-sm mr-2"
+                >
+                    +
+                </button>
+                <button
+                    onClick={ () => this.props.onDecrement(this.props.counter) }
+                    className="btn btn-secondary btn-sm"
+                >
+                    -
+                </button>
+                <button
+                    onClick={() => this.props.onDelete(this.props.counter.id)}
+                    className="btn btn-danger btn-sm m-2"
+                >
+                    Delete
+                </button>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        // classes += this.state.value === 0 ? "warning" : "primary";
+        classes += this.props.counter.value === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        // let { value } = this.state;
+        let { value } = this.props.counter;
+        return value === 0 ? 'Zero' : value;
+    }
+}
+
+export default Counter;
+//counters.jsx
+import React, { Component } from 'react';
+import Counter from './counter';
+
+class Counters extends Component {
+    render() {
+        console.log('Counters Rendered');
+        const { onReset, counters, onDelete, onIncrement, onDecrement } = this.props;
+        return (
+            <div>
+                <button
+                    onClick={onReset}
+                    className="btn btn-primary btn-sm m-2"
+                >
+                    Reset
+                </button>
+                { counters.map(counter =>
+                    <Counter
+                        key={counter.id}
+                        onDelete={onDelete}
+                        onIncrement={onIncrement}
+                        onDecrement={onDecrement}
+                        counter={counter}
+                    />
+                )}
+            </div>
+        );
+    }
+}
+
+export default Counters;
+//App.js
+import React, { Component } from 'react';
+import NavBar from './components/navbar';
+import Counters from './components/counters';
+import './App.css';
+
+class App extends Component {
+    state = {
+        counters: [
+            { id: 1, value: 0 },
+            { id: 2, value: 0 },
+            { id: 3, value: 0 },
+            { id: 4, value: 0 }
+        ]
+    };
+    constructor(props) {
+        super(props);
+        console.log('App - Constructor', this.props);
+        // this.state = this.props.something;
+    }
+    componentDidMount() {
+        //Ajax call
+        // this.setState({ movies })
+        console.log('App - Mounted');
+    }
+    handleIncrement = counter => {
+        const counters = [...this.state.counters];
+        const index = counters.indexOf(counter);
+        counters[index] = { ...counter };
+        counters[index].value++;
+        this.setState({ counters });
+    };
+    handleDecrement = counter => {
+        const counters = [...this.state.counters];
+        const index = counters.indexOf(counter);
+        counters[index] = { ...counter };
+        counters[index].value--;
+        this.setState({ counters });
+    }
+    handleReset = () => {
+        const counters = this.state.counters.map(c => {
+            c.value = 0;
+            return c;
+        });
+        this.setState({ counters });
+    };
+    handleDelete = (counterId) => {
+        const counters = this.state.counters.filter(counter => counter.id !== counterId);
+        this.setState({ counters });
+    };
+    render() {
+        console.log('App - Rendered');
+        return (
+            <React.Fragment>
+                <NavBar
+                    totalCounters={this.state.counters.filter(c => c.value > 0).length}
+                />
+                <main className="container">
+                    <Counters
+                        counters={this.state.counters}
+                        onReset={this.handleReset}
+                        onIncrement={this.handleIncrement}
+                        onDecrement={this.handleDecrement}
+                        onDelete={this.handleDelete}
+                    />
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+/////////////////////////////
+//counter.jsx
+import React, {Component} from 'react';
+
+class Counter extends Component {
+    componentDidUpdate(prevProps, prevState){
+        // console.log('Counter - Updated');
+        console.log('prevProps', prevProps);
+        console.log('prevState', prevState);
+        if (prevProps.counter.value !== this.props.counter.value) {
+            //Ajax call and get new data from the server (Ajax позвони и получи новые данные с сервера)
+
+        }
+    }
+    componentWillUnmount() {
+        console.log('Counter - Unmount');
+    }
+    render() {
+        console.log('Counter - Rendered');
+        return (
+            <div className="row">
+                <div className="col-1">
+                    <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+                </div>
+                <div className="col">
+                    <button
+                        onClick={ () => this.props.onIncrement(this.props.counter) }
+                        className="btn btn-secondary btn-sm"
+                    >
+                        +
+                    </button>
+                    <button
+                        onClick={ () => this.props.onDecrement(this.props.counter) }
+                        className="btn btn-secondary btn-sm m-2"
+                        disabled={this.props.counter.value === 0}
+                    >
+                        -
+                    </button>
+                    <button
+                        onClick={() => this.props.onDelete(this.props.counter.id)}
+                        className="btn btn-danger btn-sm"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </div>
+        );
+    }
+    getBadgeClasses() {
+        let classes = "badge m-2 badge-";
+        // classes += this.state.value === 0 ? "warning" : "primary";
+        classes += this.props.counter.value === 0 ? "warning" : "primary";
+        return classes;
+    }
+    formatCount() {
+        // let { value } = this.state;
+        let { value } = this.props.counter;
+        return value === 0 ? 'Zero' : value;
+    }
+}
+
+export default Counter;
+/*=============== 62.Exercise - Like Component (Упражнение - как компонент) ==================*/
+/*=============== 63.Solution - Like Component (Решение - как компонент) ==================*/
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import { getMovies } from '../services/fakeMovieService';
+
+class Movies extends Component {
+    state = {
+        movies: getMovies()
+    };
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+
+        return (
+            <React.Fragment>
+                <p>Showing {this.state.movies.length} movies in the database.</p>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Stock</th>
+                        <th>Rate</th>
+                        <th />
+                        <th />
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { this.state.movies.map(movie => (
+                        <tr key={movie._id}>
+                            <td>{movie.title}</td>
+                            <td>{movie.genre.name}</td>
+                            <td>{movie.numberInStock}</td>
+                            <td>{movie.dailyRentalRate}</td>
+                            <td>
+                                <Like liked={true} />
+                            </td>
+                            <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </React.Fragment>
+        );
+    }
+}
+
+export default Movies;
+//like.jsx
+import React, {Component} from 'react';
+//Input: liked: boolean
+//Output: onClick
+class Like extends Component {
+    render() {
+        let classes = "fa fa-heart";
+        if(!this.props.liked) classes += "-o";
+        return <i className={classes}></i>;
+    }
+}
+
+export default Like;
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import { getMovies } from '../services/fakeMovieService';
+
+class Movies extends Component {
+    state = {
+        movies: getMovies()
+    };
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = () => {
+        console.log('Like Clicked');
+    };
+    render() {
+        const { length: count } = this.state.movies;
+
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+
+        return (
+            <React.Fragment>
+                <p>Showing {this.state.movies.length} movies in the database.</p>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Stock</th>
+                        <th>Rate</th>
+                        <th />
+                        <th />
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { this.state.movies.map(movie => (
+                        <tr key={movie._id}>
+                            <td>{movie.title}</td>
+                            <td>{movie.genre.name}</td>
+                            <td>{movie.numberInStock}</td>
+                            <td>{movie.dailyRentalRate}</td>
+                            <td>
+                                <Like
+                                    liked={movie.liked}
+                                    onClick={this.handleLike}
+                                />
+                            </td>
+                            <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </React.Fragment>
+        );
+    }
+}
+
+export default Movies;
+//like.jsx
+import React, {Component} from 'react';
+//Input: liked: boolean
+//Output: onClick
+class Like extends Component {
+    render() {
+        let classes = "fa fa-heart";
+        if(!this.props.liked) classes += "-o";
+        return <i
+            onClick={this.props.onClick}
+            style={{cursor: "pointer"}}
+            className={classes}
+        />;
+    }
+}
+
+export default Like;
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import { getMovies } from '../services/fakeMovieService';
+
+class Movies extends Component {
+    state = {
+        movies: getMovies()
+    };
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+
+        return (
+            <React.Fragment>
+                <p>Showing {this.state.movies.length} movies in the database.</p>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Stock</th>
+                        <th>Rate</th>
+                        <th />
+                        <th />
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { this.state.movies.map(movie => (
+                        <tr key={movie._id}>
+                            <td>{movie.title}</td>
+                            <td>{movie.genre.name}</td>
+                            <td>{movie.numberInStock}</td>
+                            <td>{movie.dailyRentalRate}</td>
+                            <td>
+                                <Like
+                                    liked={movie.liked}
+                                    onClick={() => this.handleLike(movie)}
+                                />
+                            </td>
+                            <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </React.Fragment>
+        );
+    }
+}
+
+export default Movies;
+//like.jsx
+import React from 'react';
+
+const Like = props => {
+    let classes = "fa fa-heart";
+    if(props.liked) classes += "-o";
+    return <i
+        onClick={props.onClick}
+        style={{cursor: "pointer"}}
+        className={classes}
+    />;
+};
+
+export default Like;
+/*=============== 64.Summary (Резюме) ==================*/
+//Props (Реквизит)
+//Raising and Handling Events (Повышение и обработка событий)
+//Lifting the State (Снятие состояния)
+//Functional Components (Функциональные компоненты)
+//Lifecycle Hooks (Крючки жизненного цикла)
+/*=============== 65.Introduction (Вступление) ==================*/
+//Pagination, Filtering and Sorting (Нумерация страниц, фильтрация и сортировка)
+/*=============== 66.Exercise - Pagination Component (Упражнение - Компонент пагинации) ==================*/
+/*=============== 67.Pagination - Component Interface (Пагинация - интерфейс компонентов) ==================*/
+//pagination.jsx
+import React, {Component} from 'react';
+
+const Pagination = props => {
+    return null;
+};
+
+export default Pagination;
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+
+class Movies extends Component {
+    state = {
+        movies: getMovies(),
+        pageSize: 4
+    };
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        console.log(page);
+    };
+    render() {
+        const { length: count } = this.state.movies;
+
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+
+        return (
+            <React.Fragment>
+                <p>Showing {this.state.movies.length} movies in the database.</p>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Stock</th>
+                        <th>Rate</th>
+                        <th />
+                        <th />
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { this.state.movies.map(movie => (
+                        <tr key={movie._id}>
+                            <td>{movie.title}</td>
+                            <td>{movie.genre.name}</td>
+                            <td>{movie.numberInStock}</td>
+                            <td>{movie.dailyRentalRate}</td>
+                            <td>
+                                <Like
+                                    liked={movie.liked}
+                                    onClick={() => this.handleLike(movie)}
+                                />
+                            </td>
+                            <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+                <Pagination
+                    itemsCount={count}
+                    pageSize={this.state.pageSize}
+                    onPageChange={this.handlePageChange}
+                />
+            </React.Fragment>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 68.Pagination - Displaying Pages (Нумерация страниц - Отображение страниц) ==================*/
+//npm i lodash@4.17.10 (устанавливаем библиотеку утилит JavaScrip)
+//https://lodash.com/
+//pagination.jsx
+import React, {Component} from 'react';
+import _ from 'lodash';
+
+const Pagination = props => {
+    // [1,2,3].map()
+    const { itemsCount, pageSize } = props;
+    const pageCount = itemsCount / pageSize;
+    const pages = _.range(1, pageCount + 1);
+    return <nav>
+        <ul className="pagination">
+            { pages.map(page => (
+                <li key={page} className="page-item">
+                    <a className="page-link" href="#">{page}</a>
+                </li>
+            ))}
+        </ul>
+    </nav>;
+};
+
+export default Pagination;
+//pagination.jsx
+import React, {Component} from 'react';
+import _ from 'lodash';
+
+const Pagination = props => {
+    const { itemsCount, pageSize } = props;
+    const pageCount = Math.ceil(itemsCount / pageSize);
+    if (pageCount === 1) return null;
+    const pages = _.range(1, pageCount + 1);
+    return <nav>
+        <ul className="pagination">
+            { pages.map(page => (
+                <li key={page} className="page-item">
+                    <a className="page-link" href="#">{page}</a>
+                </li>
+            ))}
+        </ul>
+    </nav>;
+};
+
+export default Pagination;
+/*=============== 69.Pagination - Handling Page Changes (Пагинация - обработка изменений страницы) ==================*/
+//pagination.jsx
+import React, {Component} from 'react';
+import _ from 'lodash';
+
+const Pagination = props => {
+    const { itemsCount, pageSize, onPageChange } = props;
+    const pageCount = Math.ceil(itemsCount / pageSize);
+    if (pageCount === 1) return null;
+    const pages = _.range(1, pageCount + 1);
+    return <nav>
+        <ul className="pagination">
+            { pages.map(page => (
+                <li key={page} className="page-item active">
+                    <a className="page-link" onClick={() => onPageChange(page)}>{page}</a>
+                </li>
+            ))}
+        </ul>
+    </nav>;
+};
+
+export default Pagination;
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+
+class Movies extends Component {
+    state = {
+        movies: getMovies(),
+        pageSize: 4,
+        currentPage: 1
+    };
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage } = this.state;
+
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+
+        return (
+            <React.Fragment>
+                <p>Showing {this.state.movies.length} movies in the database.</p>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Stock</th>
+                        <th>Rate</th>
+                        <th />
+                        <th />
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { this.state.movies.map(movie => (
+                        <tr key={movie._id}>
+                            <td>{movie.title}</td>
+                            <td>{movie.genre.name}</td>
+                            <td>{movie.numberInStock}</td>
+                            <td>{movie.dailyRentalRate}</td>
+                            <td>
+                                <Like
+                                    liked={movie.liked}
+                                    onClick={() => this.handleLike(movie)}
+                                />
+                            </td>
+                            <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+                <Pagination
+                    itemsCount={count}
+                    pageSize={pageSize}
+                    onPageChange={this.handlePageChange}
+                    currentPage={currentPage}
+                />
+            </React.Fragment>
+        );
+    }
+}
+
+export default Movies;
+//pagination.jsx
+import React, {Component} from 'react';
+import _ from 'lodash';
+
+const Pagination = props => {
+    const { itemsCount, pageSize, onPageChange, currentPage } = props;
+    console.log(currentPage);
+    const pageCount = Math.ceil(itemsCount / pageSize);
+    if (pageCount === 1) return null;
+    const pages = _.range(1, pageCount + 1);
+    return <nav>
+        <ul className="pagination">
+            { pages.map(page => (
+                <li key={page} className={ page === currentPage ? "page-item active" : "page-item"}>
+                    <a className="page-link" onClick={() => onPageChange(page)}>{page}</a>
+                </li>
+            ))}
+        </ul>
+    </nav>;
+};
+
+export default Pagination;
+/*=============== 70.Pagination - Paginating Data (Пагинация данных) ==================*/
+//paginate.js
+import _ from 'lodash';
+
+export function paginate(items, pageNumber, pageSize) {
+    const startIndex = (pageNumber - 1) * pageSize;
+    // _.slice(items, startIndex);
+    // _.take()
+    return _(items).slice(startIndex).take(pageSize).value();
+}
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { paginate } from "../utils/paginate";
+
+class Movies extends Component {
+    state = {
+        movies: getMovies(),
+        pageSize: 4,
+        currentPage: 1
+    };
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, movies: allMovies } = this.state;
+
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const movies = paginate(allMovies, currentPage, pageSize);
+        console.log(movies);
+        return (
+            <React.Fragment>
+                <p>Showing {this.state.movies.length} movies in the database.</p>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Stock</th>
+                        <th>Rate</th>
+                        <th />
+                        <th />
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { movies.map(movie => (
+                        <tr key={movie._id}>
+                            <td>{movie.title}</td>
+                            <td>{movie.genre.name}</td>
+                            <td>{movie.numberInStock}</td>
+                            <td>{movie.dailyRentalRate}</td>
+                            <td>
+                                <Like
+                                    liked={movie.liked}
+                                    onClick={() => this.handleLike(movie)}
+                                />
+                            </td>
+                            <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+                <Pagination
+                    itemsCount={count}
+                    pageSize={pageSize}
+                    onPageChange={this.handlePageChange}
+                    currentPage={currentPage}
+                />
+            </React.Fragment>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 71.Pagination - Type Checking with Prop Types (Проверка типов с типами проп) ==================*/
+//npm i prop-types@15.6.2
+//pagination.jsx
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+
+const Pagination = props => {
+    const { itemsCount, pageSize, onPageChange, currentPage } = props;
+    console.log(currentPage);
+    const pageCount = Math.ceil(itemsCount / pageSize);
+    if (pageCount === 1) return null;
+    const pages = _.range(1, pageCount + 1);
+    return <nav>
+        <ul className="pagination">
+            { pages.map(page => (
+                <li key={page} className={ page === currentPage ? "page-item active" : "page-item"}>
+                    <a className="page-link" onClick={() => onPageChange(page)}>{page}</a>
+                </li>
+            ))}
+        </ul>
+    </nav>;
+};
+
+Pagination.propTypes = {
+    itemsCount: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+    onPageChange: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired
+};
+
+export default Pagination;
+/*=============== 72.Exercise - ListGroup Component (Упражнение - Компонент ListGroup) ==================*/
+/*=============== 73.Filtering - Component Interface (Фильтрация - интерфейс компонентов) ==================*/
+//listGroup.jsx
+import React from 'react';
+
+const ListGroup = () => {
+    return null;
+}
+
+export default ListGroup;
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1
+    };
+    componentDidMount() {
+        this.setState({ movies: getMovies(), genres: getGenres() });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        console.log(genre);
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, movies: allMovies } = this.state;
+
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const movies = paginate(allMovies, currentPage, pageSize);
+        return (
+            <div className="row">
+                <div className="col-2">
+                    <ListGroup
+                        items={this.state.genres}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {this.state.movies.length} movies in the database.</p>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Genre</th>
+                            <th>Stock</th>
+                            <th>Rate</th>
+                            <th />
+                            <th />
+                        </tr>
+                        </thead>
+                        <tbody>
+                        { movies.map(movie => (
+                            <tr key={movie._id}>
+                                <td>{movie.title}</td>
+                                <td>{movie.genre.name}</td>
+                                <td>{movie.numberInStock}</td>
+                                <td>{movie.dailyRentalRate}</td>
+                                <td>
+                                    <Like
+                                        liked={movie.liked}
+                                        onClick={() => this.handleLike(movie)}
+                                    />
+                                </td>
+                                <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    <Pagination
+                        itemsCount={count}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 74.Filtering - displaying items (Фильтрация - отображение элементов) ==================*/
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1
+    };
+    componentDidMount() {
+        this.setState({ movies: getMovies(), genres: getGenres() });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        console.log(genre);
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, movies: allMovies } = this.state;
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const movies = paginate(allMovies, currentPage, pageSize);
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        textProperty="name"
+                        valueProperty="_id"
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {this.state.movies.length} movies in the database.</p>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Genre</th>
+                            <th>Stock</th>
+                            <th>Rate</th>
+                            <th />
+                            <th />
+                        </tr>
+                        </thead>
+                        <tbody>
+                        { movies.map(movie => (
+                            <tr key={movie._id}>
+                                <td>{movie.title}</td>
+                                <td>{movie.genre.name}</td>
+                                <td>{movie.numberInStock}</td>
+                                <td>{movie.dailyRentalRate}</td>
+                                <td>
+                                    <Like
+                                        liked={movie.liked}
+                                        onClick={() => this.handleLike(movie)}
+                                    />
+                                </td>
+                                <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    <Pagination
+                        itemsCount={count}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+//listGroup.jsx
+import React from 'react';
+
+const ListGroup = props => {
+    const { items, textProperty, valueProperty } = props;
+    return (
+        <ul className="list-group">
+            { items.map(item =>
+                <li key={item[valueProperty]} className="list-group-item">
+                    {item[textProperty]}
+                </li>)
+            }
+        </ul>
+    );
+}
+
+export default ListGroup;
+/*=============== 75.Filtering - Default Props (Фильтрация - Реквизит по умолчанию) ==================*/
+//listGroup.jsx
+import React from 'react';
+
+const ListGroup = props => {
+    const { items, textProperty, valueProperty } = props;
+    return (
+        <ul className="list-group">
+            { items.map(item =>
+                <li key={item[valueProperty]} className="list-group-item">
+                    {item[textProperty]}
+                </li>)
+            }
+        </ul>
+    );
+};
+
+ListGroup.defaultProps = {
+    textProperty: 'name',
+    valueProperty: '_id'
+}
+
+export default ListGroup;
+/*=============== 76.Filtering - Handling Selection (Фильтрация - Выбор обработки) ==================*/
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1
+    };
+    componentDidMount() {
+        this.setState({ movies: getMovies(), genres: getGenres() });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, movies: allMovies } = this.state;
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const movies = paginate(allMovies, currentPage, pageSize);
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {this.state.movies.length} movies in the database.</p>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Genre</th>
+                            <th>Stock</th>
+                            <th>Rate</th>
+                            <th />
+                            <th />
+                        </tr>
+                        </thead>
+                        <tbody>
+                        { movies.map(movie => (
+                            <tr key={movie._id}>
+                                <td>{movie.title}</td>
+                                <td>{movie.genre.name}</td>
+                                <td>{movie.numberInStock}</td>
+                                <td>{movie.dailyRentalRate}</td>
+                                <td>
+                                    <Like
+                                        liked={movie.liked}
+                                        onClick={() => this.handleLike(movie)}
+                                    />
+                                </td>
+                                <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    <Pagination
+                        itemsCount={count}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+//listGroup.jsx
+import React from 'react';
+
+const ListGroup = props => {
+    const {
+        items,
+        textProperty,
+        valueProperty,
+        onItemSelect,
+        selectedItem
+    } = props;
+    return (
+        <ul className="list-group">
+            { items.map(item =>
+                <li
+                    onClick={() => onItemSelect(item) }
+                    key={item[valueProperty]}
+                    className={ item === selectedItem ? "list-group-item active" : "list-group-item"}
+                >
+                    {item[textProperty]}
+                </li>)
+            }
+        </ul>
+    );
+};
+
+ListGroup.defaultProps = {
+    textProperty: 'name',
+    valueProperty: '_id'
+}
+
+export default ListGroup;
+/*=============== 77.Filtering - Implementing Filtering (Фильтрация - Реализация фильтрации) ==================*/
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1
+    };
+    componentDidMount() {
+        this.setState({ movies: getMovies(), genres: getGenres() });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, selectedGenre, movies: allMovies } = this.state;
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const filtered = selectedGenre
+            ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+            : allMovies;
+        const movies = paginate(filtered, currentPage, pageSize);
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {filtered.length} movies in the database.</p>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Genre</th>
+                            <th>Stock</th>
+                            <th>Rate</th>
+                            <th />
+                            <th />
+                        </tr>
+                        </thead>
+                        <tbody>
+                        { movies.map(movie => (
+                            <tr key={movie._id}>
+                                <td>{movie.title}</td>
+                                <td>{movie.genre.name}</td>
+                                <td>{movie.numberInStock}</td>
+                                <td>{movie.dailyRentalRate}</td>
+                                <td>
+                                    <Like
+                                        liked={movie.liked}
+                                        onClick={() => this.handleLike(movie)}
+                                    />
+                                </td>
+                                <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    <Pagination
+                        itemsCount={filtered.length}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 78.Filtering - Adding All Genres (Фильтрация - Добавление всех жанров) ==================*/
+
+
+
+
+
+
+
 
 
 
