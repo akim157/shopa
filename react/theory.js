@@ -3269,6 +3269,1130 @@ class Movies extends Component {
 
 export default Movies;
 /*=============== 78.Filtering - Adding All Genres (Фильтрация - Добавление всех жанров) ==================*/
+//movies.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1
+    };
+    componentDidMount() {
+        const genres = [{ name: 'All Genres'}, ...getGenres()]
+        this.setState({ movies: getMovies(), genres });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, currentPage: 1 });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, selectedGenre, movies: allMovies } = this.state;
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const filtered = selectedGenre && selectedGenre._id
+            ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+            : allMovies;
+        const movies = paginate(filtered, currentPage, pageSize);
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {filtered.length} movies in the database.</p>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Genre</th>
+                            <th>Stock</th>
+                            <th>Rate</th>
+                            <th />
+                            <th />
+                        </tr>
+                        </thead>
+                        <tbody>
+                        { movies.map(movie => (
+                            <tr key={movie._id}>
+                                <td>{movie.title}</td>
+                                <td>{movie.genre.name}</td>
+                                <td>{movie.numberInStock}</td>
+                                <td>{movie.dailyRentalRate}</td>
+                                <td>
+                                    <Like
+                                        liked={movie.liked}
+                                        onClick={() => this.handleLike(movie)}
+                                    />
+                                </td>
+                                <td><button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button></td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    <Pagination
+                        itemsCount={filtered.length}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 79.Sorting - Extracting Movies Table (Сортировка - Извлечение таблицы фильмов) ==================*/
+//moviesTable.jsx
+import React from 'react';
+import Like from './common/like';
+
+
+const MoviesTable = props => {
+    const { movies, onDelete, onLike } = props;
+    return (
+        <table className="table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Stock</th>
+                <th>Rate</th>
+                <th />
+                <th />
+            </tr>
+            </thead>
+            <tbody>
+            { movies.map(movie => (
+                <tr key={movie._id}>
+                    <td>{movie.title}</td>
+                    <td>{movie.genre.name}</td>
+                    <td>{movie.numberInStock}</td>
+                    <td>{movie.dailyRentalRate}</td>
+                    <td>
+                        <Like
+                            liked={movie.liked}
+                            onClick={() => onLike(movie)}
+                        />
+                    </td>
+                    <td>
+                        <button
+                            onClick={() => onDelete(movie)}
+                            className="btn btn-danger btn-sm"
+                        >
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            ))}
+            </tbody>
+        </table>
+    );
+}
+
+export default MoviesTable
+//movies.jsx
+import React, { Component } from 'react';
+import MoviesTable from './moviesTable';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1
+    };
+    componentDidMount() {
+        const genres = [{ name: 'All Genres'}, ...getGenres()]
+        this.setState({ movies: getMovies(), genres });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, currentPage: 1 });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, selectedGenre, movies: allMovies } = this.state;
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const filtered = selectedGenre && selectedGenre._id
+            ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+            : allMovies;
+        const movies = paginate(filtered, currentPage, pageSize);
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {filtered.length} movies in the database.</p>
+                    <MoviesTable
+                        movies={movies}
+                        onLike={() => this.handleLike}
+                        onDelete={() => this.handleDelete}
+                    />
+                    <Pagination
+                        itemsCount={filtered.length}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 80.Sorting - Raising the Sort Event (Сортировка - Повышение события сортировки) ==================*/
+//moviesTable.jsx
+import React from 'react';
+import Like from './common/like';
+
+
+const MoviesTable = props => {
+    const { movies, onDelete, onLike, onSort } = props;
+    return (
+        <table className="table">
+            <thead>
+            <tr>
+                <th onClick={() => onSort('title')}>Title</th>
+                <th onClick={() => onSort('genre.name')}>Genre</th>
+                <th onClick={() => onSort('numberInStock')}>Stock</th>
+                <th onClick={() => onSort('dailyRentalRate')}>Rate</th>
+                <th />
+                <th />
+            </tr>
+            </thead>
+            <tbody>
+            { movies.map(movie => (
+                <tr key={movie._id}>
+                    <td>{movie.title}</td>
+                    <td>{movie.genre.name}</td>
+                    <td>{movie.numberInStock}</td>
+                    <td>{movie.dailyRentalRate}</td>
+                    <td>
+                        <Like
+                            liked={movie.liked}
+                            onClick={() => onLike(movie)}
+                        />
+                    </td>
+                    <td>
+                        <button
+                            onClick={() => onDelete(movie)}
+                            className="btn btn-danger btn-sm"
+                        >
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            ))}
+            </tbody>
+        </table>
+    );
+}
+
+export default MoviesTable
+//movies.jsx
+import React, { Component } from 'react';
+import MoviesTable from './moviesTable';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1
+    };
+    componentDidMount() {
+        const genres = [{ _id: "", name: 'All Genres'}, ...getGenres()]
+        this.setState({ movies: getMovies(), genres });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, currentPage: 1 });
+    };
+    handleSort = path => {
+        console.log(path);
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, selectedGenre, movies: allMovies } = this.state;
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const filtered = selectedGenre && selectedGenre._id
+            ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+            : allMovies;
+        const movies = paginate(filtered, currentPage, pageSize);
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {filtered.length} movies in the database.</p>
+                    <MoviesTable
+                        movies={movies}
+                        onLike={() => this.handleLike}
+                        onDelete={() => this.handleDelete}
+                        onSort={this.handleSort}
+                    />
+                    <Pagination
+                        itemsCount={filtered.length}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 81.Sorting - Implementing Sorting (Сортировка - Внедрение сортировки) ==================*/
+//movies.jsx
+handleSort = path => {
+    this.setState({ sortColumn: {path, order: 'asc'} });
+};
+//movies.jsx
+import React, { Component } from 'react';
+import MoviesTable from './moviesTable';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+import _ from 'lodash';
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1,
+        sortColumn: { path: 'title', order: 'asc' }
+    };
+    componentDidMount() {
+        const genres = [{ _id: "", name: 'All Genres'}, ...getGenres()]
+        this.setState({ movies: getMovies(), genres });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, currentPage: 1 });
+    };
+    handleSort = path => {
+        const sortColumn = { ...this.state.sortColumn };
+        if (sortColumn.path === path)
+            sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
+        else {
+            sortColumn.path = path;
+            sortColumn.order = 'asc';
+        }
+        this.setState({ sortColumn });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const {
+            pageSize,
+            currentPage,
+            selectedGenre,
+            movies: allMovies,
+            sortColumn
+        } = this.state;
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const filtered = selectedGenre && selectedGenre._id
+            ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+            : allMovies;
+        const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+        const movies = paginate(sorted, currentPage, pageSize);
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {filtered.length} movies in the database.</p>
+                    <MoviesTable
+                        movies={movies}
+                        onLike={() => this.handleLike}
+                        onDelete={() => this.handleDelete}
+                        onSort={this.handleSort}
+                    />
+                    <Pagination
+                        itemsCount={filtered.length}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 82.Sorting - Moving Responsibility (Сортировка - Перемещение ответственности) ==================*/
+//moviesTable.jsx
+import React, { Component } from 'react';
+import Like from './common/like';
+
+class MoviesTable extends Component {
+    raiseSort = path => {
+        const sortColumn = { ...this.props.sortColumn };
+        if (sortColumn.path === path)
+            sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
+        else {
+            sortColumn.path = path;
+            sortColumn.order = 'asc';
+        }
+        this.props.onSort(sortColumn);
+    };
+    render() {
+        const { movies, onDelete, onLike } = this.props;
+        return (
+            <table className="table">
+                <thead>
+                <tr>
+                    <th onClick={() => this.raiseSort('title')}>Title</th>
+                    <th onClick={() => this.raiseSort('genre.name')}>Genre</th>
+                    <th onClick={() => this.raiseSort('numberInStock')}>Stock</th>
+                    <th onClick={() => this.raiseSort('dailyRentalRate')}>Rate</th>
+                    <th />
+                    <th />
+                </tr>
+                </thead>
+                <tbody>
+                { movies.map(movie => (
+                    <tr key={movie._id}>
+                        <td>{movie.title}</td>
+                        <td>{movie.genre.name}</td>
+                        <td>{movie.numberInStock}</td>
+                        <td>{movie.dailyRentalRate}</td>
+                        <td>
+                            <Like
+                                liked={movie.liked}
+                                onClick={() => onLike(movie)}
+                            />
+                        </td>
+                        <td>
+                            <button
+                                onClick={() => onDelete(movie)}
+                                className="btn btn-danger btn-sm"
+                            >
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        );
+    }
+}
+
+export default MoviesTable
+//movies.jsx
+import React, { Component } from 'react';
+import MoviesTable from './moviesTable';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+import _ from 'lodash';
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1,
+        sortColumn: { path: 'title', order: 'asc' }
+    };
+    componentDidMount() {
+        const genres = [{ _id: "", name: 'All Genres'}, ...getGenres()]
+        this.setState({ movies: getMovies(), genres });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, currentPage: 1 });
+    };
+    handleSort = sortColumn => {
+        this.setState({ sortColumn });
+    };
+    render() {
+        const { length: count } = this.state.movies;
+        const {
+            pageSize,
+            currentPage,
+            selectedGenre,
+            movies: allMovies,
+            sortColumn
+        } = this.state;
+        if(count === 0)
+            return <p>There are no movies the database.</p>;
+        const filtered = selectedGenre && selectedGenre._id
+            ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+            : allMovies;
+        const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+        const movies = paginate(sorted, currentPage, pageSize);
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {filtered.length} movies in the database.</p>
+                    <MoviesTable
+                        movies={movies}
+                        sortColumn={sortColumn}
+                        onLike={() => this.handleLike}
+                        onDelete={() => this.handleDelete}
+                        onSort={this.handleSort}
+                    />
+                    <Pagination
+                        itemsCount={filtered.length}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 83.Sorting - Extracting TableHeader (Сортировка - Извлечение заголовка таблицы) ==================*/
+//tableHeader.jsx
+import React, { Component } from 'react';
+
+//columns: array
+//sortColumn: object
+//onSort: function
+
+class TableHeader extends Component {
+    raiseSort = path => {
+        const sortColumn = { ...this.props.sortColumn };
+        if (sortColumn.path === path)
+            sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
+        else {
+            sortColumn.path = path;
+            sortColumn.order = 'asc';
+        }
+        this.props.onSort(sortColumn);
+    };
+    render() {
+        return (
+            <thead>
+            <tr>
+                { this.props.columns.map(column => (
+                    <th
+                        key={column.path || column.key}
+                        onClick={() => this.raiseSort(column.path)}
+                    >
+                        {column.label}
+                    </th>
+                )) }
+            </tr>
+            </thead>
+        );
+    }
+}
+
+export default TableHeader;
+//moviesTable.jsx
+import React, { Component } from 'react';
+import TableHeader from './common/tableHeader';
+import Like from './common/like';
+
+class MoviesTable extends Component {
+    columns = [
+        { path: 'title', label: 'Title' },
+        { path: 'genre.name', label: 'Genre' },
+        { path: 'numberInStock', label: 'Stock' },
+        { path: 'dailyRentalRate', label: 'Rate' },
+        { key: 'like' },
+        { key: 'delete' }
+    ];
+    render() {
+        const { movies, onDelete, onLike, onSort, sortColumn } = this.props;
+        return (
+            <table className="table">
+                <TableHeader
+                    columns={this.columns}
+                    sortColumn={sortColumn}
+                    onSort={onSort}
+                />
+                <tbody>
+                { movies.map(movie => (
+                    <tr key={movie._id}>
+                        <td>{movie.title}</td>
+                        <td>{movie.genre.name}</td>
+                        <td>{movie.numberInStock}</td>
+                        <td>{movie.dailyRentalRate}</td>
+                        <td>
+                            <Like
+                                liked={movie.liked}
+                                onClick={() => onLike(movie)}
+                            />
+                        </td>
+                        <td>
+                            <button
+                                onClick={() => onDelete(movie)}
+                                className="btn btn-danger btn-sm"
+                            >
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        );
+    }
+}
+
+export default MoviesTable
+/*=============== 84.Sorting - Extracting TableBody (Сортировка - Извлечение тела таблицы) ==================*/
+//tableBody.jsx
+import React, { Component } from 'react';
+
+class TableBody extends Component {
+    render() {
+        const { data, columns } = this.props;
+        return (
+            <tbody>
+            {data.map(item =>
+                <tr>
+                    {columns.map(column => <td></td>)}
+                </tr>
+            )}
+            </tbody>
+        );
+    }
+}
+
+export default TableBody;
+//moviesTable.jsx
+import React, { Component } from 'react';
+import TableHeader from './common/tableHeader';
+import Like from './common/like';
+
+class MoviesTable extends Component {
+    columns = [
+        { path: 'title', label: 'Title' },
+        { path: 'genre.name', label: 'Genre' },
+        { path: 'numberInStock', label: 'Stock' },
+        { path: 'dailyRentalRate', label: 'Rate' },
+        { key: 'like' },
+        { key: 'delete' }
+    ];
+    render() {
+        const { movies, onDelete, onLike, onSort, sortColumn } = this.props;
+        return (
+            <table className="table">
+                <TableHeader
+                    columns={this.columns}
+                    sortColumn={sortColumn}
+                    onSort={onSort}
+                />
+                <TableBody
+                    data={movies}
+                />
+                <tbody>
+                { movies.map(movie => (
+                    <tr key={movie._id}>
+                        <td>{movie.title}</td>
+                        <td>{movie.genre.name}</td>
+                        <td>{movie.numberInStock}</td>
+                        <td>{movie.dailyRentalRate}</td>
+                        <td>
+                            <Like
+                                liked={movie.liked}
+                                onClick={() => onLike(movie)}
+                            />
+                        </td>
+                        <td>
+                            <button
+                                onClick={() => onDelete(movie)}
+                                className="btn btn-danger btn-sm"
+                            >
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        );
+    }
+}
+
+export default MoviesTable
+/*=============== 85.Sorting - Rendering Cell Content (Сортировка - Рендеринг содержимого ячеек) ==================*/
+//tableBody.jsx
+import React, { Component } from 'react';
+import _ from 'lodash';
+
+class TableBody extends Component {
+    renderCell = (item, column) => {
+        if (column.content) return column.content(item)
+        return _.get(item, column.path);
+    };
+    render() {
+        const { data, columns } = this.props;
+        return (
+            <tbody>
+            {data.map(item =>
+                <tr>
+                    {columns.map(column => <td>{this.renderCell(item, column)}</td>)}
+                </tr>
+            )}
+            </tbody>
+        );
+    }
+}
+
+export default TableBody;
+//moviesTable.jsx
+import React, { Component } from 'react';
+import TableHeader from './common/tableHeader';
+import TableBody from './common/tableBody';
+import Like from './common/like';
+
+// const x = <like></like>; //React Element {}
+
+class MoviesTable extends Component {
+    columns = [
+        { path: 'title', label: 'Title' },
+        { path: 'genre.name', label: 'Genre' },
+        { path: 'numberInStock', label: 'Stock' },
+        { path: 'dailyRentalRate', label: 'Rate' },
+        {
+            key: 'like',
+            content: movie => <Like liked={movie.liked} onClick={() => this.props.onLike(movie)}/>
+        },
+        {
+            key: 'delete',
+            content: movie => (
+                <button
+                    onClick={() => this.props.onDelete(movie)}
+                    className="btn btn-danger btn-sm"
+                >
+                    Delete
+                </button>
+            )
+        }
+    ];
+    render() {
+        const { movies, onDelete, onLike, onSort, sortColumn } = this.props;
+        return (
+            <table className="table">
+                <TableHeader
+                    columns={this.columns}
+                    sortColumn={sortColumn}
+                    onSort={onSort}
+                />
+                <TableBody
+                    data={movies}
+                    columns={this.columns}
+                />
+            </table>
+        );
+    }
+}
+
+export default MoviesTable
+/*=============== 86.Sorting - Unique Keys - Final (Сортировка - Уникальные ключи - финал) ==================*/
+//tableBody.jsx
+// <tbody>
+// {data.map(item =>
+//     <tr key={item._id}>
+//         {columns.map(column => <td key={item._id + (column.path || column.key)}>{this.renderCell(item, column)}</td>)}
+//     </tr>
+// )}
+// </tbody>
+//tableBody.jsx
+import React, { Component } from 'react';
+import _ from 'lodash';
+
+class TableBody extends Component {
+    renderCell = (item, column) => {
+        if (column.content) return column.content(item)
+        return _.get(item, column.path);
+    };
+    createKey = (item, column) => {
+        return item._id + (column.path || column.key);
+    };
+    render() {
+        const { data, columns } = this.props;
+        return (
+            <tbody>
+            {data.map(item =>
+                <tr key={item._id}>
+                    {columns.map(column => <td key={this.createKey(item, column)}>{this.renderCell(item, column)}</td>)}
+                </tr>
+            )}
+            </tbody>
+        );
+    }
+}
+
+export default TableBody;
+/*=============== 87.Sorting - Adding the Sort Icon (Сортировка - Добавление значка сортировки) ==================*/
+//tableHeader.jsx
+import React, { Component } from 'react';
+
+//columns: array
+//sortColumn: object
+//onSort: function
+
+class TableHeader extends Component {
+    raiseSort = path => {
+        const sortColumn = { ...this.props.sortColumn };
+        if (sortColumn.path === path)
+            sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
+        else {
+            sortColumn.path = path;
+            sortColumn.order = 'asc';
+        }
+        this.props.onSort(sortColumn);
+    };
+    renderSortIcon = column => {
+        const { sortColumn } = this.props;
+        if (column.path !== sortColumn.path) return null;
+        if (sortColumn.order === 'asc') return <i className="fa fa-sort-asc"></i>;
+        return <i className="fa fa-sort-desc"></i>;
+    };
+    render() {
+        return (
+            <thead>
+            <tr>
+                { this.props.columns.map(column => (
+                    <th
+                        className="clickable"
+                        key={column.path || column.key}
+                        onClick={() => this.raiseSort(column.path)}
+                    >
+                        {column.label} {this.renderSortIcon(column)}
+                    </th>
+                )) }
+            </tr>
+            </thead>
+        );
+    }
+}
+
+export default TableHeader;
+/*=============== 88.Sorting - Extracting Table (Сортировка - Извлечение таблицы) ==================*/
+//table.jsx
+import React from 'react';
+import TableHeader from './tableHeader';
+import TableBody from './tableBody';
+
+const Table = props => {
+    const { columns, sortColumn, onSort, data } = props;
+    return (
+        <table className="table">
+            <TableHeader
+                columns={columns}
+                sortColumn={sortColumn}
+                onSort={onSort}
+            />
+            <TableBody
+                data={data}
+                columns={columns}
+            />
+        </table>
+    );
+}
+
+export default Table
+//moviesTable.jsx
+import React, { Component } from 'react';
+import Table from './common/table';
+import Like from './common/like';
+
+// const x = <like></like>; //React Element {}
+
+class MoviesTable extends Component {
+    columns = [
+        { path: 'title', label: 'Title' },
+        { path: 'genre.name', label: 'Genre' },
+        { path: 'numberInStock', label: 'Stock' },
+        { path: 'dailyRentalRate', label: 'Rate' },
+        {
+            key: 'like',
+            content: movie => <Like liked={movie.liked} onClick={() => this.props.onLike(movie)}/>
+        },
+        {
+            key: 'delete',
+            content: movie => (
+                <button
+                    onClick={() => this.props.onDelete(movie)}
+                    className="btn btn-danger btn-sm"
+                >
+                    Delete
+                </button>
+            )
+        }
+    ];
+    render() {
+        const { movies, onSort, sortColumn } = this.props;
+        return (
+            <Table
+                columns={this.columns}
+                data={movies}
+                onSort={onSort}
+                sortColumn={sortColumn}
+            />
+        );
+    }
+}
+
+export default MoviesTable
+/*=============== 89.Sorting - Extracting a Method (Сортировка - Извлечение метода) ==================*/
+//movies.jsx
+import React, { Component } from 'react';
+import MoviesTable from './moviesTable';
+import ListGroup from './common/listGroup';
+import Pagination from './common/pagination';
+import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
+import { paginate } from "../utils/paginate";
+import _ from 'lodash';
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        pageSize: 4,
+        currentPage: 1,
+        sortColumn: { path: 'title', order: 'asc' }
+    };
+    componentDidMount() {
+        const genres = [{ _id: "", name: 'All Genres'}, ...getGenres()]
+        this.setState({ movies: getMovies(), genres });
+    }
+    handleDelete = (movie) => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+    };
+    handleLike = movie => {
+        console.log(movie);
+        const movies = [ ...this.state.movies ];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, currentPage: 1 });
+    };
+    handleSort = sortColumn => {
+        this.setState({ sortColumn });
+    };
+    getPageData = () => {
+        const {
+            pageSize,
+            currentPage,
+            selectedGenre,
+            movies: allMovies,
+            sortColumn
+        } = this.state;
+
+        const filtered = selectedGenre && selectedGenre._id
+            ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+            : allMovies;
+        const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+        const movies = paginate(sorted, currentPage, pageSize);
+        return { totalCount: filtered.length, data: movies};
+    }
+    render() {
+        const { length: count } = this.state.movies;
+        const {
+            pageSize,
+            currentPage,
+            sortColumn
+        } = this.state;
+        if(count === 0) return <p>There are no movies the database.</p>;
+        const { totalCount, data: movies } = this.getPageData();
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <p>Showing {totalCount} movies in the database.</p>
+                    <MoviesTable
+                        movies={movies}
+                        sortColumn={sortColumn}
+                        onLike={() => this.handleLike}
+                        onDelete={() => this.handleDelete}
+                        onSort={this.handleSort}
+                    />
+                    <Pagination
+                        itemsCount={totalCount}
+                        pageSize={pageSize}
+                        onPageChange={this.handlePageChange}
+                        currentPage={currentPage}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 90.Destrucuring Arguments (Уничтожающие аргументы) ==================*/
+//table.jsx
+import React from 'react';
+import TableHeader from './tableHeader';
+import TableBody from './tableBody';
+
+const Table = ({ columns, sortColumn, onSort, data }) => {
+    return (
+        <table className="table">
+            <TableHeader
+                columns={columns}
+                sortColumn={sortColumn}
+                onSort={onSort}
+            />
+            <TableBody
+                data={data}
+                columns={columns}
+            />
+        </table>
+    );
+}
+
+export default Table
+/*=============== 91.Summary (Резюме) ==================*/
+//Component Design (Компонентный дизайн)
+//Component Interface (Компонентный интерфейс)
+//Reusable Components (Многоразовые компоненты)
+//Refacroting (Рефакторинг)
+//Writing Clean Code (Написание чистого кода)
+/*=============== 92.Introduction (Вступление) ==================*/
+
+
+
+
+
 
 
 
