@@ -4388,6 +4388,840 @@ export default Table
 //Refacroting (Рефакторинг)
 //Writing Clean Code (Написание чистого кода)
 /*=============== 92.Introduction (Вступление) ==================*/
+//Route Parameters (Параметры маршрута)
+//Query String (Строка запроса)
+//Redirect (переадресовывать)
+//Not Found (404) Pages (Не найдено (404) Страницы)
+//Nested Routing (Вложенная маршрутизация)
+/*=============== 93.Setup (Настроить) ==================*/
+//Auto Import - ES6, TS, JSX, TSX
+/*=============== 94.Adding Routing (Добавление маршрутизации) ==================*/
+//create-react-app router-app (команда для создания нового проекта)
+//npm i react-router-dom (Привязки DOM для React Router)
+//index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+
+ReactDOM.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>,
+    document.getElementById('root')
+);
+
+serviceWorker.unregister();
+//App.js
+import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
+import NavBar from './components/navbar';
+import Products from './components/products';
+import Posts from './components/posts';
+import Home from './components/home';
+import Dashboard from './components/admin/dashboard';
+import ProductDetails from './components/productDetails';
+import NotFound from './components/notFound';
+import './App.css';
+
+class App extends Component {
+    render() {
+        return (
+            <div>
+                <NavBar />
+                <div className="content">
+                    <Route path='/products' component={Products} />
+                    <Route path='/posts' component={Posts} />
+                    <Route path='/admin' component={Dashboard} />
+                    <Route path='/' component={Home} />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default App;
+/*=============== 95.Switch (переключатель) ==================*/
+//App.js
+import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import NavBar from './components/navbar';
+import Products from './components/products';
+import Posts from './components/posts';
+import Home from './components/home';
+import Dashboard from './components/admin/dashboard';
+import ProductDetails from './components/productDetails';
+import NotFound from './components/notFound';
+import './App.css';
+
+class App extends Component {
+    render() {
+        return (
+            <div>
+                <NavBar />
+                <div className="content">
+                    <Switch>
+                        <Route path='/products' component={Products} />
+                        <Route path='/posts' component={Posts} />
+                        <Route path='/admin' component={Dashboard} />
+                        {/*<Route path='/' exact component={Home} />*/}
+                        <Route path='/' component={Home} />
+                    </Switch>
+                </div>
+            </div>
+        );
+    }
+}
+
+export default App;
+/*=============== 96.Link (ссылка) ==================*/
+//navbar.jsx
+import React from "react";
+import { Link } from 'react-router-dom';
+
+const NavBar = () => {
+    return (
+        <ul>
+            <li>
+                <Link to="/">Home</Link>
+            </li>
+            <li>
+                <Link to="/products">Products</Link>
+            </li>
+            <li>
+                <Link to="/posts/2018/06">Posts</Link>
+            </li>
+            <li>
+                <Link to="/admin">Admin</Link>
+            </li>
+        </ul>
+    );
+};
+
+export default NavBar;
+/*=============== 97.Route Props (Маршрут Реквизит) ==================*/
+//https://reacttraining.com/react-router/web/guides/quick-start
+/*=============== 98.Passing Props (Прохождение реквизита) ==================*/
+//App.jsx
+import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import NavBar from './components/navbar';
+import Products from './components/products';
+import Posts from './components/posts';
+import Home from './components/home';
+import Dashboard from './components/admin/dashboard';
+import ProductDetails from './components/productDetails';
+import NotFound from './components/notFound';
+import './App.css';
+
+class App extends Component {
+    render() {
+        return (
+            <div>
+                <NavBar />
+                <div className="content">
+                    <Switch>
+                        <Route
+                            path='/products'
+                            render={(props) => <Products sortBy="newest" {...props} />}
+                        />
+                        <Route path='/posts' component={Posts} />
+                        <Route path='/admin' component={Dashboard} />
+                        {/*<Route path='/' exact component={Home} />*/}
+                        <Route path='/' component={Home} />
+                    </Switch>
+                </div>
+            </div>
+        );
+    }
+}
+
+export default App;
+/*=============== 99.Route Parameters (Параметры маршрута) ==================*/
+//App.js
+import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import NavBar from './components/navbar';
+import Products from './components/products';
+import Posts from './components/posts';
+import Home from './components/home';
+import Dashboard from './components/admin/dashboard';
+import ProductDetails from './components/productDetails';
+import NotFound from './components/notFound';
+import './App.css';
+
+class App extends Component {
+    render() {
+        return (
+            <div>
+                <NavBar />
+                <div className="content">
+                    <Switch>
+                        <Route path="/products/:id" component={ProductDetails} />
+                        <Route
+                            path='/products'
+                            render={(props) => <Products sortBy="newest" {...props} />}
+                        />
+                        <Route path='/posts/:year/:month' component={Posts} />
+                        <Route path='/admin' component={Dashboard} />
+                        {/*<Route path='/' exact component={Home} />*/}
+                        <Route path='/' component={Home} />
+                    </Switch>
+                </div>
+            </div>
+        );
+    }
+}
+
+export default App;
+//products.jsx
+import React, { Component } from "react";
+import { Link } from 'react-router-dom';
+
+class Products extends Component {
+    state = {
+        products: [
+            { id: 1, name: "Product 1" },
+            { id: 2, name: "Product 2" },
+            { id: 3, name: "Product 3" }
+        ]
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Products</h1>
+                <ul>
+                    {this.state.products.map(product => (
+                        <li key={product.id}>
+                            <Link to={`/products/${product.id}`}>{product.name}</Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
+}
+
+export default Products;
+/*=============== 100.Optional Parameters (Необязательные параметры) ==================*/
+//App.js
+import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import NavBar from './components/navbar';
+import Products from './components/products';
+import Posts from './components/posts';
+import Home from './components/home';
+import Dashboard from './components/admin/dashboard';
+import ProductDetails from './components/productDetails';
+import NotFound from './components/notFound';
+import './App.css';
+
+class App extends Component {
+    render() {
+        return (
+            <div>
+                <NavBar />
+                <div className="content">
+                    <Switch>
+                        <Route path="/products/:id" component={ProductDetails} />
+                        <Route
+                            path='/products'
+                            render={(props) => <Products sortBy="newest" {...props} />}
+                        />
+                        <Route path='/posts/:year?/:month?' component={Posts} />
+                        <Route path='/admin' component={Dashboard} />
+                        {/*<Route path='/' exact component={Home} />*/}
+                        <Route path='/' component={Home} />
+                    </Switch>
+                </div>
+            </div>
+        );
+    }
+}
+
+export default App;
+//posts.jsx
+import React from "react";
+
+const Posts = ({ match }) => {
+    return (
+        <div>
+            <h1>Posts</h1>
+            Year: {match.params.year}, Month: {match.params.month}
+        </div>
+    );
+};
+
+export default Posts;
+/*=============== 101.Query String Parameters (Параметры строки запроса) ==================*/
+//npm i query-string@6.1.0
+//posts.jsx
+import React from "react";
+import queryString from 'query-string';
+
+const Posts = ({ match, location }) => {
+    const result = queryString.parse(location.search);
+    console.log(result);
+    return (
+        <div>
+            <h1>Posts</h1>
+            Year: {match.params.year}, Month: {match.params.month}
+        </div>
+    );
+};
+
+export default Posts;
+/*=============== 102.Redirects (Перенаправление) ==================*/
+//App.js
+import React, { Component } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
+import NavBar from "./components/navbar";
+import Products from "./components/products";
+import Posts from "./components/posts";
+import Home from "./components/home";
+import Dashboard from "./components/admin/dashboard";
+import ProductDetails from "./components/productDetails";
+import NotFound from "./components/notFound";
+import "./App.css";
+
+class App extends Component {
+    render() {
+        return (
+            <div>
+                <NavBar />
+                <div className="content">
+                    <Switch>
+                        <Route path="/products/:id" component={ProductDetails} />
+                        <Route
+                            path="/products"
+                            render={props => <Products sortBy="newest" {...props} />}
+                        />
+                        <Route path="/posts/:year?/:month?" component={Posts} />
+                        <Route path="/admin" component={Dashboard} />
+                        <Redirect from="/messages" to="/posts" />
+                        <Route path="/not-found" component={NotFound} />
+                        <Route path="/" exact component={Home} />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </div>
+            </div>
+        );
+    }
+}
+
+export default App;
+/*=============== 103.Programmatic Navigation (Программная навигация) ==================*/
+//productDetails.jsx
+import React, { Component } from "react";
+
+class ProductDetails extends Component {
+    handleSave = () => {
+        // Navigate to /products
+        //   this.props.history.push('/products');
+        this.props.history.replace("/products");
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Product Details - {this.props.match.params.id}</h1>
+                <button onClick={this.handleSave}>Save</button>
+            </div>
+        );
+    }
+}
+
+export default ProductDetails;
+/*=============== 104.Nested Routing (Вложенная маршрутизация) ==================*/
+//dashboard.jsx
+import React from "react";
+import { Route } from 'react-router-dom';
+import Users from './users';
+import Posts from './posts';
+import SideBar from "./sidebar";
+
+const Dashboard = ({ match }) => {
+    return (
+        <div>
+            <h1>Admin Dashboard</h1>
+            <SideBar />
+            <Route path='/admin/users' component={Users}/>
+            <Route path='/admin/posts' component={Posts}/>
+        </div>
+    );
+};
+
+export default Dashboard;
+//sidebar.jsx
+import React from "react";
+import { Link } from "react-router-dom";
+
+const SideBar = () => {
+    return (
+        <ul>
+            <li>
+                <Link to="/admin/posts">Post</Link>
+            </li>
+            <li>
+                <Link to="/admin/users">Users</Link>
+            </li>
+        </ul>
+    );
+};
+
+export default SideBar;
+/*=============== 105.Exercises NavBar and Routing (Упражнения Навбар и Маршрутизация) ==================*/
+/*=============== 106.Adding React Router (Добавление React Router) ==================*/
+//npm i react-router-dom
+//index.js
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import "./index.css";
+import "bootstrap/dist/css/bootstrap.css";
+import "font-awesome/css/font-awesome.css";
+
+ReactDOM.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>,
+    document.getElementById("root")
+);
+//create files
+//customers.jsx | movieForm.jsx | notFound.jsx | rentals.jsx
+import React from 'react';
+
+const Customers = () => {
+    return <h1>Customers</h1>;
+}
+
+export default Customers;
+/*=============== 107.Adding Routers (Добавление маршрутизаторов) ==================*/
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import "./App.css";
+
+class App extends Component {
+    render() {
+        return (
+            <main className="container">
+                <Switch>
+                    <Route path="/movies" component={Movies} />
+                    <Route path="/customers" component={Customers} />
+                    <Route path="/rentals" component={Rentals} />
+                    <Route path="/not-found" component={NotFound} />
+                    <Redirect from="/" exact to="movies" />
+                    <Redirect to="/not-found" />
+                </Switch>
+            </main>
+        );
+    }
+}
+
+export default App;
+/*=============== 108.Adding the NavBar (Добавление NavBar) ==================*/
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import "./App.css";
+
+class App extends Component {
+    render() {
+        return (
+            <React.Fragment>
+                <NavBar />
+                <main className="container">
+                    <Switch>
+                        <Route path="/movies" component={Movies} />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+//navbar.jsx
+import React from "react";
+import { Link, NavLink } from 'react-router-dom';
+
+const NavBar = () => {
+    return (
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <Link className="navbar-brand" to="/">
+                Vidly
+            </Link>
+            <button
+                className="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span className="navbar-toggler-icon" />
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNav">
+                <ul className="navbar-nav">
+                    <li className="nav-item active">
+                        <NavLink className="nav-link" to="/movies">
+                            Movies
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/customers">
+                            Customers
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/rentals">
+                            Rentals
+                        </NavLink>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    );
+};
+
+export default NavBar;
+/*=============== 109.Linking to the MovieForm (Ссылка на форму фильма) ==================*/
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import "./App.css";
+
+class App extends Component {
+    render() {
+        return (
+            <React.Fragment>
+                <NavBar />
+                <main className="container">
+                    <Switch>
+                        <Route path="/movies/:id" component={MovieForm}/>
+                        <Route path="/movies" component={Movies} />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+//movesTable.jsx
+import React, { Component } from "react";
+import { Link } from 'react-router-dom';
+import Table from "./common/table";
+import Like from "./common/like";
+
+// const x = <like></like>; //React Element {}
+
+class MoviesTable extends Component {
+    columns = [
+        {
+            path: "title",
+            label: "Title",
+            content: movie => <Link to={`/movies/${movie._id}`}>{movie.title}</Link>
+        },
+        { path: "genre.name", label: "Genre" },
+        { path: "numberInStock", label: "Stock" },
+        { path: "dailyRentalRate", label: "Rate" },
+        {
+            key: "like",
+            content: movie => (
+                <Like liked={movie.liked} onClick={() => this.props.onLike(movie)} />
+            )
+        },
+        {
+            key: "delete",
+            content: movie => (
+                <button
+                    onClick={() => this.props.onDelete(movie)}
+                    className="btn btn-danger btn-sm"
+                >
+                    Delete
+                </button>
+            )
+        }
+    ];
+    render() {
+        const { movies, onSort, sortColumn } = this.props;
+        return (
+            <Table
+                columns={this.columns}
+                data={movies}
+                onSort={onSort}
+                sortColumn={sortColumn}
+            />
+        );
+    }
+}
+
+export default MoviesTable;
+//movieForm.jsx
+import React from "react";
+
+const MovieForm = ({ match, history }) => {
+    return (
+        <div>
+            <h1>MovieForm {match.params.id}</h1>
+            <button
+                className="btn btn-primary"
+                onClick={() => history.push("/movies")}
+            >
+                Save
+            </button>
+        </div>
+    );
+};
+
+export default MovieForm;
+/*=============== 110.Summary (Резюме) ==================*/
+//Route Parameters (Параметры маршрута)
+//Query String (Строка запроса)
+//Redirect (переадресовывать)
+//Not Found (404) Pages (Не найдено (404) Страницы)
+//Nested Routing (Вложенная маршрутизация)
+/*=============== 111.Introduction (Вступление) ==================*/
+//Forms (Формы)
+//Let`s get started (Давайте начнем)
+/*=============== 112.Building a Bootstrap Form (Создание формы начальной загрузки) ==================*/
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import LoginForm from "./components/loginForm";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+
+class App extends Component {
+    render() {
+        return (
+            <React.Fragment>
+                <NavBar />
+                <main className="container">
+                    <Switch>
+                        <Route path="/login" component={LoginForm}/>
+                        <Route path="/movies/:id" component={MovieForm}/>
+                        <Route path="/movies" component={Movies} />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+//navbar.jsx
+import React from "react";
+import { Link, NavLink } from "react-router-dom";
+
+const NavBar = () => {
+    return (
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <Link className="navbar-brand" to="/">
+                Vidly
+            </Link>
+            <button
+                className="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span className="navbar-toggler-icon" />
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNav">
+                <ul className="navbar-nav">
+                    <li className="nav-item active">
+                        <NavLink className="nav-link" to="/movies">
+                            Movies
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/customers">
+                            Customers
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/rentals">
+                            Rentals
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/login">
+                            Login
+                        </NavLink>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    );
+};
+
+export default NavBar;
+//loginForm.jsx
+import React, { Component } from "react";
+
+class LoginForm extends Component {
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form action="">
+                    <div className="form-group">
+                        <label htmlFor="username">UserName</label>
+                        <input id="username" type="text" className="form-control" />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input id="password" type="text" className="form-control" />
+                    </div>
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 113.Handling Form submission (Форма обработки заявки) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+
+class LoginForm extends Component {
+    handleSubmit = e => {
+        e.preventDefault();
+        //Call the server
+        console.log('submitted');
+    };
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="username">UserName</label>
+                        <input id="username" type="text" className="form-control" />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input id="password" type="text" className="form-control" />
+                    </div>
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 114.Refs ==================*/
+import React, { Component } from "react";
+
+class LoginForm extends Component {
+    username = React.createRef();
+    // componentDidMount() {
+    //   this.username.current.focus();
+    // }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        //Call the server
+        // const username = document.getElementById('username').value;
+        const username = this.username.current.value;
+        console.log("submitted");
+    };
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="username">UserName</label>
+                        <input
+                            autoFocus
+                            ref={this.username}
+                            id="username"
+                            type="text"
+                            className="form-control"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input id="password" type="text" className="form-control" />
+                    </div>
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+
+/*=============== 115.Controlled Elements (Контролируемые элементы) ==================*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
