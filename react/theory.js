@@ -5205,6 +5205,694 @@ class LoginForm extends Component {
 export default LoginForm;
 
 /*=============== 115.Controlled Elements (Контролируемые элементы) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" }
+    };
+    // username = React.createRef();
+    // componentDidMount() {
+    //   this.username.current.focus();
+    // }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        //Call the server
+        // const username = document.getElementById('username').value;
+        // const username = this.username.current.value;
+        // console.log("submitted");
+    };
+    handleChange = e => {
+        const account = {...this.state.account};
+        account.username = e.currentTarget.value;
+        this.setState({ account });
+    };
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="username">UserName</label>
+                        <input
+                            autoFocus
+                            // ref={this.username}
+                            id="username"
+                            type="text"
+                            className="form-control"
+                            value={this.state.account.username}
+                            onChange={this.handleChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input id="password" type="text" className="form-control" />
+                    </div>
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 116.Hsndling Multiple Inputs (Hsndling несколько входов) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" }
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+    };
+    handleChange = ({ currentTarget: input}) => {
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="username">UserName</label>
+                        <input
+                            autoFocus
+                            id="username"
+                            type="text"
+                            className="form-control"
+                            value={account.username}
+                            onChange={this.handleChange}
+                            name="username"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            value={account.password}
+                            onChange={this.handleChange}
+                            name="password"
+                            id="password"
+                            type="text"
+                            className="form-control"
+                        />
+                    </div>
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 117.Common Errors (Распространенные ошибки) ==================*/
+account: { password: "" }
+account: { username: null, password: "" }
+/*=============== 118.Extracting a Reusable Input (Извлечение многоразового ввода) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+import Input from "./common/input";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" }
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={account.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                    />
+                    <Input
+                        name="password"
+                        value={account.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                    />
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+//input.jsx
+import React from "react";
+
+const Input = ({ name, label, value, onChange }) => {
+    return (
+        <div className="form-group">
+            <label htmlFor={name}>{label}</label>
+            <input
+                autoFocus
+                id={name}
+                type="text"
+                className="form-control"
+                value={value}
+                onChange={onChange}
+                name={name}
+            />
+        </div>
+    );
+};
+
+export default Input;
+/*=============== 119.Validation (Валидация) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+import Input from "./common/input";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" },
+        errors: {}
+    };
+    //errros['username']
+    //errors.find(e => e.name === 'username')
+    validate = () => {
+        return { username: 'Username is required.' };
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        this.setState({ errors });
+        if (errors) return;
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={account.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                    />
+                    <Input
+                        name="password"
+                        value={account.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                    />
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 120.A Basic Validation Implementation (Базовая реализация валидации) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+import Input from "./common/input";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" },
+        errors: {}
+    };
+    //errros['username']
+    //errors.find(e => e.name === 'username')
+    validate = () => {
+        const errors = {};
+        const { account } = this.state;
+        if (account.username.trim() === '')
+            errors.username = 'Username is requried.';
+        if (account.password.trim() === '')
+            errors.password = 'Password is requried.';
+
+        return Object.keys(errors).length === 0 ? null : errors;
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        console.log(errors);
+        this.setState({ errors });
+        if (errors) return;
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={account.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                    />
+                    <Input
+                        name="password"
+                        value={account.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                    />
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 121.Displaying Validation Errors (Отображение ошибок валидации) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+import Input from "./common/input";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" },
+        errors: {}
+    };
+    validate = () => {
+        const errors = {};
+        const { account } = this.state;
+        if (account.username.trim() === "")
+            errors.username = "Username is requried.";
+        if (account.password.trim() === "")
+            errors.password = "Password is requried.";
+
+        return Object.keys(errors).length === 0 ? null : errors;
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account, errors } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={account.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                        error={errors.username}
+                    />
+                    <Input
+                        name="password"
+                        value={account.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                        error={errors.password}
+                    />
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+//input.jsx
+import React from "react";
+
+const Input = ({ name, label, value, error, onChange }) => {
+    return (
+        <React.Fragment>
+            <div className="form-group">
+                <label htmlFor={name}>{label}</label>
+                <input
+                    autoFocus
+                    id={name}
+                    type="text"
+                    className="form-control"
+                    value={value}
+                    onChange={onChange}
+                    name={name}
+                />
+            </div>
+            {error && <div className="alert alert-danger">{error}</div>}
+        </React.Fragment>
+    );
+};
+
+export default Input;
+/*=============== 122.Validation on Change (Проверка на изменение) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+import Input from "./common/input";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" },
+        errors: {}
+    };
+    validate = () => {
+        const errors = {};
+        const { account } = this.state;
+        if (account.username.trim() === "")
+            errors.username = "Username is requried.";
+        if (account.password.trim() === "")
+            errors.password = "Password is requried.";
+
+        return Object.keys(errors).length === 0 ? null : errors;
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+    };
+    validateProperty = ({ name, value }) => {
+        if (name === 'username') {
+            if (value.trim() === '') return 'Username is required.';
+            //...
+        }
+        if (name === 'password') {
+            if (value.trim() === '') return 'Password is required.';
+            //...
+        }
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const errors = { ...this.state.errors };
+        const errorMessage = this.validateProperty(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account, errors } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={account.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                        error={errors.username}
+                    />
+                    <Input
+                        name="password"
+                        value={account.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                        error={errors.password}
+                    />
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 123.Joi ==================*/
+//https://www.npmjs.com/package/@hapi/joi
+//npm i --save @hapi/joi
+//npm i joi-browser
+//loginForm.jsx
+import React, { Component } from "react";
+import Joi from "joi-browser";
+import Input from "./common/input";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" },
+        errors: {}
+    };
+    schema = {
+        username: Joi.string().required(),
+        password: Joi.string().required()
+    };
+    validate = () => {
+        const result = Joi.validate(this.state.account, this.schema, { abortEarly: false });
+        console.log(result);
+        const errors = {};
+        const { account } = this.state;
+        if (account.username.trim() === "")
+            errors.username = "Username is requried.";
+        if (account.password.trim() === "")
+            errors.password = "Password is requried.";
+
+        return Object.keys(errors).length === 0 ? null : errors;
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+    };
+    validateProperty = ({ name, value }) => {
+        if (name === "username") {
+            if (value.trim() === "") return "Username is required.";
+            //...
+        }
+        if (name === "password") {
+            if (value.trim() === "") return "Password is required.";
+            //...
+        }
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const errors = { ...this.state.errors };
+        const errorMessage = this.validateProperty(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account, errors } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={account.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                        error={errors.username}
+                    />
+                    <Input
+                        name="password"
+                        value={account.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                        error={errors.password}
+                    />
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 124.Validating a Form Using Joi (Проверка формы с помощью Joi) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+import Joi from "joi-browser";
+import Input from "./common/input";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" },
+        errors: {}
+    };
+    schema = {
+        username: Joi.string().required().label('Username'),
+        password: Joi.string().required().label('Password')
+    };
+    validate = () => {
+        const oprions = { abortEarly: false };
+        const { error } = Joi.validate(this.state.account, this.schema, oprions);
+        if (error) return null;
+        const errors = {};
+        for (let item of error.details)
+            errors[item.path[0]] = item.message;
+        return errors;
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+    };
+    validateProperty = ({ name, value }) => {
+        if (name === "username") {
+            if (value.trim() === "") return "Username is required.";
+            //...
+        }
+        if (name === "password") {
+            if (value.trim() === "") return "Password is required.";
+            //...
+        }
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const errors = { ...this.state.errors };
+        const errorMessage = this.validateProperty(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account, errors } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={account.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                        error={errors.username}
+                    />
+                    <Input
+                        name="password"
+                        value={account.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                        error={errors.password}
+                    />
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 125.Validating a Field Using Joi (Проверка поля с помощью Joi) ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+import Joi from "joi-browser";
+import Input from "./common/input";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" },
+        errors: {}
+    };
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+    validate = () => {
+        const oprions = { abortEarly: false };
+        const { error } = Joi.validate(this.state.account, this.schema, oprions);
+        if (error) return null;
+        const errors = {};
+        for (let item of error.details) errors[item.path[0]] = item.message;
+        return errors;
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+    };
+    validateProperty = ({ name, value }) => {
+        const obj = { [name]: value };
+        const schema = { [name]: this.schema[name] };
+        const { error } = Joi.validate(obj, schema);
+        return error ? error.details[0].message : null;
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const errors = { ...this.state.errors };
+        const errorMessage = this.validateProperty(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account, errors } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={account.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                        error={errors.username}
+                    />
+                    <Input
+                        name="password"
+                        value={account.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                        error={errors.password}
+                    />
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 126.Disabling the Submit Button (Отключение кнопки «Отправить») ==================*/
+
+
+
+
+
+
+
+
+
+
 
 
 
