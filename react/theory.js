@@ -5883,6 +5883,981 @@ class LoginForm extends Component {
 
 export default LoginForm;
 /*=============== 126.Disabling the Submit Button (Отключение кнопки «Отправить») ==================*/
+//loginForm.jsx
+import React, { Component } from "react";
+import Joi from "joi-browser";
+import Input from "./common/input";
+
+class LoginForm extends Component {
+    state = {
+        account: { username: "", password: "" },
+        errors: {}
+    };
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+    validate = () => {
+        const options = { abortEarly: false };
+        const { error } = Joi.validate(this.state.account, this.schema, options);
+        if (error) return null;
+        const errors = {};
+        for (let item of error.details) errors[item.path[0]] = item.message;
+        return errors;
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+    };
+    validateProperty = ({ name, value }) => {
+        const obj = { [name]: value };
+        const schema = { [name]: this.schema[name] };
+        const { error } = Joi.validate(obj, schema);
+        return error ? error.details[0].message : null;
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const errors = { ...this.state.errors };
+        const errorMessage = this.validateProperty(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account });
+    };
+    render() {
+        const { account, errors } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={account.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                        error={errors.username}
+                    />
+                    <Input
+                        name="password"
+                        value={account.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                        error={errors.password}
+                    />
+                    <button disabled={this.validate()} className="btn btn-primary">
+                        Login
+                    </button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 127.Code Review (Обзор кода) ==================*/
+/*=============== 128.Extracting a Reusable Form (Извлечение многоразовой формы) ==================*/
+//loginForm.jsx
+import React from "react";
+import Form from './common/form';
+import Input from "./common/input";
+
+class LoginForm extends Form {
+    state = {
+        data: { username: "", password: "" },
+        errors: {}
+    };
+
+    doSubmit = () => {
+        console.log("Submitted");
+    };
+
+    render() {
+        const { data, errors } = this.state;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <Input
+                        name="username"
+                        value={data.username}
+                        label="UserName"
+                        onChange={this.handleChange}
+                        error={errors.username}
+                    />
+                    <Input
+                        name="password"
+                        value={data.password}
+                        label="Password"
+                        onChange={this.handleChange}
+                        error={errors.password}
+                    />
+                    <button disabled={this.validate()} className="btn btn-primary">
+                        Login
+                    </button>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+
+//form.jsx
+import React, {Component} from 'react';
+import Joi from "joi-browser";
+
+class Form extends Component {
+    state = {
+        data: {},
+        errors: {}
+    };
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+    validate = () => {
+        const options = { abortEarly: false };
+        const { error } = Joi.validate(this.state.data, this.schema, options);
+        if (!error) return null;
+        const errors = {};
+        for (let item of error.details) errors[item.path[0]] = item.message;
+        return errors;
+    };
+    validateProperty = ({ name, value }) => {
+        const obj = { [name]: value };
+        const schema = { [name]: this.schema[name] };
+        const { error } = Joi.validate(obj, schema);
+        return error ? error.details[0].message : null;
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+        this.doSubmit();
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const errors = { ...this.state.errors };
+        const errorMessage = this.validateProperty(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+        const data = { ...this.state.data };
+        data[input.name] = input.value;
+        this.setState({ data });
+    };
+}
+
+export default Form;
+/*=============== 129.Extracting Helper Rendering Methods (Извлечение вспомогательных методов рендеринга) ==================*/
+//loginForm.jsx
+import React from "react";
+import Form from "./common/form";
+
+class LoginForm extends Form {
+    state = {
+        data: { username: "", password: "" },
+        errors: {}
+    };
+
+    doSubmit = () => {
+        console.log("Submitted");
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "UserName")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderButton("Login")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+//form.jsx
+import React, { Component } from "react";
+import Joi from "joi-browser";
+import Input from "./input";
+
+class Form extends Component {
+    state = {
+        data: {},
+        errors: {}
+    };
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+    validate = () => {
+        const options = { abortEarly: false };
+        const { error } = Joi.validate(this.state.data, this.schema, options);
+        if (!error) return null;
+        const errors = {};
+        for (let item of error.details) errors[item.path[0]] = item.message;
+        return errors;
+    };
+    validateProperty = ({ name, value }) => {
+        const obj = { [name]: value };
+        const schema = { [name]: this.schema[name] };
+        const { error } = Joi.validate(obj, schema);
+        return error ? error.details[0].message : null;
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+        this.doSubmit();
+    };
+    handleChange = ({ currentTarget: input }) => {
+        const errors = { ...this.state.errors };
+        const errorMessage = this.validateProperty(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+        const data = { ...this.state.data };
+        data[input.name] = input.value;
+        this.setState({ data });
+    };
+
+    renderButton(label) {
+        return (
+            <button disabled={this.validate()} className="btn btn-primary">
+                {label}
+            </button>
+        );
+    }
+
+    renderInput(name, label, type = 'text') {
+        const { data, errors } = this.state;
+        return (
+            <Input
+                type={type}
+                name={name}
+                value={data[name]}
+                label={label}
+                onChange={this.handleChange}
+                error={errors[name]}
+            />
+        );
+    }
+}
+
+export default Form;
+
+//input.jsx
+import React from "react";
+
+const Input = ({ name, label, value, error, onChange, type }) => {
+    return (
+        <React.Fragment>
+            <div className="form-group">
+                <label htmlFor={name}>{label}</label>
+                <input
+                    autoFocus
+                    id={name}
+                    type={type}
+                    className="form-control"
+                    value={value}
+                    onChange={onChange}
+                    name={name}
+                />
+            </div>
+            {error && <div className="alert alert-danger">{error}</div>}
+        </React.Fragment>
+    );
+};
+
+export default Input;
+//input.jsx
+import React from "react";
+
+const Input = ({ name, label, error, ...rest }) => {
+    return (
+        <React.Fragment>
+            <div className="form-group">
+                <label htmlFor={name}>{label}</label>
+                <input {...rest} id={name} className="form-control" />
+            </div>
+            {error && <div className="alert alert-danger">{error}</div>}
+        </React.Fragment>
+    );
+};
+
+export default Input;
+/*=============== 130.Register Form (Форма регистрации) ==================*/
+/*=============== 131.Code Review (Обзор кода) ==================*/
+//registerForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+
+class RegisterForm extends Form {
+    state = {
+        data: { username: "", password: "", name: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .email()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .min(5)
+            .label("Password"),
+        name: Joi.string()
+            .required()
+            .label("Name")
+    };
+
+    doSubmit = () => {
+        // Call the server
+        console.log("Submitted");
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Register</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "Username")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderInput("name", "Name")}
+                    {this.renderButton("Register")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default RegisterForm;
+//App.jsx
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import LoginForm from "./components/loginForm";
+import RegisterForm from "./components/registerForm";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+
+class App extends Component {
+    render() {
+        return (
+            <React.Fragment>
+                <NavBar />
+                <main className="container">
+                    <Switch>
+                        <Route path="/register" component={RegisterForm}/>
+                        <Route path="/login" component={LoginForm}/>
+                        <Route path="/movies/:id" component={MovieForm}/>
+                        <Route path="/movies" component={Movies} />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+//navbar.jsx
+import React from "react";
+import { Link, NavLink } from "react-router-dom";
+
+const NavBar = () => {
+    return (
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <Link className="navbar-brand" to="/">
+                Vidly
+            </Link>
+            <button
+                className="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span className="navbar-toggler-icon" />
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNav">
+                <ul className="navbar-nav">
+                    <li className="nav-item active">
+                        <NavLink className="nav-link" to="/movies">
+                            Movies
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/customers">
+                            Customers
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/rentals">
+                            Rentals
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/login">
+                            Login
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/register">
+                            Register
+                        </NavLink>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    );
+};
+
+export default NavBar;
+/*=============== 132.Exercise 2-Movie Form (Упражнение 2-форма фильма) ==================*/
+/*=============== 133.Code Review (Обзор кода) ==================*/
+//movies.jsx
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import MoviesTable from "./moviesTable";
+import ListGroup from "./common/listGroup";
+import Pagination from "./common/pagination";
+import { getMovies, deleteMovie } from "../services/fakeMovieService";
+import { getGenres } from "../services/fakeGenreService";
+import { paginate } from "../utils/paginate";
+import _ from "lodash";
+import SearchBox from "./searchBox";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        currentPage: 1,
+        pageSize: 4,
+        searchQuery: "",
+        selectedGenre: null,
+        sortColumn: { path: "title", order: "asc" }
+    };
+
+    componentDidMount() {
+        const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
+
+        this.setState({ movies: getMovies(), genres });
+    }
+
+    handleDelete = movie => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+
+        deleteMovie(movie._id);
+    };
+
+    handleLike = movie => {
+        const movies = [...this.state.movies];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
+    };
+
+    handleSearch = query => {
+        this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
+    };
+
+    handleSort = sortColumn => {
+        this.setState({ sortColumn });
+    };
+
+    getPagedData = () => {
+        const {
+            pageSize,
+            currentPage,
+            sortColumn,
+            selectedGenre,
+            searchQuery,
+            movies: allMovies
+        } = this.state;
+
+        let filtered = allMovies;
+        if (searchQuery)
+            filtered = allMovies.filter(m =>
+                m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+            );
+        else if (selectedGenre && selectedGenre._id)
+            filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
+
+        const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+        const movies = paginate(sorted, currentPage, pageSize);
+
+        return { totalCount: filtered.length, data: movies };
+    };
+
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
+
+        if (count === 0) return <p>There are no movies in the database.</p>;
+
+        const { totalCount, data: movies } = this.getPagedData();
+
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <Link
+                        to="/movies/new"
+                        className="btn btn-primary"
+                        style={{ marginBottom: 20 }}
+                    >
+                        New Movie
+                    </Link>
+                    <p>Showing {totalCount} movies in the database.</p>
+                    <SearchBox value={searchQuery} onChange={this.handleSearch} />
+                    <MoviesTable
+                        movies={movies}
+                        sortColumn={sortColumn}
+                        onLike={this.handleLike}
+                        onDelete={this.handleDelete}
+                        onSort={this.handleSort}
+                    />
+                    <Pagination
+                        itemsCount={totalCount}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={this.handlePageChange}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+//searchBox.jsx
+import React from "react";
+
+const SearchBox = ({ value, onChange }) => {
+    return (
+        <input
+            type="text"
+            name="query"
+            className="form-control my-3"
+            placeholder="Search..."
+            value={value}
+            onChange={e => onChange(e.currentTarget.value)}
+        />
+    );
+};
+
+export default SearchBox;
+//movieForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import { getMovie, saveMovie } from "../services/fakeMovieService";
+import { getGenres } from "../services/fakeGenreService";
+
+class MovieForm extends Form {
+    state = {
+        data: {
+            title: "",
+            genreId: "",
+            numberInStock: "",
+            dailyRentalRate: ""
+        },
+        genres: [],
+        errors: {}
+    };
+
+    schema = {
+        _id: Joi.string(),
+        title: Joi.string()
+            .required()
+            .label("Title"),
+        genreId: Joi.string()
+            .required()
+            .label("Genre"),
+        numberInStock: Joi.number()
+            .required()
+            .min(0)
+            .max(100)
+            .label("Number in Stock"),
+        dailyRentalRate: Joi.number()
+            .required()
+            .min(0)
+            .max(10)
+            .label("Daily Rental Rate")
+    };
+
+    componentDidMount() {
+        const genres = getGenres();
+        this.setState({ genres });
+
+        const movieId = this.props.match.params.id;
+        if (movieId === "new") return;
+
+        const movie = getMovie(movieId);
+        if (!movie) return this.props.history.replace("/not-found");
+
+        this.setState({ data: this.mapToViewModel(movie) });
+    }
+
+    mapToViewModel(movie) {
+        return {
+            _id: movie._id,
+            title: movie.title,
+            genreId: movie.genre._id,
+            numberInStock: movie.numberInStock,
+            dailyRentalRate: movie.dailyRentalRate
+        };
+    }
+
+    doSubmit = () => {
+        saveMovie(this.state.data);
+
+        this.props.history.push("/movies");
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Movie Form</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("title", "Title")}
+                    {this.renderSelect("genreId", "Genre", this.state.genres)}
+                    {this.renderInput("numberInStock", "Number in Stock", "number")}
+                    {this.renderInput("dailyRentalRate", "Rate")}
+                    {this.renderButton("Save")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default MovieForm;
+//form.jsx
+import React, { Component } from "react";
+import Joi from "joi-browser";
+import Input from "./input";
+import Select from "./select";
+
+class Form extends Component {
+    state = {
+        data: {},
+        errors: {}
+    };
+
+    validate = () => {
+        const options = { abortEarly: false };
+        const { error } = Joi.validate(this.state.data, this.schema, options);
+        if (!error) return null;
+
+        const errors = {};
+        for (let item of error.details) errors[item.path[0]] = item.message;
+        return errors;
+    };
+
+    validateProperty = ({ name, value }) => {
+        const obj = { [name]: value };
+        const schema = { [name]: this.schema[name] };
+        const { error } = Joi.validate(obj, schema);
+        return error ? error.details[0].message : null;
+    };
+
+    handleSubmit = e => {
+        e.preventDefault();
+
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+
+        this.doSubmit();
+    };
+
+    handleChange = ({ currentTarget: input }) => {
+        const errors = { ...this.state.errors };
+        const errorMessage = this.validateProperty(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+
+        const data = { ...this.state.data };
+        data[input.name] = input.value;
+
+        this.setState({ data, errors });
+    };
+
+    renderButton(label) {
+        return (
+            <button disabled={this.validate()} className="btn btn-primary">
+                {label}
+            </button>
+        );
+    }
+
+    renderSelect(name, label, options) {
+        const { data, errors } = this.state;
+
+        return (
+            <Select
+                name={name}
+                value={data[name]}
+                label={label}
+                options={options}
+                onChange={this.handleChange}
+                error={errors[name]}
+            />
+        );
+    }
+
+    renderInput(name, label, type = "text") {
+        const { data, errors } = this.state;
+
+        return (
+            <Input
+                type={type}
+                name={name}
+                value={data[name]}
+                label={label}
+                onChange={this.handleChange}
+                error={errors[name]}
+            />
+        );
+    }
+}
+
+export default Form;
+//select.jsx
+import React from "react";
+
+const Select = ({ name, label, options, error, ...rest }) => {
+    return (
+        <div className="form-group">
+            <label htmlFor={name}>{label}</label>
+            <select name={name} id={name} {...rest} className="form-control">
+                <option value="" />
+                {options.map(option => (
+                    <option key={option._id} value={option._id}>
+                        {option.name}
+                    </option>
+                ))}
+            </select>
+            {error && <div className="alert alert-danger">{error}</div>}
+        </div>
+    );
+};
+
+export default Select;
+/*=============== 134.Exercise 3 - Search Movies (Упражнение 3 - Поиск фильмов) ==================*/
+/*=============== 135.Code Review (Обзор кода) ==================*/
+//movies.jsx
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import MoviesTable from "./moviesTable";
+import ListGroup from "./common/listGroup";
+import Pagination from "./common/pagination";
+import { getMovies, deleteMovie } from "../services/fakeMovieService";
+import { getGenres } from "../services/fakeGenreService";
+import { paginate } from "../utils/paginate";
+import _ from "lodash";
+import SearchBox from "./searchBox";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        currentPage: 1,
+        pageSize: 4,
+        searchQuery: "",
+        selectedGenre: null,
+        sortColumn: { path: "title", order: "asc" }
+    };
+
+    componentDidMount() {
+        const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
+
+        this.setState({ movies: getMovies(), genres });
+    }
+
+    handleDelete = movie => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+
+        deleteMovie(movie._id);
+    };
+
+    handleLike = movie => {
+        const movies = [...this.state.movies];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
+    };
+
+    handleSearch = query => {
+        this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
+    };
+
+    handleSort = sortColumn => {
+        this.setState({ sortColumn });
+    };
+
+    getPagedData = () => {
+        const {
+            pageSize,
+            currentPage,
+            sortColumn,
+            selectedGenre,
+            searchQuery,
+            movies: allMovies
+        } = this.state;
+
+        let filtered = allMovies;
+        if (searchQuery)
+            filtered = allMovies.filter(m =>
+                m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+            );
+        else if (selectedGenre && selectedGenre._id)
+            filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
+
+        const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+        const movies = paginate(sorted, currentPage, pageSize);
+
+        return { totalCount: filtered.length, data: movies };
+    };
+
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
+
+        if (count === 0) return <p>There are no movies in the database.</p>;
+
+        const { totalCount, data: movies } = this.getPagedData();
+
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <Link
+                        to="/movies/new"
+                        className="btn btn-primary"
+                        style={{ marginBottom: 20 }}
+                    >
+                        New Movie
+                    </Link>
+                    <p>Showing {totalCount} movies in the database.</p>
+                    <SearchBox value={searchQuery} onChange={this.handleSearch} />
+                    <MoviesTable
+                        movies={movies}
+                        sortColumn={sortColumn}
+                        onLike={this.handleLike}
+                        onDelete={this.handleDelete}
+                        onSort={this.handleSort}
+                    />
+                    <Pagination
+                        itemsCount={totalCount}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={this.handlePageChange}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+//searchBox.jsx
+import React from "react";
+
+const SearchBox = ({ value, onChange }) => {
+    return (
+        <input
+            type="text"
+            name="query"
+            className="form-control my-3"
+            placeholder="Search..."
+            value={value}
+            onChange={e => onChange(e.currentTarget.value)}
+        />
+    );
+};
+
+export default SearchBox;
+
+/*=============== 136.Introduction (Вступление) ==================*/
+//Calling Backend Services (Вызов сервисов Backend)
+//create-react-app http-app (Создаем новый проект)
+/*=============== 137.JSON Placeholder (Заполнитель) ==================*/
+
+
+
+
+
+
+
+
+
+
 
 
 
