@@ -7024,7 +7024,7 @@ class App extends Component {
 
 export default App;
 /*=============== 141.Lifecycle of a Request (Жизненный цикл запроса) ==================*/
-
+//to be continue - theory_new.js
 
 
 
