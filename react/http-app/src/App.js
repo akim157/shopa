@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from 'axios';
+import axios from "axios";
 import "./App.css";
 
 const apiEndpoint = "https://jsonplaceholder.typicode.com/posts";
@@ -20,19 +20,49 @@ class App extends Component {
   }
 
   handleAdd = async () => {
-    const obj = { title: 'a', body: 'b' };
+    const obj = { title: "a", body: "b" };
     const { data: post } = await axios.post(apiEndpoint, obj);
 
     const posts = [post, ...this.state.posts];
     this.setState({ posts });
   };
 
-  handleUpdate = post => {
-    console.log("Update", post);
+  handleUpdate = async post => {
+    post.title = "UPDATED";
+    const { data } = await axios.put(apiEndpoint + "/" + post.id, post);
+    // axios.patch(apiEndpoint + '/' + post.id, { title: post.title });
+    const posts = [...this.state.posts];
+    const index = posts.indexOf(post);
+    posts[index] = { ...post };
+    this.setState({ posts });
   };
 
-  handleDelete = post => {
-    console.log("Delete", post);
+  handleDelete = async post => {
+    const originalPosts = this.state.posts;
+
+    const posts = this.state.posts.filter(p => p.id !== post.id);
+    this.setState({ posts });
+
+    try {
+      await axios.delete(apiEndpoint + "/" + post.id);
+      throw new Error("");
+    } catch (ex) {
+      // ex.request;
+      // ex.response;
+      //Expected (404: not found, 400: bad request) - CLIENT ERRORS
+      // - Display a specific error message (Показать конкретное сообщение об ошибке)
+        if (ex.response && ex.response.status === 404)
+          alert('this post has alredy been deleted');
+        else {
+          console.log('Logging the error', ex);
+          alert('An unexpected error occurred.');
+        }
+      //Unexpected (network down, server down, db down, bug) (сеть не работает, сервер не работает, дБ не работает, ошибка)
+      // - Log them
+      // - Display a generic and friendly error message (Показать общее и понятное сообщение об ошибке)
+      alert("Something failed while deleting a post!");
+      this.setState({ posts: originalPosts });
+    }
   };
 
   render() {
