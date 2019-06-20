@@ -4,7 +4,7 @@ import MoviesTable from "./moviesTable";
 import ListGroup from "./common/listGroup";
 import Pagination from "./common/pagination";
 import { getMovies, deleteMovie } from "../services/fakeMovieService";
-import { getGenres } from "../services/fakeGenreService";
+import { getGenres } from "../services/genreService";
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
 import SearchBox from "./searchBox";
@@ -20,9 +20,11 @@ class Movies extends Component {
     sortColumn: { path: "title", order: "asc" }
   };
 
-  componentDidMount() {
-    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
-
+  async componentDidMount() {
+      console.log(getGenres())
+    const { data } = await getGenres();
+    const genres = [{ _id: "", name: "All Genres" }, ...data ];
+    console.log(genres);
     this.setState({ movies: getMovies(), genres });
   }
 

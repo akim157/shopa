@@ -698,4 +698,81 @@ export default {
 //Express (фреймворк)
 //MongoDB
 /*=============== 153.Installing MongoDB on Mac (Установка MongoDB на Mac) ==================*/
+//https://brew.sh/index_ru - пакетный менеджер для Apple
+//brew install mongodb
+//sudo mkdir -p /data/db - создаем каталок (-p, --parents - не выдавать ошибок если существует, создавать продительские каталоги если необходимо)
+//sudo chown -R `id -un` /data/db - изменения владельца или группу для указания файлов (-R, --recursive Рекурсивное изменение владельца каталогов и их содержимого.)
+//mongod
+//https://www.mongodb.com/
+/*=============== 154.Installing MongoDB on Windows (Установка MongoDB на Windows) ==================*/
+//Установка mongoDB
+//Установка mongoDB compos
+//Настройка Path к файлу mongod
+//cmd запускаем демона mongod
+//cls - очистка
+//md c:\data\db - создаем каталог
+//mongodb
+//запускаем mngodb compos
+/*=============== 155.Setting up the Node Backend (Настройка Node Backend) ==================*/
+//https://github.com/mosh-hamedani/vidly-api-node
+//git clone https://github.com/mosh-hamedani/vidly-api-node.git
+//cd vidly-api-node
+//npm i
+//node seed.js
+//node index.js
+//http://localhost:3900/api/movies
+/*=============== 156.Disabling Authentication (Отключение аутентификации) ==================*/
+//https://www.getpostman.com/downloads/
+/*=============== 157.Exercise - Connect Movies Page to the Backend (Упражнение - Соедините страницу фильмов с бэкэндом) ==================*/
+/*=============== 158.Ading Http and Log Services (Адинг Http и Log Services) ==================*/
+//npm i axios
+//npm i react-toastify
+//copy httpSevices and logService
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import LoginForm from "./components/loginForm";
+import RegisterForm from "./components/registerForm";
+import 'react-toastify/dist/ReactToastify.css';
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+
+class App extends Component {
+    render() {
+        return (
+            <React.Fragment>
+                <ToastContainer />
+                <NavBar />
+                <main className="container">
+                    <Switch>
+                        <Route path="/register" component={RegisterForm}/>
+                        <Route path="/login" component={LoginForm}/>
+                        <Route path="/movies/:id" component={MovieForm}/>
+                        <Route path="/movies" component={Movies} />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+/*=============== 159.Replacing FakeGenreService (Замена FakeGenreService) ==================*/
+
+
+
+
 
