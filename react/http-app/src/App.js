@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { ToastContainer } from 'react-toastify';
+import http from './services/httpService';
+import config from './config';
+import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
-
-const apiEndpoint = "https://jsonplaceholder.typicode.com/posts";
 
 class App extends Component {
   state = {
@@ -11,17 +12,13 @@ class App extends Component {
 
   async componentDidMount() {
     //pending > resolved (success) OR rejected
-    const { data: posts } = await axios.get(apiEndpoint);
+    const { data: posts } = await http.get(config.apiEndpoint);
     this.setState({ posts });
-    // const promise = axios.get('https://jsonplaceholder.typicode.com/posts');
-    // promise.then();
-    //   const response = await promise;
-    //   console.log(response);
   }
 
   handleAdd = async () => {
     const obj = { title: "a", body: "b" };
-    const { data: post } = await axios.post(apiEndpoint, obj);
+    const { data: post } = await http.post(config.apiEndpoint, obj);
 
     const posts = [post, ...this.state.posts];
     this.setState({ posts });
@@ -29,7 +26,7 @@ class App extends Component {
 
   handleUpdate = async post => {
     post.title = "UPDATED";
-    const { data } = await axios.put(apiEndpoint + "/" + post.id, post);
+    const { data } = await http.put(config.apiEndpoint + "/" + post.id, post);
     // axios.patch(apiEndpoint + '/' + post.id, { title: post.title });
     const posts = [...this.state.posts];
     const index = posts.indexOf(post);
@@ -44,23 +41,11 @@ class App extends Component {
     this.setState({ posts });
 
     try {
-      await axios.delete(apiEndpoint + "/" + post.id);
+      await http.delete('a' + config.apiEndpoint + "/" + post.id);
       throw new Error("");
     } catch (ex) {
-      // ex.request;
-      // ex.response;
-      //Expected (404: not found, 400: bad request) - CLIENT ERRORS
-      // - Display a specific error message (Показать конкретное сообщение об ошибке)
-        if (ex.response && ex.response.status === 404)
-          alert('this post has alredy been deleted');
-        else {
-          console.log('Logging the error', ex);
-          alert('An unexpected error occurred.');
-        }
-      //Unexpected (network down, server down, db down, bug) (сеть не работает, сервер не работает, дБ не работает, ошибка)
-      // - Log them
-      // - Display a generic and friendly error message (Показать общее и понятное сообщение об ошибке)
-      alert("Something failed while deleting a post!");
+      if (ex.response && ex.response.status === 404)
+        alert("this post has alredy been deleted");
       this.setState({ posts: originalPosts });
     }
   };
@@ -68,6 +53,7 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
+          <ToastContainer />
         <button className="btn btn-primary" onClick={this.handleAdd}>
           Add
         </button>
