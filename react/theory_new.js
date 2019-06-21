@@ -771,6 +771,681 @@ class App extends Component {
 
 export default App;
 /*=============== 159.Replacing FakeGenreService (Замена FakeGenreService) ==================*/
+//genreService.js
+import http from "./httpService";
+
+export function getGenres() {
+    return http.get('http://localhost:3900/api/genres');
+}
+//movies.jsx
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import MoviesTable from "./moviesTable";
+import ListGroup from "./common/listGroup";
+import Pagination from "./common/pagination";
+import { getMovies, deleteMovie } from "../services/fakeMovieService";
+import { getGenres } from "../services/genreService";
+import { paginate } from "../utils/paginate";
+import _ from "lodash";
+import SearchBox from "./searchBox";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        currentPage: 1,
+        pageSize: 4,
+        searchQuery: "",
+        selectedGenre: null,
+        sortColumn: { path: "title", order: "asc" }
+    };
+
+    async componentDidMount() {
+        const { data } = await getGenres();
+        const genres = [{ _id: "", name: "All Genres" }, ...data ];
+
+        this.setState({ movies: getMovies(), genres });
+    }
+
+    handleDelete = movie => {
+        const movies = this.state.movies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+
+        deleteMovie(movie._id);
+    };
+
+    handleLike = movie => {
+        const movies = [...this.state.movies];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
+    };
+
+    handleSearch = query => {
+        this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
+    };
+
+    handleSort = sortColumn => {
+        this.setState({ sortColumn });
+    };
+
+    getPagedData = () => {
+        const {
+            pageSize,
+            currentPage,
+            sortColumn,
+            selectedGenre,
+            searchQuery,
+            movies: allMovies
+        } = this.state;
+
+        let filtered = allMovies;
+        if (searchQuery)
+            filtered = allMovies.filter(m =>
+                m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+            );
+        else if (selectedGenre && selectedGenre._id)
+            filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
+
+        const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+        const movies = paginate(sorted, currentPage, pageSize);
+
+        return { totalCount: filtered.length, data: movies };
+    };
+
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
+
+        if (count === 0) return <p>There are no movies in the database.</p>;
+
+        const { totalCount, data: movies } = this.getPagedData();
+
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <Link
+                        to="/movies/new"
+                        className="btn btn-primary"
+                        style={{ marginBottom: 20 }}
+                    >
+                        New Movie
+                    </Link>
+                    <p>Showing {totalCount} movies in the database.</p>
+                    <SearchBox value={searchQuery} onChange={this.handleSearch} />
+                    <MoviesTable
+                        movies={movies}
+                        sortColumn={sortColumn}
+                        onLike={this.handleLike}
+                        onDelete={this.handleDelete}
+                        onSort={this.handleSort}
+                    />
+                    <Pagination
+                        itemsCount={totalCount}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={this.handlePageChange}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 160.Replacing FakeMovieService (Замена FakeMovieService) ==================*/
+//movies.jsx
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import MoviesTable from "./moviesTable";
+import ListGroup from "./common/listGroup";
+import Pagination from "./common/pagination";
+import { getMovies, deleteMovie } from "../services/movieService";
+import { getGenres } from "../services/genreService";
+import { paginate } from "../utils/paginate";
+import _ from "lodash";
+import SearchBox from "./searchBox";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        currentPage: 1,
+        pageSize: 4,
+        searchQuery: "",
+        selectedGenre: null,
+        sortColumn: { path: "title", order: "asc" }
+    };
+
+    async componentDidMount() {
+        const { data } = await getGenres();
+        const genres = [{ _id: "", name: "All Genres" }, ...data];
+
+        const { data: movies } = await getMovies();
+        this.setState({ movies, genres });
+    }
+
+    handleDelete = async movie => {
+        const originalMovies = this.state.movies;
+        const movies = originalMovies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+
+        try {
+            await deleteMovie(movie._id);
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404)
+                toast.error("This movie has already been deleted.");
+            this.setState({ movies: originalMovies });
+        }
+    };
+
+    handleLike = movie => {
+        const movies = [...this.state.movies];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
+    };
+
+    handleSearch = query => {
+        this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
+    };
+
+    handleSort = sortColumn => {
+        this.setState({ sortColumn });
+    };
+
+    getPagedData = () => {
+        const {
+            pageSize,
+            currentPage,
+            sortColumn,
+            selectedGenre,
+            searchQuery,
+            movies: allMovies
+        } = this.state;
+
+        let filtered = allMovies;
+        if (searchQuery)
+            filtered = allMovies.filter(m =>
+                m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+            );
+        else if (selectedGenre && selectedGenre._id)
+            filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
+
+        const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+        const movies = paginate(sorted, currentPage, pageSize);
+
+        return { totalCount: filtered.length, data: movies };
+    };
+
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
+
+        if (count === 0) return <p>There are no movies in the database.</p>;
+
+        const { totalCount, data: movies } = this.getPagedData();
+
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    <Link
+                        to="/movies/new"
+                        className="btn btn-primary"
+                        style={{ marginBottom: 20 }}
+                    >
+                        New Movie
+                    </Link>
+                    <p>Showing {totalCount} movies in the database.</p>
+                    <SearchBox value={searchQuery} onChange={this.handleSearch} />
+                    <MoviesTable
+                        movies={movies}
+                        sortColumn={sortColumn}
+                        onLike={this.handleLike}
+                        onDelete={this.handleDelete}
+                        onSort={this.handleSort}
+                    />
+                    <Pagination
+                        itemsCount={totalCount}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={this.handlePageChange}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+//movieService.js
+import http from './httpService';
+
+const apiEndpoint = 'http://localhost:3900/api/movies';
+export function getMovies() {
+    return http.get(apiEndpoint);
+}
+export function deleteMovie(movieId) {
+    return http.delete(apiEndpoint + '/' + movieId);
+}
+/*=============== 161.Extracting a Config File (Извлечение файла конфигурации) ==================*/
+//config.json
+{
+    "apiUrl": "http://localhost:3900/api"
+}
+//genreService.js
+import http from "./httpService";
+import { apiUrl } from '../config.json';
+
+export function getGenres() {
+    return http.get(apiUrl + '/genres');
+}
+//movieService.js
+import http from './httpService';
+import { apiUrl } from '../config.json';
+
+const apiEndpoint = apiUrl + '/movies';
+export function getMovies() {
+    return http.get(apiEndpoint);
+}
+export function deleteMovie(movieId) {
+    return http.delete(apiEndpoint + '/' + movieId);
+}
+/*=============== 162.Exercise - Connect Movie Form to the Backend (Упражнение - Соедините форму фильма с бэкэндом) ==================*/
+/*=============== 163.Populating the Form (Заполнение формы) ==================*/
+//movieService.js
+import http from './httpService';
+import { apiUrl } from '../config.json';
+
+const apiEndpoint = apiUrl + '/movies';
+
+export function getMovies() {
+    return http.get(apiEndpoint);
+}
+export function getMovie(movieId) {
+    return http.get(apiEndpoint + '/' + movieId);
+}
+export function saveMovie(movie) {
+
+}
+export function deleteMovie(movieId) {
+    return http.delete(apiEndpoint + '/' + movieId);
+}
+//movieForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import { getMovie, saveMovie } from "../services/movieService";
+import { getGenres } from "../services/genreService";
+
+class MovieForm extends Form {
+    state = {
+        data: {
+            title: "",
+            genreId: "",
+            numberInStock: "",
+            dailyRentalRate: ""
+        },
+        genres: [],
+        errors: {}
+    };
+
+    schema = {
+        _id: Joi.string(),
+        title: Joi.string()
+            .required()
+            .label("Title"),
+        genreId: Joi.string()
+            .required()
+            .label("Genre"),
+        numberInStock: Joi.number()
+            .required()
+            .min(0)
+            .max(100)
+            .label("Number in Stock"),
+        dailyRentalRate: Joi.number()
+            .required()
+            .min(0)
+            .max(10)
+            .label("Daily Rental Rate")
+    };
+
+    async componentDidMount() {
+        const { data: genres } = await getGenres();
+        this.setState({ genres });
+
+        const movieId = this.props.match.params.id;
+        if (movieId === "new") return;
+
+        try {
+            const { data: movie } = await getMovie(movieId);
+            this.setState({ data: this.mapToViewModel(movie) });
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404)
+                return this.props.history.replace("/not-found");
+        }
+    }
+
+    mapToViewModel(movie) {
+        return {
+            _id: movie._id,
+            title: movie.title,
+            genreId: movie.genre._id,
+            numberInStock: movie.numberInStock,
+            dailyRentalRate: movie.dailyRentalRate
+        };
+    }
+
+    doSubmit = () => {
+        saveMovie(this.state.data);
+
+        this.props.history.push("/movies");
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Movie Form</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("title", "Title")}
+                    {this.renderSelect("genreId", "Genre", this.state.genres)}
+                    {this.renderInput("numberInStock", "Number in Stock", "number")}
+                    {this.renderInput("dailyRentalRate", "Rate")}
+                    {this.renderButton("Save")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default MovieForm;
+/*=============== 164.Refactoring (Рефакторинг) ==================*/
+//movieForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import { getMovie, saveMovie } from "../services/movieService";
+import { getGenres } from "../services/genreService";
+
+class MovieForm extends Form {
+    state = {
+        data: {
+            title: "",
+            genreId: "",
+            numberInStock: "",
+            dailyRentalRate: ""
+        },
+        genres: [],
+        errors: {}
+    };
+
+    schema = {
+        _id: Joi.string(),
+        title: Joi.string()
+            .required()
+            .label("Title"),
+        genreId: Joi.string()
+            .required()
+            .label("Genre"),
+        numberInStock: Joi.number()
+            .required()
+            .min(0)
+            .max(100)
+            .label("Number in Stock"),
+        dailyRentalRate: Joi.number()
+            .required()
+            .min(0)
+            .max(10)
+            .label("Daily Rental Rate")
+    };
+
+    async populateGenres(){
+        const { data: genres } = await getGenres();
+        this.setState({ genres });
+    }
+
+    async pupulateMovie() {
+        try {
+            const movieId = this.props.match.params.id;
+            if (movieId === "new") return;
+
+            const { data: movie } = await getMovie(movieId);
+            this.setState({ data: this.mapToViewModel(movie) });
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404)
+                return this.props.history.replace("/not-found");
+        }
+    }
+
+    async componentDidMount() {
+        await this.populateGenres();
+        await this.pupulateMovie();
+    }
+
+    mapToViewModel(movie) {
+        return {
+            _id: movie._id,
+            title: movie.title,
+            genreId: movie.genre._id,
+            numberInStock: movie.numberInStock,
+            dailyRentalRate: movie.dailyRentalRate
+        };
+    }
+
+    doSubmit = () => {
+        saveMovie(this.state.data);
+
+        this.props.history.push("/movies");
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Movie Form</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("title", "Title")}
+                    {this.renderSelect("genreId", "Genre", this.state.genres)}
+                    {this.renderInput("numberInStock", "Number in Stock", "number")}
+                    {this.renderInput("dailyRentalRate", "Rate")}
+                    {this.renderButton("Save")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default MovieForm;
+/*=============== 165.Saving the Movie (Сохранение фильма) ==================*/
+//movieService.js
+import http from "./httpService";
+import { apiUrl } from "../config.json";
+
+const apiEndpoint = apiUrl + "/movies";
+
+export function getMovies() {
+    return http.get(apiEndpoint);
+}
+export function getMovie(movieId) {
+    return http.get(apiEndpoint + "/" + movieId);
+}
+export function saveMovie(movie) {
+    if (movie._id) {
+        const body = { ...movie };
+        delete body._id;
+        http.put(apiEndpoint + "/" + movie._id, body);
+    }
+    http.post(apiEndpoint, movie);
+}
+export function deleteMovie(movieId) {
+    return http.delete(apiEndpoint + "/" + movieId);
+}
+//movieForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import { getMovie, saveMovie } from "../services/movieService";
+import { getGenres } from "../services/genreService";
+
+class MovieForm extends Form {
+    state = {
+        data: {
+            title: "",
+            genreId: "",
+            numberInStock: "",
+            dailyRentalRate: ""
+        },
+        genres: [],
+        errors: {}
+    };
+
+    schema = {
+        _id: Joi.string(),
+        title: Joi.string()
+            .required()
+            .label("Title"),
+        genreId: Joi.string()
+            .required()
+            .label("Genre"),
+        numberInStock: Joi.number()
+            .required()
+            .min(0)
+            .max(100)
+            .label("Number in Stock"),
+        dailyRentalRate: Joi.number()
+            .required()
+            .min(0)
+            .max(10)
+            .label("Daily Rental Rate")
+    };
+
+    async populateGenres() {
+        const { data: genres } = await getGenres();
+        this.setState({ genres });
+    }
+
+    async pupulateMovie() {
+        try {
+            const movieId = this.props.match.params.id;
+            if (movieId === "new") return;
+
+            const { data: movie } = await getMovie(movieId);
+            this.setState({ data: this.mapToViewModel(movie) });
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404)
+                return this.props.history.replace("/not-found");
+        }
+    }
+
+    async componentDidMount() {
+        await this.populateGenres();
+        await this.pupulateMovie();
+    }
+
+    mapToViewModel(movie) {
+        return {
+            _id: movie._id,
+            title: movie.title,
+            genreId: movie.genre._id,
+            numberInStock: movie.numberInStock,
+            dailyRentalRate: movie.dailyRentalRate
+        };
+    }
+
+    doSubmit = async () => {
+        await saveMovie(this.state.data);
+
+        this.props.history.push("/movies");
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Movie Form</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("title", "Title")}
+                    {this.renderSelect("genreId", "Genre", this.state.genres)}
+                    {this.renderInput("numberInStock", "Number in Stock", "number")}
+                    {this.renderInput("dailyRentalRate", "Rate")}
+                    {this.renderButton("Save")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default MovieForm;
+/*=============== 166.Refactoring (Рефакторинг) ==================*/
+//movieService.js
+import http from "./httpService";
+import { apiUrl } from "../config.json";
+
+const apiEndpoint = apiUrl + "/movies";
+
+function movieUrl(id) {
+    // return apiEndpoint + '/' + id;
+    return `${apiEndpoint}/${id}`;
+}
+export function getMovies() {
+    return http.get(apiEndpoint);
+}
+export function getMovie(movieId) {
+    return http.get(movieUrl(movieId));
+}
+export function saveMovie(movie) {
+    if (movie._id) {
+        const body = { ...movie };
+        delete body._id;
+        http.put(movieUrl(movie._id), body);
+    }
+    http.post(apiEndpoint, movie);
+}
+export function deleteMovie(movieId) {
+    return http.delete(movieUrl(movieId));
+}
+/*=============== 167.Introduction (Вступление) ==================*/
+//Authentication and Authorization
+//JSON Web Tokens (Веб-токены JSON)
+//Calling Protected APIs (Вызов Защищенных API)
+//Showing/Hiding Elements (Показ / скрытие элементов)
+//Protected Routes (Защищенные маршруты)
+/*=============== 168.Registering a New User (Регистрация нового пользователя) ==================*/
+
+
 
 
 
