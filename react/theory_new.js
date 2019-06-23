@@ -721,6 +721,10 @@ export default {
 //node seed.js
 //node index.js
 //http://localhost:3900/api/movies
+///////////////////
+//Если возникнут проблемы при развертывании то скорей всего это в модуле bcrypt
+//https://stackoverflow.com/questions/34546272/cannot-find-module-bcrypt
+//auth.js | user.js - изменить bcrypt на bcryptjs
 /*=============== 156.Disabling Authentication (Отключение аутентификации) ==================*/
 //https://www.getpostman.com/downloads/
 /*=============== 157.Exercise - Connect Movies Page to the Backend (Упражнение - Соедините страницу фильмов с бэкэндом) ==================*/
@@ -1444,6 +1448,1555 @@ export function deleteMovie(movieId) {
 //Showing/Hiding Elements (Показ / скрытие элементов)
 //Protected Routes (Защищенные маршруты)
 /*=============== 168.Registering a New User (Регистрация нового пользователя) ==================*/
+//postman
+{
+    "email": "user1@domain.com",
+    "password": "123456",
+    "name": "Maxim"
+}
+/*=============== 169.Submitting the Registration Form (Подача регистрационной формы) ==================*/
+//userService.js
+import http from "./httpService";
+import { apiUrl } from "../config.json";
+
+const apiEndpoint = apiUrl + "/users";
+
+export function register(user) {
+    return http.post(apiEndpoint, {
+        email: user.username,
+        password: user.password,
+        name: user.name
+    });
+}
+//registerForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import * as userService from '../services/userService';
+
+class RegisterForm extends Form {
+    state = {
+        data: { username: "", password: "", name: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .email()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .min(5)
+            .label("Password"),
+        name: Joi.string()
+            .required()
+            .label("Name")
+    };
+
+    doSubmit = async () => {
+        await userService.register(this.state.data);
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Register</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "Username")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderInput("name", "Name")}
+                    {this.renderButton("Register")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default RegisterForm;
+/*=============== 170.Handling Registration Errors (Обработка Ошибок Регистрации) ==================*/
+//registerForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import * as userService from '../services/userService';
+
+class RegisterForm extends Form {
+    state = {
+        data: { username: "", password: "", name: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .email()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .min(5)
+            .label("Password"),
+        name: Joi.string()
+            .required()
+            .label("Name")
+    };
+
+    doSubmit = async () => {
+        try {
+            await userService.register(this.state.data);
+        }
+        catch(ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = {...this.state.errors};
+                errors.username = ex.response.data;
+                this.setState({ errors });
+            }
+        }
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Register</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "Username")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderInput("name", "Name")}
+                    {this.renderButton("Register")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default RegisterForm;
+/*=============== 171.Logging in a User (Вход в систему пользователя) ==================*/
+/*=============== 172.Submitting the Login Form (Отправка формы входа) ==================*/
+//authService.js
+import http from "./httpService";
+import { apiUrl } from "../config.json";
+
+const apiEndpoint = apiUrl + "/auth";
+
+export function login(email, password) {
+    return http.post(apiEndpoint, { email, password });
+}
+//loginForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import { login } from "../services/authService";
+
+class LoginForm extends Form {
+    state = {
+        data: { username: "", password: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+
+    doSubmit = async () => {
+        const { data } = this.state;
+        await login(data.username, data.password);
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "UserName")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderButton("Login")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 173.Handling Login Errors (Обработка ошибок входа) ==================*/
+//loginForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import { login } from "../services/authService";
+
+class LoginForm extends Form {
+    state = {
+        data: { username: "", password: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+
+    doSubmit = async () => {
+        try {
+            const { data } = this.state;
+            await login(data.username, data.password);
+        } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = { ...this.state.errors };
+                errors.username = ex.response.data;
+                this.setState({ errors });
+            }
+        }
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "UserName")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderButton("Login")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 174.Storing the JWT (Хранение JWT) ==================*/
+//loginForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import { login } from "../services/authService";
+
+class LoginForm extends Form {
+    state = {
+        data: { username: "", password: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+
+    doSubmit = async () => {
+        try {
+            const { data } = this.state;
+            const { data: jwt } = await login(data.username, data.password);
+            localStorage.setItem('token', jwt);
+            this.props.history.push('/');
+        } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = { ...this.state.errors };
+                errors.username = ex.response.data;
+                this.setState({ errors });
+            }
+        }
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "UserName")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderButton("Login")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 175.Logging in the User upon Registration (Вход пользователя при регистрации) ==================*/
+//vidly-api-node - users.js
+router.post("/", async (req, res) => {
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    let user = await User.findOne({ email: req.body.email });
+    if (user) return res.status(400).send("User already registered.");
+
+    user = new User(_.pick(req.body, ["name", "email", "password"]));
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+    await user.save();
+
+    const token = user.generateAuthToken();
+    res
+        .header("x-auth-token", token)
+        .header("access-control-expose-headers", "x-auth-token")
+        .send(_.pick(user, ["_id", "name", "email"]));
+});
+//registerForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import * as userService from '../services/userService';
+
+class RegisterForm extends Form {
+    state = {
+        data: { username: "", password: "", name: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .email()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .min(5)
+            .label("Password"),
+        name: Joi.string()
+            .required()
+            .label("Name")
+    };
+
+    doSubmit = async () => {
+        try {
+            const response = await userService.register(this.state.data);
+            localStorage.setItem('token', response.headers['x-auth-token']);
+            this.props.history.push('/');
+        }
+        catch(ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = {...this.state.errors};
+                errors.username = ex.response.data;
+                this.setState({ errors });
+            }
+        }
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Register</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "Username")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderInput("name", "Name")}
+                    {this.renderButton("Register")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default RegisterForm;
+/*=============== 176.JSON Web Tokens (JWT) ==================*/
+//https://jwt.io
+/*=============== 177.Getting the Current User (Получение текущего пользователя) ==================*/
+//npm i jwt-decode
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import jwtDecode from "jwt-decode";
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import LoginForm from "./components/loginForm";
+import RegisterForm from "./components/registerForm";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+class App extends Component {
+    state = {};
+    componentDidMount() {
+        try {
+            const jwt = localStorage.getItem("token");
+            const user = jwtDecode(jwt);
+            this.setState({ user });
+        } catch (ex) {}
+    }
+    render() {
+        return (
+            <React.Fragment>
+                <ToastContainer />
+                <NavBar user={this.state.user} />
+                <main className="container">
+                    <Switch>
+                        <Route path="/register" component={RegisterForm} />
+                        <Route path="/login" component={LoginForm} />
+                        <Route path="/movies/:id" component={MovieForm} />
+                        <Route path="/movies" component={Movies} />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+/*=============== 178.Displaying the Current User on NavBar (Отображение текущего пользователя на NavBar) ==================*/
+//navbar.jsx
+import React from "react";
+import { Link, NavLink } from "react-router-dom";
+
+const NavBar = ({ user }) => {
+    return (
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <Link className="navbar-brand" to="/">
+                Vidly
+            </Link>
+            <button
+                className="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span className="navbar-toggler-icon" />
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNav">
+                <div className="navbar-nav">
+                    <NavLink className="nav-link" to="/movies">
+                        Movies
+                    </NavLink>
+                    <NavLink className="nav-link" to="/customers">
+                        Customers
+                    </NavLink>
+                    <NavLink className="nav-link" to="/rentals">
+                        Rentals
+                    </NavLink>
+                    {!user && (
+                        <React.Fragment>
+                            <NavLink className="nav-link" to="/login">
+                                Login
+                            </NavLink>
+                            <NavLink className="nav-link" to="/register">
+                                Register
+                            </NavLink>
+                        </React.Fragment>
+                    )}
+                    {user && (
+                        <React.Fragment>
+                            <NavLink className="nav-link" to="/profile">
+                                {user.name}
+                            </NavLink>
+                            <NavLink className="nav-link" to="/logout">
+                                Logout
+                            </NavLink>
+                        </React.Fragment>
+                    )}
+                </div>
+            </div>
+        </nav>
+    );
+};
+
+export default NavBar;
+//login.Form.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import { login } from "../services/authService";
+
+class LoginForm extends Form {
+    state = {
+        data: { username: "", password: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+
+    doSubmit = async () => {
+        try {
+            const { data } = this.state;
+            const { data: jwt } = await login(data.username, data.password);
+            localStorage.setItem("token", jwt);
+            window.location = "/";
+        } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = { ...this.state.errors };
+                errors.username = ex.response.data;
+                this.setState({ errors });
+            }
+        }
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "UserName")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderButton("Login")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+//registerForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import * as userService from "../services/userService";
+
+class RegisterForm extends Form {
+    state = {
+        data: { username: "", password: "", name: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .email()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .min(5)
+            .label("Password"),
+        name: Joi.string()
+            .required()
+            .label("Name")
+    };
+
+    doSubmit = async () => {
+        try {
+            const response = await userService.register(this.state.data);
+            localStorage.setItem("token", response.headers["x-auth-token"]);
+            window.location = "/";
+        } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = { ...this.state.errors };
+                errors.username = ex.response.data;
+                this.setState({ errors });
+            }
+        }
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Register</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "Username")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderInput("name", "Name")}
+                    {this.renderButton("Register")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default RegisterForm;
+/*=============== 179.Logging out a User (Выход пользователя) ==================*/
+//logout.jsx
+import React, {Component} from 'react';
+
+class Logout extends Component {
+    componentDidMount() {
+        localStorage.removeItem('token');
+        window.location = '/';
+    }
+    render() {
+        return null;
+    }
+}
+
+export default Logout;
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import jwtDecode from "jwt-decode";
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import LoginForm from "./components/loginForm";
+import RegisterForm from "./components/registerForm";
+import Logout from "./components/logout";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+class App extends Component {
+    state = {};
+    componentDidMount() {
+        try {
+            const jwt = localStorage.getItem("token");
+            const user = jwtDecode(jwt);
+            this.setState({ user });
+        } catch (ex) {}
+    }
+    render() {
+        return (
+            <React.Fragment>
+                <ToastContainer />
+                <NavBar user={this.state.user} />
+                <main className="container">
+                    <Switch>
+                        <Route path="/register" component={RegisterForm} />
+                        <Route path="/login" component={LoginForm} />
+                        <Route path="/logout" component={Logout} />
+                        <Route path="/movies/:id" component={MovieForm} />
+                        <Route path="/movies" component={Movies} />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+/*=============== 180.Refactoring ==================*/
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import LoginForm from "./components/loginForm";
+import RegisterForm from "./components/registerForm";
+import Logout from "./components/logout";
+import auth from './services/authService';
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+class App extends Component {
+    state = {};
+    componentDidMount() {
+        const user = auth.getCurrentUser();
+        this.setState({ user });
+    }
+    render() {
+        return (
+            <React.Fragment>
+                <ToastContainer />
+                <NavBar user={this.state.user} />
+                <main className="container">
+                    <Switch>
+                        <Route path="/register" component={RegisterForm} />
+                        <Route path="/login" component={LoginForm} />
+                        <Route path="/logout" component={Logout} />
+                        <Route path="/movies/:id" component={MovieForm} />
+                        <Route path="/movies" component={Movies} />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+//loginForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import auth from "../services/authService";
+
+class LoginForm extends Form {
+    state = {
+        data: { username: "", password: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+
+    doSubmit = async () => {
+        try {
+            const { data } = this.state;
+            await auth.login(data.username, data.password);
+            window.location = "/";
+        } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = { ...this.state.errors };
+                errors.username = ex.response.data;
+                this.setState({ errors });
+            }
+        }
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "UserName")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderButton("Login")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+//registerForm.jsx
+import React from "react";
+import Joi from "joi-browser";
+import Form from "./common/form";
+import * as userService from "../services/userService";
+import auth from '../services/authService';
+
+class RegisterForm extends Form {
+    state = {
+        data: { username: "", password: "", name: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .email()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .min(5)
+            .label("Password"),
+        name: Joi.string()
+            .required()
+            .label("Name")
+    };
+
+    doSubmit = async () => {
+        try {
+            const response = await userService.register(this.state.data);
+            auth.loginWithJwt(response.headers["x-auth-token"]);
+            window.location = "/";
+        } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = { ...this.state.errors };
+                errors.username = ex.response.data;
+                this.setState({ errors });
+            }
+        }
+    };
+
+    render() {
+        return (
+            <div>
+                <h1>Register</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "Username")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderInput("name", "Name")}
+                    {this.renderButton("Register")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default RegisterForm;
+//logout.jsx
+import React, { Component } from "react";
+import auth from "../services/authService";
+
+class Logout extends Component {
+    componentDidMount() {
+        auth.logout();
+        window.location = "/";
+    }
+    render() {
+        return null;
+    }
+}
+
+export default Logout;
+//authService.js
+import jwtDecode from "jwt-decode";
+import http from "./httpService";
+import { apiUrl } from "../config.json";
+
+const apiEndpoint = apiUrl + "/auth";
+const tokenKey = "token";
+
+export async function login(email, password) {
+    const { data: jwt } = await http.post(apiEndpoint, { email, password });
+    localStorage.setItem(tokenKey, jwt);
+}
+
+export function loginWithJwt(jwt) {
+    localStorage.setItem(tokenKey, jwt);
+}
+
+export function logout() {
+    localStorage.removeItem(tokenKey);
+}
+
+export function getCurrentUser() {
+    try {
+        const jwt = localStorage.getItem(tokenKey);
+        return jwtDecode(jwt);
+    } catch (ex) {
+        return null;
+    }
+}
+
+export default {
+    login,
+    logout,
+    getCurrentUser,
+    loginWithJwt
+};
+/*=============== 181.Calling Protected API Endpoints (Вызов защищенных конечных точек API) ==================*/
+//default.json
+{
+    "jwtPrivateKey": "unsecureKey",
+    "db": "mongodb://localhost/vidly",
+    "port": "3900",
+    "requiresAuth": true
+}
+//authService.js
+import jwtDecode from "jwt-decode";
+import http from "./httpService";
+import { apiUrl } from "../config.json";
+
+const apiEndpoint = apiUrl + "/auth";
+const tokenKey = "token";
+
+export async function login(email, password) {
+    const { data: jwt } = await http.post(apiEndpoint, { email, password });
+    localStorage.setItem(tokenKey, jwt);
+}
+
+export function loginWithJwt(jwt) {
+    localStorage.setItem(tokenKey, jwt);
+}
+
+export function logout() {
+    localStorage.removeItem(tokenKey);
+}
+
+export function getCurrentUser() {
+    try {
+        const jwt = localStorage.getItem(tokenKey);
+        return jwtDecode(jwt);
+    } catch (ex) {
+        return null;
+    }
+}
+
+export function getJwt() {
+    return localStorage.getItem(tokenKey);
+}
+
+export default {
+    login,
+    logout,
+    getCurrentUser,
+    getJwt,
+    loginWithJwt
+};
+//httpService.js
+import axios from "axios";
+import logger from "./logService";
+import auth from './authService';
+import { toast } from "react-toastify";
+
+axios.defaults.headers.common['x-auth-token'] = auth.getJwt();
+
+axios.interceptors.response.use(null, error => {
+    const expectedError =
+        error.response &&
+        error.response.status >= 400 &&
+        error.response.status < 500;
+
+    if (!expectedError) {
+        logger.log(error);
+        toast.error("An unexpected error occurrred.");
+    }
+
+    return Promise.reject(error);
+});
+
+export default {
+    get: axios.get,
+    post: axios.post,
+    put: axios.put,
+    delete: axios.delete
+};
+/*=============== 182.Fixing Bi-directional Dependencies (Исправление двунаправленных зависимостей) ==================*/
+//Dependencies (Зависимости)
+//Http <- -> Auth
+//Http getJwt() ->  <- setJwt() Auth
+//httpService.js
+import axios from "axios";
+import logger from "./logService";
+import { toast } from "react-toastify";
+
+axios.interceptors.response.use(null, error => {
+    const expectedError =
+        error.response &&
+        error.response.status >= 400 &&
+        error.response.status < 500;
+
+    if (!expectedError) {
+        logger.log(error);
+        toast.error("An unexpected error occurrred.");
+    }
+
+    return Promise.reject(error);
+});
+
+function setJwt(jwt) {
+    axios.defaults.headers.common["x-auth-token"] = jwt;
+}
+
+export default {
+    get: axios.get,
+    post: axios.post,
+    put: axios.put,
+    delete: axios.delete,
+    setJwt
+};
+//authService.js
+import jwtDecode from "jwt-decode";
+import http from "./httpService";
+import { apiUrl } from "../config.json";
+
+const apiEndpoint = apiUrl + "/auth";
+const tokenKey = "token";
+
+http.setJwt(getJwt());
+
+export async function login(email, password) {
+    const { data: jwt } = await http.post(apiEndpoint, { email, password });
+    localStorage.setItem(tokenKey, jwt);
+}
+
+export function loginWithJwt(jwt) {
+    localStorage.setItem(tokenKey, jwt);
+}
+
+export function logout() {
+    localStorage.removeItem(tokenKey);
+}
+
+export function getCurrentUser() {
+    try {
+        const jwt = localStorage.getItem(tokenKey);
+        return jwtDecode(jwt);
+    } catch (ex) {
+        return null;
+    }
+}
+
+export function getJwt() {
+    return localStorage.getItem(tokenKey);
+}
+
+export default {
+    login,
+    logout,
+    getCurrentUser,
+    getJwt,
+    loginWithJwt
+};
+/*=============== 183.Authorizatoin (авторизация) ==================*/
+//{
+//   _id: "5d0e5aafe14a061e9449e963",
+//   name: "Maxim",
+//   email: "user1@domain.com",
+//   password: "$2a$10$ydTvs.QOuHjIv5MhlD0vgu9BYGfq3RJF7nLISSdXT.ocvStzYrZai",
+//   __v: 0,
+//   isAdmin: true
+// }
+/*=============== 184.Showing or Hiding Elements based on the User (Отображение или скрытие элементов на основе пользователя) ==================*/
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import LoginForm from "./components/loginForm";
+import RegisterForm from "./components/registerForm";
+import Logout from "./components/logout";
+import auth from "./services/authService";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+class App extends Component {
+    state = {};
+    componentDidMount() {
+        const user = auth.getCurrentUser();
+        this.setState({ user });
+    }
+    render() {
+        return (
+            <React.Fragment>
+                <ToastContainer />
+                <NavBar user={this.state.user} />
+                <main className="container">
+                    <Switch>
+                        <Route path="/register" component={RegisterForm} />
+                        <Route path="/login" component={LoginForm} />
+                        <Route path="/logout" component={Logout} />
+                        <Route path="/movies/:id" component={MovieForm} />
+                        <Route
+                            path="/movies"
+                            render={props => <Movies {...props} user={this.state.user} />}
+                        />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+//movies.jsx
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import MoviesTable from "./moviesTable";
+import ListGroup from "./common/listGroup";
+import Pagination from "./common/pagination";
+import { getMovies, deleteMovie } from "../services/movieService";
+import { getGenres } from "../services/genreService";
+import { paginate } from "../utils/paginate";
+import _ from "lodash";
+import SearchBox from "./searchBox";
+
+class Movies extends Component {
+    state = {
+        movies: [],
+        genres: [],
+        currentPage: 1,
+        pageSize: 4,
+        searchQuery: "",
+        selectedGenre: null,
+        sortColumn: { path: "title", order: "asc" }
+    };
+
+    async componentDidMount() {
+        const { data } = await getGenres();
+        console.log(data);
+        const genres = [{ _id: "", name: "All Genres" }, ...data];
+
+        const { data: movies } = await getMovies();
+        this.setState({ movies, genres });
+    }
+
+    handleDelete = async movie => {
+        const originalMovies = this.state.movies;
+        const movies = originalMovies.filter(m => m._id !== movie._id);
+        this.setState({ movies });
+
+        try {
+            await deleteMovie(movie._id);
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404)
+                toast.error("This movie has already been deleted.");
+            this.setState({ movies: originalMovies });
+        }
+    };
+
+    handleLike = movie => {
+        const movies = [...this.state.movies];
+        const index = movies.indexOf(movie);
+        movies[index] = { ...movies[index] };
+        movies[index].liked = !movies[index].liked;
+        this.setState({ movies });
+    };
+
+    handlePageChange = page => {
+        this.setState({ currentPage: page });
+    };
+
+    handleGenreSelect = genre => {
+        this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
+    };
+
+    handleSearch = query => {
+        this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
+    };
+
+    handleSort = sortColumn => {
+        this.setState({ sortColumn });
+    };
+
+    getPagedData = () => {
+        const {
+            pageSize,
+            currentPage,
+            sortColumn,
+            selectedGenre,
+            searchQuery,
+            movies: allMovies
+        } = this.state;
+
+        let filtered = allMovies;
+        if (searchQuery)
+            filtered = allMovies.filter(m =>
+                m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+            );
+        else if (selectedGenre && selectedGenre._id)
+            filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
+
+        const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+        const movies = paginate(sorted, currentPage, pageSize);
+
+        return { totalCount: filtered.length, data: movies };
+    };
+
+    render() {
+        const { length: count } = this.state.movies;
+        const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
+        const { user } = this.props;
+
+        if (count === 0) return <p>There are no movies in the database.</p>;
+
+        const { totalCount, data: movies } = this.getPagedData();
+
+        return (
+            <div className="row">
+                <div className="col-3">
+                    <ListGroup
+                        items={this.state.genres}
+                        selectedItem={this.state.selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className="col">
+                    {user && (
+                        <Link
+                            to="/movies/new"
+                            className="btn btn-primary"
+                            style={{ marginBottom: 20 }}
+                        >
+                            New Movie
+                        </Link>
+                    )}
+                    <p>Showing {totalCount} movies in the database.</p>
+                    <SearchBox value={searchQuery} onChange={this.handleSearch} />
+                    <MoviesTable
+                        movies={movies}
+                        sortColumn={sortColumn}
+                        onLike={this.handleLike}
+                        onDelete={this.handleDelete}
+                        onSort={this.handleSort}
+                    />
+                    <Pagination
+                        itemsCount={totalCount}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={this.handlePageChange}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Movies;
+/*=============== 185.Projecting Routes (Проектирование маршрутов) ==================*/
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import LoginForm from "./components/loginForm";
+import RegisterForm from "./components/registerForm";
+import Logout from "./components/logout";
+import auth from "./services/authService";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+class App extends Component {
+    state = {};
+    componentDidMount() {
+        const user = auth.getCurrentUser();
+        this.setState({ user });
+    }
+    render() {
+        const { user } = this.state;
+        return (
+            <React.Fragment>
+                <ToastContainer />
+                <NavBar user={this.state.user} />
+                <main className="container">
+                    <Switch>
+                        <Route path="/register" component={RegisterForm} />
+                        <Route path="/login" component={LoginForm} />
+                        <Route path="/logout" component={Logout} />
+                        <Route
+                            path="/movies/:id"
+                            render={props => {
+                                if (!user) return <Redirect to="/login" />;
+                                return <MovieForm {...props} />;
+                            }}
+                        />
+                        <Route
+                            path="/movies"
+                            render={props => <Movies {...props} user={this.state.user} />}
+                        />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+/*=============== 186.Extracting ProtectedRoute (Извлечение защищенного маршрута) ==================*/
+//protectedRoute.jsx
+import React from "react";
+import { Route, Redirect } from 'react-router-dom';
+import auth from '../../services/authService';
+
+const ProtectedRoute = ({ path, component: Component, render, ...rest }) => {
+    return (
+        <Route
+            {...rest}
+            render={props => {
+                if (!auth.getCurrentUser()) return <Redirect to="/login" />;
+                return Component ? <Component {...props} /> : render(props);
+            }}
+        />
+    );
+};
+
+export default ProtectedRoute;
+//App.js
+import React, { Component } from "react";
+import { Route, Redirect, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import MovieForm from "./components/movieForm";
+import Movies from "./components/movies";
+import Customers from "./components/customers";
+import Rentals from "./components/rentals";
+import NotFound from "./components/notFound";
+import NavBar from "./components/navbar";
+import LoginForm from "./components/loginForm";
+import RegisterForm from "./components/registerForm";
+import Logout from "./components/logout";
+import ProtectedRoute from './components/common/protectedRoute';
+import auth from "./services/authService";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+class App extends Component {
+    state = {};
+    componentDidMount() {
+        const user = auth.getCurrentUser();
+        this.setState({ user });
+    }
+    render() {
+        const { user } = this.state;
+        return (
+            <React.Fragment>
+                <ToastContainer />
+                <NavBar user={this.state.user} />
+                <main className="container">
+                    <Switch>
+                        <Route path="/register" component={RegisterForm} />
+                        <Route path="/login" component={LoginForm} />
+                        <Route path="/logout" component={Logout} />
+                        <ProtectedRoute
+                            path="/movies/:id"
+                            component={MovieForm}
+                        />
+                        <Route
+                            path="/movies"
+                            render={props => <Movies {...props} user={this.state.user} />}
+                        />
+                        <Route path="/customers" component={Customers} />
+                        <Route path="/rentals" component={Rentals} />
+                        <Route path="/not-found" component={NotFound} />
+                        <Redirect from="/" exact to="movies" />
+                        <Redirect to="/not-found" />
+                    </Switch>
+                </main>
+            </React.Fragment>
+        );
+    }
+}
+
+export default App;
+/*=============== 187.Redirecting after Login (Перенаправление после входа в систему) ==================*/
+//protectedRoute.jsx
+import React from "react";
+import { Route, Redirect } from "react-router-dom";
+import auth from "../../services/authService";
+
+const ProtectedRoute = ({ path, component: Component, render, ...rest }) => {
+    return (
+        <Route
+            {...rest}
+            render={props => {
+                if (!auth.getCurrentUser())
+                    return (
+                        <Redirect
+                            to={{
+                                pathname: "/login",
+                                state: { from: props.location }
+                            }}
+                        />
+                    );
+                return Component ? <Component {...props} /> : render(props);
+            }}
+        />
+    );
+};
+
+export default ProtectedRoute;
+//loginForm.jsx
+import React from "react";
+import { Redirect } from 'react-router-dom';
+import Joi from "joi-browser";
+import Form from "./common/form";
+import auth from "../services/authService";
+
+class LoginForm extends Form {
+    state = {
+        data: { username: "", password: "" },
+        errors: {}
+    };
+
+    schema = {
+        username: Joi.string()
+            .required()
+            .label("Username"),
+        password: Joi.string()
+            .required()
+            .label("Password")
+    };
+
+    doSubmit = async () => {
+        try {
+            const { data } = this.state;
+            await auth.login(data.username, data.password);
+            const { state } = this.props.location;
+            window.location = state ? state.from.pathname : '/';
+        } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = { ...this.state.errors };
+                errors.username = ex.response.data;
+                this.setState({ errors });
+            }
+        }
+    };
+
+    render() {
+        if (auth.getCurrentUser()) return <Redirect to="/" />;
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={this.handleSubmit}>
+                    {this.renderInput("username", "UserName")}
+                    {this.renderInput("password", "Password", "password")}
+                    {this.renderButton("Login")}
+                </form>
+            </div>
+        );
+    }
+}
+
+export default LoginForm;
+/*=============== 188.Exercise (Упражнение) ==================*/
+/*=============== 189.Hiding the Delete Column (Скрытие столбца удаления) ==================*/
+//moviesTable.jsx
+import React, { Component } from "react";
+import auth from "../services/authService";
+import { Link } from "react-router-dom";
+import Table from "./common/table";
+import Like from "./common/like";
+
+// const x = <like></like>; //React Element {}
+
+class MoviesTable extends Component {
+    columns = [
+        {
+            path: "title",
+            label: "Title",
+            content: movie => <Link to={`/movies/${movie._id}`}>{movie.title}</Link>
+        },
+        { path: "genre.name", label: "Genre" },
+        { path: "numberInStock", label: "Stock" },
+        { path: "dailyRentalRate", label: "Rate" },
+        {
+            key: "like",
+            content: movie => (
+                <Like liked={movie.liked} onClick={() => this.props.onLike(movie)} />
+            )
+        }
+    ];
+
+    deleteColumn = {
+        key: "delete",
+        content: movie => (
+            <button
+                onClick={() => this.props.onDelete(movie)}
+                className="btn btn-danger btn-sm"
+            >
+                Delete
+            </button>
+        )
+    };
+
+    constructor() {
+        super();
+        const user = auth.getCurrentUser();
+        if (user && user.isAdmin) this.columns.push(this.deleteColumn);
+    }
+
+    render() {
+        const { movies, onSort, sortColumn } = this.props;
+        return (
+            <Table
+                columns={this.columns}
+                data={movies}
+                onSort={onSort}
+                sortColumn={sortColumn}
+            />
+        );
+    }
+}
+
+export default MoviesTable;
+/*=============== 190.Introduction (Вступление) ==================*/
+//Deployment (развертывание)
+//Environment Variables (Переменные среды)
+//Production Builds (Построение производства)
+//Deploying to Heroku (Развертывание в Heroku)
+/*=============== 191.Environment Variables (Переменные среды) ==================*/
+//.env | .env.development
+//REACT_APP_NAME=Vidly in Dev
+// REACT_APP_VERSION=1
+//index.js
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import "./index.css";
+import "bootstrap/dist/css/bootstrap.css";
+import "font-awesome/css/font-awesome.css";
+
+console.log('SUPERMAN', process.env.REACT_APP_NAME);
+
+ReactDOM.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>,
+    document.getElementById("root")
+);
+/*=============== 192.Production Builds (Построение производства) ==================*/
+//npm run build
+//npm i -g serve
+//serve -s build
+//http://localhost:5000
+/*=============== 193.Getting Started with Heroku (Начало работы с Heroku) ==================*/
+//https://www.heroku.com/
+//https://devcenter.heroku.com/articles/heroku-cli
+//npm install -g heroku
+//heroku --version
+//heroku login
+//export HTTP_PROXY=http://proxy.server.com:1234
+/*=============== 194.MongoDB in the Cloud (MongoDB в облаке) ==================*/
+//https://mlab.com/
+/*=============== 195.Adding Code to a Git Repository (Adding Code to a Git Repository) ==================*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
