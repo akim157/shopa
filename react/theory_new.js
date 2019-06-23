@@ -2977,6 +2977,56 @@ ReactDOM.render(
 /*=============== 194.MongoDB in the Cloud (MongoDB в облаке) ==================*/
 //https://mlab.com/
 /*=============== 195.Adding Code to a Git Repository (Adding Code to a Git Repository) ==================*/
+//https://git-scm.com/
+//git --version
+//.gitignore
+//node_modules/
+//git init
+//git add .
+//git commit -m "Initial commit"
+/*=============== 196.Deploying to Heroku (Развертывание в Heroku) ==================*/
+//heroku create
+//git push heroku master
+//heroku open
+/*=============== 197.Viewing Logs (Просмотр журналов) ==================*/
+//heroku logs
+/*=============== 198.Setting Environment Variables on Heroku (Установка переменных среды в Heroku) ==================*/
+//heroku config:set vidly_db=mogodb://vidlyuser:1234@ds012538.mlab.com
+//custom-environment-variables.json
+//{
+//   "jwtPrivateKey": "vidly_jwtPrivateKey",
+//   "db": "vidly_db"
+// }
+//git add .
+//git commit -m "Added support for reading connection string from ronment variable"
+//git push heroku master
+//heroku open
+//.../api/genres
+/*=============== 199.Preparing the Font-end for Deployment (Подготовка внешнего интерфейса к развертыванию) ==================*/
+//.env.production
+//REACT_APP_API_URL=http://young-refuge-51186.herokuapp.com/api
+//.env.development
+//REACT_APP_API_URL=http://localhost:3900/api
+//httpService.js
+//axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+//npm run build
+//serve -s build
+/*=============== 200.Deploying the Front-end (Развертывание Front-end) ==================*/
+//.gitignore
+//node_modules/
+//git init
+//git add .
+//git commit -m "Initial commit"
+//heroku buildpack for create-react-app
+//https://github.com/mars/create-react-app-buildpack
+//heroku create --buildpack https://github.com/mars/create-react-app-buildpack.git
+//git push heroku master
+//heroku open
+/*=============== 200.A Story (История) ==================*/
+
+
+
+
 
 
 
