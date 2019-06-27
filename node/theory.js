@@ -97,8 +97,111 @@ console.log(module);
 //Модуль не пренадлежит к глобальному объекту
 //В узле каждый файл является модуль, переменные и функции опредененны в этом файле, они не доступны за пределами этого модуля
 /* ============== 11.Creating a Module (Создание модуля) ================== */
+//logger.js
+var url = 'http://mylogger.io/log';
 
-йф
+function log(message) {
+    //Send an HTTP request (Отправить запрос HTTP)
+    console.log(message);
+}
+
+module.exports.log = log;
+/* ============== 12.Loading a Module (Загрузка модуля) ================== */
+//app.js
+const logger = require('./logger');
+
+logger.log('message');
+/////////////////
+//logger.js
+var url = 'http://mylogger.io/log';
+
+function log(message) {
+    //Send an HTTP request (Отправить запрос HTTP)
+    console.log(message);
+}
+
+module.exports = log;
+//app.js
+const log = require('./logger');
+
+log('message');
+/* ============== 13.Module Wrapper Function (Функция обертки модуля) ================== */
+//logger.js
+(function(exports, require, module, __filename, __dirname) {
+    console.log(__filename);
+    console.log(__dirname);
+
+    var url = "http://mylogger.io/log";
+
+    function log(message) {
+        //Send an HTTP request (Отправить запрос HTTP)
+        console.log(message);
+    }
+
+    module.exports = log;
+    // module.exports.log = log;
+    // exports.log = log;
+    //
+    // exports = log; //module.exports
+});
+/* ============== 14.Path Module (Путь модуля) ================== */
+//app.js
+const path = require('path');
+var pathObj = path.parse(__filename);
+
+console.log(pathObj);
+/* ============== 15.OS Module (ОС Модуль) ================== */
+//app.js
+const os = require('os');
+
+var totalMemory = os.totalmem();
+var freeMemory = os.freemem();
+
+console.log('Total Memory: ' + totalMemory);
+console.log('Free Memory: ' + freeMemory);
+
+//Template string
+// ES6 / ES2015 : ECMAScript 6
+
+console.log(`Total Memory: ${totalMemory}`);
+console.log(`Free Memory: ${freeMemory}`);
+/* ============== 16.File System Module (Файловая система модуля) ================== */
+//app.js
+const fs = require('fs');
+
+// const files = fs.readdirSync('./');
+// console.log(files); //[ 'app.js', 'logger.js' ]
+
+fs.readdir('./', function(err, files) {
+    if (err) console.log('Error', err);
+    else console.log('Result', files); //[ 'app.js', 'logger.js' ]
+});
+/* ============== 17.Events Module (События модуль) ================== */
+//A signal that something has happened (Сигнал о том, что что-то случилось)
+//Example
+//HTTP -> Event:New Request
+//Class -> Human
+//Object -> John
+//app.js
+const EventEmitter = require('events'); //class, not function
+const emitter = new EventEmitter();
+
+//Register a listener (Зарегистрировать слушателя)
+emitter.on('messageLogged', function() {
+    console.log('Listener called');
+});
+
+
+//Raise an event (Поднять событие)
+emitter.emit('messageLogged');
+
+//Making a noise, produce - signalling (Шуметь, производить - сигнализация)
+
+
+
+
+
+
 
 
 
