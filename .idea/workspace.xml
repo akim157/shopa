@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="94bfdfcf-5e0a-4660-b7f9-216511d95c51" name="Default" comment="">
+    <list default="true" id="94bfdfcf-5e0a-4660-b7f9-216511d95c51" name="Default" comment="v1.5.35">
+      <change afterPath="$PROJECT_DIR$/Node/theory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/counter-app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/react/counter-app/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/counter-app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/react/counter-app/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/counter-app/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/counter-app/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/theory.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/theory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/vidly-api-node" beforeDir="false" afterPath="$PROJECT_DIR$/react/vidly-api-node" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,30 +16,12 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="theory.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/react/theory.js">
+        <entry file="file://$PROJECT_DIR$/Node/theory.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="674" column="21" lean-forward="true" selection-start-line="674" selection-start-column="21" selection-end-line="674" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="counter.jsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/counter-app/src/components/counter.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="1" lean-forward="true" selection-end-line="28" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/counter-app/src/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="34">
+              <caret line="2" column="10" lean-forward="true" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
               <folding>
-                <element signature="e#0#26#0" expanded="true" />
+                <element signature="n#!!doc" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -52,13 +32,13 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Vue Single File Component" />
         <option value="JavaScript File" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>i</find>
       <find>join</find>
       <find>Array.</find>
       <find>.value</find>
@@ -66,9 +46,35 @@
       <find>entries</find>
       <find>[].</find>
       <find>sni</find>
+      <find>heart</find>
+      <find>style</find>
+      <find>Mount</find>
+      <find>componentDidMount</find>
+      <find>create</find>
+      <find>React s</find>
+      <find>/a&gt;</find>
+      <find>href</find>
+      <find>handleLike</find>
+      <find>&lt;Rea</find>
+      <find>/bootstrap</find>
+      <find>bootstrap</find>
+      <find>&lt;Reac</find>
+      <find>account</find>
+      <find>Pagination</find>
+      <find>SearchBox</find>
+      <find>handleSearch</find>
+      <find>getPa</find>
+      <find>There are no mo</find>
+      <find>mongo</find>
+      <find>bcrypt</find>
+      <find>console</find>
+      <find>node ind</find>
     </findStrings>
     <replaceStrings>
       <replace />
+      <replace>/NavLink&gt;</replace>
+      <replace>to</replace>
+      <replace>data</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -78,16 +84,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/laravel/praktika/site.php" />
-        <option value="$PROJECT_DIR$/js-basics/method.js" />
-        <option value="$PROJECT_DIR$/js-basics/theory.js" />
-        <option value="$PROJECT_DIR$/react/react-app/src/person.js" />
-        <option value="$PROJECT_DIR$/react/react-app/src/teacher.js" />
-        <option value="$PROJECT_DIR$/react/react-app/src/index.js" />
-        <option value="$PROJECT_DIR$/react/counter-app/src/components/counter.jsx.js" />
-        <option value="$PROJECT_DIR$/react/counter-app/src/index.js" />
-        <option value="$PROJECT_DIR$/react/counter-app/src/components/counter.jsx" />
+        <option value="$PROJECT_DIR$/react/router-app/src/components/productDetails.jsx" />
+        <option value="$PROJECT_DIR$/react/router-app/src/components/admin/sidebar.jsx" />
+        <option value="$PROJECT_DIR$/react/router-app/src/components/admin/dashboard.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/common/pagination.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/customers.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/notFound.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/rentals.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/common/like.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/common/tableBody.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/index.css" />
+        <option value="$PROJECT_DIR$/vue/my-server/package.json" />
+        <option value="$PROJECT_DIR$/vue/my-server/db.json" />
+        <option value="$PROJECT_DIR$/vue/my-server/src/main.js" />
+        <option value="$PROJECT_DIR$/vue/my-server/src/App.vue" />
+        <option value="$PROJECT_DIR$/vue/my-srever/package.json" />
+        <option value="$PROJECT_DIR$/vue/my-srever/db.json" />
+        <option value="$PROJECT_DIR$/vue/my-srever/src/AppResource.vue" />
+        <option value="$PROJECT_DIR$/vue/my-srever/src/main.js" />
+        <option value="$PROJECT_DIR$/vue/my-srever/src/Counter.vue" />
+        <option value="$PROJECT_DIR$/vue/my-srever/src/SecondCounter.vue" />
+        <option value="$PROJECT_DIR$/vue/my-srever/src/Actions.vue" />
+        <option value="$PROJECT_DIR$/vue/my-srever/src/store/counter.js" />
+        <option value="$PROJECT_DIR$/vue/my-srever/src/store/index.js" />
+        <option value="$PROJECT_DIR$/vue/my-srever/src/App.vue" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/common/form.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/common/input.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/movieForm.jsx" />
         <option value="$PROJECT_DIR$/react/theory.js" />
+        <option value="$PROJECT_DIR$/react/http-app/src/App.js" />
+        <option value="$PROJECT_DIR$/react/vidly-api-node/routes/auth.js" />
+        <option value="$PROJECT_DIR$/react/vidly/src/services/userService.js" />
+        <option value="$PROJECT_DIR$/react/vidly-api-node/routes/users.js" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/navbar.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/logout.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/registerForm.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly-api-node/config/default.json" />
+        <option value="$PROJECT_DIR$/react/vidly/src/services/httpService.js" />
+        <option value="$PROJECT_DIR$/react/vidly-api-node/routes/movies.js" />
+        <option value="$PROJECT_DIR$/react/vidly/src/services/authService.js" />
+        <option value="$PROJECT_DIR$/react/vidly/src/App.js" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/common/protectedRoute.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/loginForm.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/moviesTable.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly/src/index.js" />
+        <option value="$PROJECT_DIR$/react/vidly/.env" />
+        <option value="$PROJECT_DIR$/react/vidly/src/components/movies.jsx" />
+        <option value="$PROJECT_DIR$/react/vidly-api-node/config/custom-environment-variables.json" />
+        <option value="$PROJECT_DIR$/react/vidly/.env.production" />
+        <option value="$PROJECT_DIR$/react/vidly/.env.development" />
+        <option value="$PROJECT_DIR$/react/theory_new.js" />
+        <option value="$PROJECT_DIR$/Node/theory.js" />
       </list>
     </option>
   </component>
@@ -105,16 +152,25 @@
   </component>
   <component name="NodeModulesDirectoryManager">
     <handled-path value="$PROJECT_DIR$/react/counter-app/node_modules" />
+    <handled-path value="$PROJECT_DIR$/react/http-app/node_modules" />
     <handled-path value="$PROJECT_DIR$/react/react-app/node_modules" />
+    <handled-path value="$PROJECT_DIR$/react/router-app/node_modules" />
+    <handled-path value="$PROJECT_DIR$/react/vidly-api-node/node_modules" />
+    <handled-path value="$PROJECT_DIR$/react/vidly/node_modules" />
+    <handled-path value="$PROJECT_DIR$/vue/my-srever/node_modules" />
   </component>
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths>
       <path value="$PROJECT_DIR$/react/counter-app/package.json" />
+      <path value="$PROJECT_DIR$/react/http-app/package.json" />
       <path value="$PROJECT_DIR$/react/react-app/package.json" />
+      <path value="$PROJECT_DIR$/react/router-app/package.json" />
+      <path value="$PROJECT_DIR$/react/vidly-api-node/package.json" />
+      <path value="$PROJECT_DIR$/react/vidly/package.json" />
+      <path value="$PROJECT_DIR$/vue/my-srever/package.json" />
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="960" />
     <option name="width" value="960" />
     <option name="height" value="1040" />
   </component>
@@ -123,7 +179,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -134,38 +189,28 @@
             <path>
               <item name="shopa" type="b2602c69:ProjectViewProjectNode" />
               <item name="shopa" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="shopa" type="b2602c69:ProjectViewProjectNode" />
-              <item name="shopa" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="counter-app" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="shopa" type="b2602c69:ProjectViewProjectNode" />
-              <item name="shopa" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="counter-app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="shopa" type="b2602c69:ProjectViewProjectNode" />
-              <item name="shopa" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="counter-app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Node" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SearchEverywhereHistoryKey" value="MOVIE&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/movies.jsx&#10;movie&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/moviesTable.jsx&#10;index.js&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/index.js&#10;mov&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/moviesTable.jsx&#10;movies&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/movies.jsx&#10;loginF&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/loginForm.jsx&#10;authSe&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/services/authService.js&#10;app.js&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/App.js&#10;authS&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/services/authService.js&#10;httpSer&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/services/httpService.js&#10;default&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly-api-node/config/default.json&#10;auth&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/services/authService.js&#10;regi&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/registerForm.jsx&#10;logi&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/loginForm.jsx&#10;navBar&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/navbar.jsx&#10;form&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/common/form.jsx&#10;login&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/loginForm.jsx&#10;reg&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/registerForm.jsx&#10;logSer&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/http-app/src/services/logService.js&#10;app&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/App.js&#10;input&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/common/input.jsx&#10;nav&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/components/navbar.jsx&#10;index.c&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/index.css&#10;inde&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/index.js&#10;index&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/vidly/src/index.js&#10;dash&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/router-app/src/components/admin/dashboard.jsx&#10;produ&#9;FILE&#9;file://D:/mymaxim/OSPanel/domains/shopa/react/router-app/src/components/productDetails.jsx" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="editing.templates" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="prettierjs.PrettierConfiguration.NodeInterpreter" value="project" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\Администратор\AppData\Roaming\npm\node_modules\prettier" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\mymaxim\OSPanel\domains\shopa\vue\my-srever\src" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -217,7 +262,21 @@
       <workItem from="1560032310597" duration="111000" />
       <workItem from="1560032433442" duration="19447000" />
       <workItem from="1560101422731" duration="391000" />
-      <workItem from="1560101827840" duration="7164000" />
+      <workItem from="1560101827840" duration="8968000" />
+      <workItem from="1560193467181" duration="7200000" />
+      <workItem from="1560276106883" duration="29138000" />
+      <workItem from="1560537877541" duration="13671000" />
+      <workItem from="1560621843261" duration="23478000" />
+      <workItem from="1560760554832" duration="460000" />
+      <workItem from="1560788797060" duration="15148000" />
+      <workItem from="1560887898032" duration="9538000" />
+      <workItem from="1560968651004" duration="6006000" />
+      <workItem from="1561063326667" duration="961000" />
+      <workItem from="1561137573434" duration="32801000" />
+      <workItem from="1561406161725" duration="5751000" />
+      <workItem from="1561492934127" duration="1994000" />
+      <workItem from="1561670682842" duration="5000" />
+      <workItem from="1561670838966" duration="5000" />
     </task>
     <task id="LOCAL-00001" summary="v1.0.4">
       <created>1555270941898</created>
@@ -282,29 +341,126 @@
       <option name="project" value="LOCAL" />
       <updated>1560080368524</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="v1.3.29">
+      <created>1560112966713</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1560112966713</updated>
+    </task>
+    <task id="LOCAL-00011" summary="v1.3.30">
+      <created>1560114649589</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1560114649589</updated>
+    </task>
+    <task id="LOCAL-00012" summary="v1.4.32">
+      <created>1560204599439</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1560204599439</updated>
+    </task>
+    <task id="LOCAL-00013" summary="v1.4.34">
+      <created>1560372839196</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1560372839196</updated>
+    </task>
+    <task id="LOCAL-00014" summary="v1.5.35">
+      <created>1560640096122</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1560640096122</updated>
+    </task>
+    <task id="LOCAL-00015" summary="v1.5.36">
+      <created>1560640311371</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1560640311371</updated>
+    </task>
+    <task id="LOCAL-00016" summary="v1.5.36">
+      <created>1560719661619</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1560719661619</updated>
+    </task>
+    <task id="LOCAL-00017" summary="v1.6.36">
+      <created>1560804217127</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1560804217127</updated>
+    </task>
+    <task id="LOCAL-00018" summary="v1.7.36">
+      <created>1560898613199</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1560898613199</updated>
+    </task>
+    <task id="LOCAL-00019" summary="v1.7.37">
+      <created>1560898949573</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1560898949573</updated>
+    </task>
+    <task id="LOCAL-00020" summary="v1.7.40">
+      <created>1560982505748</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1560982505748</updated>
+    </task>
+    <task id="LOCAL-00021" summary="v1.7.41">
+      <created>1560982584375</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1560982584375</updated>
+    </task>
+    <task id="LOCAL-00022" summary="v1.7.44">
+      <created>1561326966127</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1561326966127</updated>
+    </task>
+    <task id="LOCAL-00023" summary="v1.7.45">
+      <created>1561329230700</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1561329230700</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="104551000" />
+    <option name="totallyTimeSpent" value="252511000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="960" y="0" width="960" height="1040" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="0" width="960" height="1040" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.29444444" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.34555554" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.33887044" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.3366556" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32890365" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.32890365" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.48394242" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -329,284 +485,51 @@
     <MESSAGE value="v1.0.25" />
     <MESSAGE value="v1.1.29" />
     <MESSAGE value="v1.2.29" />
-    <option name="LAST_COMMIT_MESSAGE" value="v1.2.29" />
+    <MESSAGE value="v1.3.29" />
+    <MESSAGE value="v1.3.30" />
+    <MESSAGE value="v1.4.32" />
+    <MESSAGE value="v1.4.34" />
+    <MESSAGE value="v1.5.35" />
+    <MESSAGE value="v1.5.36" />
+    <MESSAGE value="v1.6.36" />
+    <MESSAGE value="v1.7.36" />
+    <MESSAGE value="v1.7.37" />
+    <MESSAGE value="v1.7.40" />
+    <MESSAGE value="v1.7.41" />
+    <MESSAGE value="v1.7.44" />
+    <MESSAGE value="v1.7.45" />
+    <option name="LAST_COMMIT_MESSAGE" value="v1.7.45" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
+    <entry file="file://$PROJECT_DIR$/Node/theory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12189">
-          <caret line="717" column="20" lean-forward="true" selection-start-line="717" selection-start-column="20" selection-end-line="717" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8228">
-          <caret line="484" column="24" lean-forward="true" selection-start-line="484" selection-start-column="24" selection-end-line="484" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="80" column="2" lean-forward="true" selection-start-line="80" selection-start-column="2" selection-end-line="80" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="918">
-          <caret line="54" column="2" lean-forward="true" selection-start-line="54" selection-start-column="2" selection-end-line="54" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="60" column="33" lean-forward="true" selection-start-line="60" selection-start-column="33" selection-end-line="60" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="23" lean-forward="true" selection-start-line="9" selection-start-column="46" selection-end-line="10" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18904">
-          <caret line="1112" column="1" lean-forward="true" selection-start-line="1112" selection-start-column="1" selection-end-line="1112" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8381">
-          <caret line="493" column="15" lean-forward="true" selection-start-line="493" selection-start-column="15" selection-end-line="493" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4165">
-          <caret line="245" column="35" lean-forward="true" selection-start-line="245" selection-start-column="35" selection-end-line="245" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/praktika/site.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8041">
-          <caret line="473" column="2" selection-start-line="473" selection-start-column="2" selection-end-line="473" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="7" lean-forward="true" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/praktika/site.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8041">
-          <caret line="473" column="2" lean-forward="true" selection-start-line="473" selection-start-column="2" selection-end-line="473" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="7" lean-forward="true" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/praktika/site.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7667">
-          <caret line="451" column="40" lean-forward="true" selection-start-line="451" selection-start-column="40" selection-end-line="451" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/praktika/site.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7412">
-          <caret line="436" column="22" lean-forward="true" selection-start-line="436" selection-start-column="22" selection-end-line="436" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/praktika/landlar.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6477">
-          <caret line="385" column="107" lean-forward="true" selection-start-line="385" selection-start-column="107" selection-end-line="385" selection-end-column="147" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/praktika/site.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2278">
-          <caret line="134" column="10" lean-forward="true" selection-start-line="134" selection-start-column="10" selection-end-line="134" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/teoria/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="198" column="70" lean-forward="true" selection-start-line="198" selection-start-column="70" selection-end-line="198" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/praktika/landlar.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6477">
-          <caret line="385" column="107" selection-start-line="385" selection-start-column="107" selection-end-line="385" selection-end-column="147" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/praktika/site.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="436" column="22" lean-forward="true" selection-start-line="436" selection-start-column="22" selection-end-line="436" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="7" lean-forward="true" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laravel/praktika/site.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="473" column="2" selection-start-line="473" selection-start-column="2" selection-end-line="473" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1529" column="39" selection-start-line="1529" selection-start-column="39" selection-end-line="1529" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js-basics/method.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="36" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/react-app/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/react-app/public/manifest.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" lean-forward="true" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/react-app/src/serviceWorker.js" />
-    <entry file="file://$PROJECT_DIR$/react/react-app/src/logo.svg" />
-    <entry file="file://$PROJECT_DIR$/react/react-app/src/index.css" />
-    <entry file="file://$PROJECT_DIR$/react/react-app/src/App.test.js" />
-    <entry file="file://$PROJECT_DIR$/react/react-app/src/App.js" />
-    <entry file="file://$PROJECT_DIR$/react/react-app/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1751">
-          <caret line="103" column="17" selection-start-line="103" selection-start-column="17" selection-end-line="103" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/react-app/config/webpack.config.dev.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/react-app/src/person.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="7" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/react-app/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="16" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/react-app/src/teacher.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" selection-end-line="13" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/counter-app/node_modules/boostrap/package.json" />
-    <entry file="file://$PROJECT_DIR$/react/counter-app/src/index.css">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/counter-app/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="34">
+          <caret line="2" column="10" lean-forward="true" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
           <folding>
-            <element signature="e#0#26#0" expanded="true" />
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/counter-app/src/components/counter.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="1" lean-forward="true" selection-end-line="28" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/theory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="674" column="21" lean-forward="true" selection-start-line="674" selection-start-column="21" selection-end-line="674" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
