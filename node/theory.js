@@ -196,7 +196,7 @@ emitter.on('messageLogged', function() {
 emitter.emit('messageLogged');
 
 //Making a noise, produce - signalling (Шуметь, производить - сигнализация)
-1
+12
 
 
 
