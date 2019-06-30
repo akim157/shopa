@@ -1,13 +1,17 @@
-const EventEmitter = require('events'); //class, not function
-const emitter = new EventEmitter();
+const http = require('http');
 
-//Register a listener (Зарегистрировать слушателя)
-emitter.on('messageLogged', function() {
-    console.log('Listener called');
+const server = http.createServer((req, res) => {	
+	if (req.url === '/') {
+		res.write('Hello World');
+		res.end();
+	}
+
+	if (req.url === '/api/courses') {
+		res.write(JSON.stringify([1 ,2 ,3]));
+		res.end();
+	}
 });
 
+server.listen(3000);
 
-//Raise an event (Поднять событие)
-emitter.emit('messageLogged');
-
-//Making a noise, produce - signalling (Шуметь, производить - сигнализация)
+console.log('Listening on port 3000...');

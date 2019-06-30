@@ -1,2 +1,4 @@
 .idea
 react/vidly-api-node
+.vscode
+node_modules
