@@ -1763,6 +1763,197 @@ function sendEmail(email, movies) {
 //md D:\data\db
 //mongodbCompass play
 /* ============== 79.Connecting to MongoDB (Подключение к MongoDB) ================== */
+//mkdir mongo-demo
+//npm i mongoose
+//index.js
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/playground')
+    .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.log('Could not connect to MongoDB...', err));
+//nodemon index.js
+/* ============== 80.Schemas (Схемы) ================== */
+//Schema types (Типы схемы)
+//String | Number | Date | Buffer | Boolean | ObjectID | Array
+//index.js
+const courseSchema = new mongoose.Schema({
+    name: String,
+    author: String,
+    tags: [ String ],
+    date: { type: Date, default: Date.now },
+    isPublished: Boolean
+});
+/* ============== 81.Models (Модели) ================== */
+//https://mongoosejs.com/docs/guide.html
+//index.js
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/playground')
+    .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.log('Could not connect to MongoDB...', err));
+
+const courseSchema = new mongoose.Schema({
+    name: String,
+    author: String,
+    tags: [ String ],
+    date: { type: Date, default: Date.now },
+    isPublished: Boolean
+});
+
+const Course = mongoose.model('Course', courseSchema);
+const course = new Course({
+    name: 'Node.js Course',
+    author: 'Maxim',
+    tags: ['node', 'backend'],
+    isPublished: true
+});
+/* ============== 82.Saving a Document (Сохранение документа) ================== */
+//index.js
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/playground')
+    .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.log('Could not connect to MongoDB...', err));
+
+const courseSchema = new mongoose.Schema({
+    name: String,
+    author: String,
+    tags: [ String ],
+    date: { type: Date, default: Date.now },
+    isPublished: Boolean
+});
+
+const Course = mongoose.model('Course', courseSchema);
+
+async function createCourse() {
+    const course = new Course({
+        name: 'Angular Course',
+        author: 'Maxim',
+        tags: ['angular', 'frontend'],
+        isPublished: true
+    });
+
+    const result = await course.save();
+    console.log(result);
+}
+
+createCourse();
+/* ============== 83.Querying Documents (Запрос документов) ================== */
+//index.js
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/playground')
+    .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.log('Could not connect to MongoDB...', err));
+
+const courseSchema = new mongoose.Schema({
+    name: String,
+    author: String,
+    tags: [ String ],
+    date: { type: Date, default: Date.now },
+    isPublished: Boolean
+});
+
+const Course = mongoose.model('Course', courseSchema);
+
+async function createCourse() {
+    const course = new Course({
+        name: 'Angular Course',
+        author: 'Maxim',
+        tags: ['angular', 'frontend'],
+        isPublished: true
+    });
+
+    const result = await course.save();
+    console.log(result);
+}
+
+async function getCourses() {
+    const courses = await Course.find();
+    console.log(courses);
+}
+
+// createCourse();
+getCourses();
+///////////////
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/playground')
+    .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.log('Could not connect to MongoDB...', err));
+
+const courseSchema = new mongoose.Schema({
+    name: String,
+    author: String,
+    tags: [ String ],
+    date: { type: Date, default: Date.now },
+    isPublished: Boolean
+});
+
+const Course = mongoose.model('Course', courseSchema);
+
+async function createCourse() {
+    const course = new Course({
+        name: 'Angular Course',
+        author: 'Maxim',
+        tags: ['angular', 'frontend'],
+        isPublished: true
+    });
+
+    const result = await course.save();
+    console.log(result);
+}
+
+async function getCourses() {
+    const courses = await Course
+        .find({ author: 'Maxim', isPublished: true })
+        .limit(10)
+        .sort({ name: 1 })
+        .select({ name: 1, tags: 1 });
+    console.log(courses);
+}
+
+// createCourse();
+getCourses();
+/* ============== 84.Comparison Query Operators (Операторы запросов сравнения) ================== */
+async function getCourses() {
+    // eq (equal) (равный)
+    // ne (not equal) (не равный)
+    // qt (greater than) (лучше чем)
+    // gte (greater than or equal to) (больше или равно)
+    // lt (less than) (Меньше, чем)
+    // lte (less than or equal to) (меньше или равно)
+    // in (в)
+    // nin (not in) (не в)
+    const courses = await Course
+    // .find({ author: 'Maxim', isPublished: true })
+    // .find({ price: 10 })
+    // .find({ price: { $gte: 10, $lte: 20 } })
+        .find({ price: { $in: [10, 15, 20]} })
+        .limit(10)
+        .sort({ name: 1 })
+        .select({ name: 1, tags: 1 });
+    console.log(courses);
+}
+/* ============== 85.Logical Query Operators (Логические операторы запросов) ================== */
+async function getCourses() {
+    // or
+    // and
+    const courses = await Course
+    // .find({ author: 'Maxim', isPublished: true })
+        .find()
+        // .or([{ author: 'Maxim' }, {isPublished: true}])
+        .and([])
+        .limit(10)
+        .sort({ name: 1 })
+        .select({ name: 1, tags: 1 });
+    console.log(courses);
+}
+/* ============== 86.Reqular Expressions (Регулярные выражения) ================== */
+
+
+
+
 
 
 
