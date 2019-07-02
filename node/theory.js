@@ -1950,6 +1950,193 @@ async function getCourses() {
     console.log(courses);
 }
 /* ============== 86.Reqular Expressions (Регулярные выражения) ================== */
+async function getCourses() {    
+	const courses = await Course
+			// .find({ author: 'Maxim', isPublished: true })  
+			
+			// Starts with Maxim
+			.find({ author: /^Maxim/ })         
+
+			// Ends with Fedorov
+			.find({ auth: /Fedorov$/i})
+
+			// Contains Maxim
+			.find({ author: /.*Maxim.*/})  
+			.limit(10)
+			.sort({ name: 1 })
+			.select({ name: 1, tags: 1 });
+	console.log(courses);
+}
+/* ============== 87.Counting (подсчет) ================== */
+async function getCourses() {    
+	const courses = await Course
+			.find({ author: 'Maxim', isPublished: true })  								
+			.limit(10)
+			.sort({ name: 1 })
+			.count();
+	console.log(courses);
+}
+/* ============== 88.Pagination (Пагинация) ================== */
+async function getCourses() {
+	const pageNumber = 2;
+	const pageSize = 10;
+	// /api/courses?pageNumber=2&pageSize=10
+
+	const courses = await Course
+		.find({ author: 'Maxim', isPublished: true })
+		.skip((pageNumber - 1) * pageSize)
+		.limit(pageSize)
+		.sort({ name: 1 })
+		.select({ name: 1, tags: 1 });
+	console.log(courses);
+}
+/* ============== 89.Exerciese 1 (Упражнение 1) ================== */
+//mongoimport --db mongo-exercises --collection courses --file exercise-data.json --jsonArray
+//mongoimport - инструмент для массового импорта данных в ваш экземпляр MongoDB.
+//--db - Задает имя базы данных, в которой запускается mongoimport .
+//mongo-exercises - имя бд
+//--collection - Определяет коллекцию для импорта. С версии 2.6  mongoimportберет имя коллекции из имени входного файла. MongoDB пропускает расширение файла из имени коллекции, если входной файл имеет расширение.
+//courses - имя колекции
+//--file - Определяет местоположение и имя файла, содержащего данные для импорта.
+//exercise-data.json - имя файла
+//--jsonArray - Принимает импорт данных, представленных несколькими документами MongoDB в одном массиве 
+//Exercise - Упражнение
+//Get all the published backend courses, sort them by their name, (Получить все опубликованные бэкэнд-курсы, отсортировать их по названию,)
+//pick only their name and author, and display them. (выберите только их имя и автора и отобразите их)
+//Solution - Решение
+//solution1.js
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/mongo-exercises');
+
+const courseSchema = new mongoose.Schema({
+	name: String,
+	author: String,
+	tags: [String],
+	date: Date,
+	isPublished: Boolean,
+	price: Number
+});
+
+const Course = mongoose.model('Course', courseSchema);
+
+async function getCourses() {
+	return await Course
+		.find({ isPublished: true, tags: 'backend' })
+		.sort({ name: 1 })
+		.select({ name: 1, author: 1 });	
+}
+
+async function run() {
+	const courses = await getCourses();
+	console.log(courses);
+}
+
+run();
+/* ============== 90.Exerciese 2 (Упражнение 2) ================== */
+//Get all the published frontend and backend courses, (Получить все опубликованные интерфейсы и бэкэнд-курсы)
+//sort them by their price in a descending order, (сортировать их по цене в порядке убывания)
+//pick only their name and author, (выбрать только их имя и автора)
+//and display them. (и отобразить их)
+//Solution - Решение
+//solution2.js
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/mongo-exercises');
+
+const courseSchema = new mongoose.Schema({
+	name: String,
+	author: String,
+	tags: [String],
+	date: Date,
+	isPublished: Boolean,
+	price: Number
+});
+
+const Course = mongoose.model('Course', courseSchema);
+
+async function getCourses() {
+	return await Course
+		.find({ isPublished: true, tags: { $in: ['frontend', 'backend']} })
+		.sort('-price')
+		.select('name author price');	
+}
+
+async function run() {
+	const courses = await getCourses();
+	console.log(courses);
+}
+
+run();
+//////////////
+async function getCourses() {
+	return await Course
+		.find({ isPublished: true })
+		.or([ { tags: 'frontend' }, { tags: 'backend' }])
+		.sort('-price')
+		.select('name author price');	
+}
+/* ============== 91.Exerciese 3 (Упражнение 3) ================== */
+//Get all the published courses that are $15 or more, (Получить все опубликованные курсы, которые стоят $ 15 или более)
+//or have the word 'by' in their title. (или иметь слово «по» в заголовке)
+//Solution - Решение
+async function getCourses() {
+	return await Course
+		.find({ isPublished: true })
+		.or([
+			{ price: { $gte: 15 } },
+			{ name: /.*by.*/ }
+		])
+		.sort('-price')
+		.select('name author price');
+}
+/* ============== 92.Updating Documents - Query First (Обновление документов - сначала запрос) ================== */
+async function updateCourse(id) {
+	// Approach: Query first (Подход: сначала запрос)
+	// findById()
+	// Modify its properties (Изменить его свойства)
+	// save()
+
+	// Approach: Update first (Подход: сначала обновить)
+	// Update directly (Обновление напрямую)
+	// Optionally: get the updated document (Опционально: получить обновленный документ)
+	const course = await Course.findById(id);	
+	if (!course) return;
+
+	course.isPublished = true;
+	course.author = 'Another Author';
+
+	// course.set({
+	// 	isPublished: true,
+	// 	author: 'Another Author'
+	// });
+
+	const result = await course.save();
+	console.log(result);
+}
+/* ============== 93.Updating a Document - Update First (Обновление документов - сначала обнавление) ================== */
+//https://docs.mongodb.com/manual/reference/operator/update/
+async function updateCourse(id) {	
+	const result = await Course.update({ _id: id }, {
+		$set: {
+			author: 'Mosh',
+			isPublished: false
+		}
+	});			
+	console.log(result);
+}
+////////////
+async function updateCourse(id) {	
+	const result = await Course.findByIdAndUpdate(id, {
+		$set: {
+			author: 'Jason',
+			isPublished: false
+		}
+	}, { new: true });			
+	console.log(result);
+}
+/* ============== 94.Removing Documents (Удаление документов) ================== */
+
 
 
 
