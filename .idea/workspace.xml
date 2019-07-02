@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="94bfdfcf-5e0a-4660-b7f9-216511d95c51" name="Default" comment="v1.5.35">
-      <change afterPath="$PROJECT_DIR$/Node/theory.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/vidly-api-node" beforeDir="false" afterPath="$PROJECT_DIR$/react/vidly-api-node" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Node/node-course/async-demo/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/Node/node-course/async-demo/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Node/npm-demo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Node/theory.js" beforeDir="false" afterPath="$PROJECT_DIR$/Node/theory.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,20 +15,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="theory.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Node/theory.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="10" lean-forward="true" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -151,6 +139,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node/node-app/node_modules" />
+    <handled-path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules" />
     <handled-path value="$PROJECT_DIR$/react/counter-app/node_modules" />
     <handled-path value="$PROJECT_DIR$/react/http-app/node_modules" />
     <handled-path value="$PROJECT_DIR$/react/react-app/node_modules" />
@@ -161,6 +151,92 @@
   </component>
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths>
+      <path value="$PROJECT_DIR$/node/lion-lib/package.json" />
+      <path value="$PROJECT_DIR$/node/node-app/node_modules/lion-lib/package.json" />
+      <path value="$PROJECT_DIR$/node/node-app/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/async-demo/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/@hapi/address/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/@hapi/hoek/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/@hapi/joi/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/@hapi/marker/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/@hapi/topo/node_modules/@hapi/hoek/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/@hapi/topo/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/accepts/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/array-flatten/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/basic-auth/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/body-parser/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/bytes/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/camelize/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/content-disposition/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/content-security-policy-builder/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/content-type/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/cookie-signature/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/cookie/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/dasherize/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/debug/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/depd/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/destroy/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/dns-prefetch-control/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/dont-sniff-mimetype/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/ee-first/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/encodeurl/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/escape-html/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/etag/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/expect-ct/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/express/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/feature-policy/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/finalhandler/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/forwarded/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/frameguard/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/fresh/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/helmet-crossdomain/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/helmet-csp/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/helmet/node_modules/depd/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/helmet/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/hide-powered-by/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/hpkp/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/hsts/node_modules/depd/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/hsts/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/http-errors/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/iconv-lite/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/ienoopen/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/inherits/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/ipaddr.js/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/media-typer/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/merge-descriptors/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/methods/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/mime-db/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/mime-types/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/mime/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/morgan/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/ms/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/negotiator/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/nocache/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/on-finished/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/on-headers/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/parseurl/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/path-to-regexp/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/platform/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/proxy-addr/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/qs/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/range-parser/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/raw-body/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/referrer-policy/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/safe-buffer/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/safer-buffer/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/send/node_modules/ms/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/send/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/serve-static/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/setprototypeof/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/statuses/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/toidentifier/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/type-is/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/unpipe/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/utils-merge/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/vary/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/node_modules/x-xss-protection/package.json" />
+      <path value="$PROJECT_DIR$/node/node-course/express-demo/package.json" />
+      <path value="$PROJECT_DIR$/node/vidly/package.json" />
       <path value="$PROJECT_DIR$/react/counter-app/package.json" />
       <path value="$PROJECT_DIR$/react/http-app/package.json" />
       <path value="$PROJECT_DIR$/react/react-app/package.json" />
@@ -170,7 +246,7 @@
       <path value="$PROJECT_DIR$/vue/my-srever/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="width" value="960" />
     <option name="height" value="1040" />
   </component>
@@ -179,6 +255,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -189,13 +266,12 @@
             <path>
               <item name="shopa" type="b2602c69:ProjectViewProjectNode" />
               <item name="shopa" type="462c0819:PsiDirectoryNode" />
-              <item name="Node" type="462c0819:PsiDirectoryNode" />
+              <item name="node" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -277,6 +353,7 @@
       <workItem from="1561492934127" duration="1994000" />
       <workItem from="1561670682842" duration="5000" />
       <workItem from="1561670838966" duration="5000" />
+      <workItem from="1562008038328" duration="2152000" />
     </task>
     <task id="LOCAL-00001" summary="v1.0.4">
       <created>1555270941898</created>
@@ -443,24 +520,25 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="252511000" />
+    <option name="totallyTimeSpent" value="254663000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="960" height="1040" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.34555554" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3366556" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32890365" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.48394242" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.35333332" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -506,10 +584,17 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Node/theory.js">
+    <entry file="file://$PROJECT_DIR$/node/theory.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="10" lean-forward="true" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node/theory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="406">
+          <caret line="1495" lean-forward="true" selection-start-line="1495" selection-end-line="1495" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
