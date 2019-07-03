@@ -2136,6 +2136,381 @@ async function updateCourse(id) {
 	console.log(result);
 }
 /* ============== 94.Removing Documents (Удаление документов) ================== */
+async function removeCourse(id) {
+    const result = await Course.deleteOne({ _id: id });
+    console.log(result);
+}
+/////////////
+async function removeCourse(id) {
+    // const result = await Course.deleteMany({ _id: id });
+    const course = await Course.findByIdAndRemove(id);
+    console.log(course);
+}
+/* ============== 95.Validation (Валидация) ================== */
+//index.js
+const mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost/mongo-exercises", {
+    useNewUrlParser: true
+});
+
+const courseSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    author: String,
+    tags: [String],
+    date: Date,
+    isPublished: Boolean,
+    price: Number
+});
+
+const Course = mongoose.model("Course", courseSchema);
+
+async function createCourse() {
+    const course = new Course({
+        // name: "Node Course",
+        author: "Maxim Fedorov",
+        tags: ["node", "frontend"],
+        isPublished: true
+    });
+    try {
+        // course.validate(err => {
+        //     if (err) {
+        //
+        //     }
+        // });
+        // const isValid = await course.validate();
+        // if (!isValid) {}
+        const result = await course.save();
+        console.log(result);
+    } catch (ex) {
+        console.log(ex);
+    }
+}
+
+async function getCourses() {
+    const pageNumber = 2;
+    const pageSize = 10;
+    // /api/courses?pageNumber=2&pageSize=10
+
+    const courses = await Course.find({ author: "Maxim", isPublished: true })
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .sort({ name: 1 })
+        .select({ name: 1, tags: 1 });
+    console.log(courses);
+}
+
+async function updateCourse(id) {
+    const result = await Course.findByIdAndUpdate(
+        id,
+        {
+            $set: {
+                author: "Jason",
+                isPublished: false
+            }
+        },
+        { new: true }
+    );
+    console.log(result);
+}
+
+async function removeCourse(id) {
+    // const result = await Course.deleteMany({ _id: id });
+    const course = await Course.findByIdAndRemove(id);
+    console.log(course);
+}
+
+createCourse();
+// getCourses();
+// updateCourse('5a6900fff467be65019a9001');
+// removeCourse("5d1c6f464724a7177c0086e7");
+/* ============== 96.Built-In Validators (Встроенная валидация) ================== */
+const mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost/mongo-exercises", {
+    useNewUrlParser: true
+});
+
+const courseSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        minLength: 5,
+        maxLength: 255
+        // match: /patten/
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ["web", "mobile", "network"]
+    },
+    author: String,
+    tags: [String],
+    date: Date,
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        required: function() {
+            return this.isPublished;
+        },
+        min: 10,
+        max: 200
+    }
+});
+
+const Course = mongoose.model("Course", courseSchema);
+
+async function createCourse() {
+    const course = new Course({
+        // name: "Node Course",
+        category: "-",
+        author: "Maxim Fedorov",
+        tags: ["node", "frontend"],
+        isPublished: true
+    });
+    try {
+        const result = await course.save();
+        console.log(result);
+    } catch (ex) {
+        console.log(ex);
+    }
+}
+createCourse();
+/* ============== 97.Custom Validators (Пользовательские валидаторы) ================== */
+const courseSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        minLength: 5,
+        maxLength: 255
+        // match: /patten/
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ["web", "mobile", "network"]
+    },
+    author: String,
+    tags: {
+        type: Array,
+        validate: {
+            validator: function(v) {
+                return v && v.length > 0;
+            },
+            message: 'A course should have at least on tag'
+        }
+    },
+    date: Date,
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        required: function() {
+            return this.isPublished;
+        },
+        min: 10,
+        max: 200
+    }
+});
+/* ============== 98.Async Validators (Асинхронные валидаторы) ================== */
+const courseSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        minLength: 5,
+        maxLength: 255
+        // match: /patten/
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ["web", "mobile", "network"]
+    },
+    author: String,
+    tags: {
+        type: Array,
+        validate: {
+            isAsync: true,
+            validator: function(v, callback) {
+                setTimeout(() => {
+                    // Do some async work
+                    const result = v && v.length > 0;
+                    callback(result);
+                }, 4000);
+            },
+            message: "A course should have at least on tag"
+        }
+    },
+    date: Date,
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        required: function() {
+            return this.isPublished;
+        },
+        min: 10,
+        max: 200
+    }
+});
+/* ============== 99.Validation Errors (Ошибки валидации) ================== */
+async function createCourse() {
+    const course = new Course({
+        name: "Angular Course",
+        category: "-",
+        author: "Maxim",
+        tags: null,
+        isPublished: true,
+        price: 15
+    });
+    try {
+        const result = await course.save();
+        console.log(result);
+    } catch (ex) {
+        for (field in ex.errors) console.log(ex.errors[field]);
+    }
+}
+/* ============== 100.SchemaType Options (Параметры типа схема) ================== */
+const courseSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        minLength: 5,
+        maxLength: 255
+        // match: /patten/
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ["web", "mobile", "network"],
+        lowercase: true,
+        // uppercase: true
+        trim: true
+    },
+    author: String,
+    tags: {
+        type: Array,
+        validate: {
+            isAsync: true,
+            validator: function(v, callback) {
+                setTimeout(() => {
+                    // Do some async work
+                    const result = v && v.length > 0;
+                    callback(result);
+                }, 4000);
+            },
+            message: "A course should have at least on tag"
+        }
+    },
+    date: Date,
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        required: function() {
+            return this.isPublished;
+        },
+        min: 10,
+        max: 200,
+        get: v => Math.round(v),
+        set: v => Math.round(v)
+    }
+});
+/* ============== 101.Project - Add Persistence to Genres API (Проект - Добавить постоянство к жанру API) ================== */
+//vidly -> npm i mongoose
+//nodemon index.js
+//index.js
+const mongoose = require('mongoose');
+const genres = require('./routes/genres');
+const express = require('express');
+const app = express();
+
+mongoose.connect('mongodb://localhost/vidly')
+    .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.error('Could not connect to MongoDB...'));
+
+app.use(express.json());
+app.use('/api/genres', genres);
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
+//genres.js
+const Joi = require("joi");
+const mongoose = require("mongoose");
+const express = require("express");
+const router = express.Router();
+
+const Genre = mongoose.model(
+    "Genre",
+    new mongoose.Schema({
+        name: {
+            type: String,
+            required: true,
+            minlength: 5,
+            maxlength: 50
+        }
+    })
+);
+
+router.get("/", async (req, res) => {
+    const genres = await Genre.find().sort("name");
+    res.send(genres);
+});
+
+router.post("/", async (req, res) => {
+    const { error } = validateGenre(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const genre = new Genre({ name: req.body.name });
+    await genre.save();
+
+    res.send(genre);
+});
+
+router.put("/:id", async (req, res) => {
+    const { error } = validateGenre(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const genre = await Genre.findByIdAndUpdate(
+        req.params.id,
+        { name: req.body.name },
+        { new: true }
+    );
+
+    if (!genre)
+        return res.status(404).send("The genre with the given ID was not found.");
+
+    res.send(genre);
+});
+
+router.delete("/:id", async (req, res) => {
+    const genre = await Genre.findByIdAndRemove(req.params.id);
+
+    if (!genre)
+        return res.status(404).send("The genre with the given ID was not found.");
+
+    res.send(genre);
+});
+
+router.get("/:id", async (req, res) => {
+    const genre = await Genre.findById(req.params.id);
+    if (!genre)
+        return res.status(404).send("The genre with the given ID was not found.");
+    res.send(genre);
+});
+
+function validateGenre(genre) {
+    const schema = {
+        name: Joi.string()
+            .min(3)
+            .required()
+    };
+
+    return Joi.validate(genre, schema);
+}
+
+module.exports = router;
+/* ============== 102.Project - Build the Customers API (Проект - создание API клиентов) ================== */
+
+
+
 
 
 
