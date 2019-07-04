@@ -2508,6 +2508,807 @@ function validateGenre(genre) {
 
 module.exports = router;
 /* ============== 102.Project - Build the Customers API (Проект - создание API клиентов) ================== */
+//index.js
+const mongoose = require('mongoose');
+const genres = require('./routes/genres');
+const customers = require('./routes/customers');
+const express = require('express');
+const app = express();
+
+mongoose.connect('mongodb://localhost/vidly')
+    .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.error('Could not connect to MongoDB...'));
+
+app.use(express.json());
+app.use('/api/genres', genres);
+app.use('/api/customers', customers);
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
+//customers.js
+const Joi = require("joi");
+const mongoose = require("mongoose");
+const express = require("express");
+const router = express.Router();
+
+const Customer = mongoose.model(
+    "Customer",
+    new mongoose.Schema({
+        name: {
+            type: String,
+            required: true,
+            minlength: 5,
+            maxlength: 50
+        },
+        idGold: {
+            type: Boolean,
+            default: false
+        },
+        phone: {
+            type: String,
+            required: true,
+            minlength: 5,
+            maxlength: 50
+        }
+    })
+);
+
+router.get("/", async (req, res) => {
+    const customers = await Customer.find().sort("name");
+    res.send(customers);
+});
+
+router.post("/", async (req, res) => {
+    const { error } = validateCustomer(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const customer = new Customer({
+        name: req.body.name,
+        phone: req.body.phone,
+        idGold: req.body.idGold
+    });
+    await customer.save();
+
+    res.send(genre);
+});
+
+function validateCustomer(customer) {
+    const schema = {
+        name: Joi.string()
+            .min(5)
+            .max(50)
+            .required(),
+        phone: Joi.string()
+            .min(5)
+            .max(50)
+            .required(),
+        isGold: Joi.boolean()
+    };
+
+    return Joi.validate(customer, schema);
+}
+
+module.exports = router;
+/* ============== 103.Restructuring the Project (Реструктуризация проекта) ================== */
+//customers.js
+const { Cutomer, validate } = require('../models/customer'); //.Customer
+const mongoose = require("mongoose");
+const express = require("express");
+const router = express.Router();
+
+router.get("/", async (req, res) => {
+    const customers = await Customer.find().sort("name");
+    res.send(customers);
+});
+
+router.post("/", async (req, res) => {
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const customer = new Customer({
+        name: req.body.name,
+        phone: req.body.phone,
+        idGold: req.body.idGold
+    });
+    await customer.save();
+
+    res.send(customer);
+});
+
+router.put("/:id", async (req, res) => {
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const сustomer = await Customer.findByIdAndUpdate(
+        req.params.id,
+        { name: req.body.name },
+        { new: true }
+    );
+
+    if (!сustomer)
+        return res.status(404).send("The genre with the given ID was not found.");
+
+    res.send(сustomer);
+});
+
+router.delete("/:id", async (req, res) => {
+    const сustomer = await Customer.findByIdAndRemove(req.params.id);
+
+    if (!сustomer)
+        return res.status(404).send("The genre with the given ID was not found.");
+
+    res.send(сustomer);
+});
+
+
+
+module.exports = router;
+//customer.js
+const Joi = require("joi");
+const mongoose = require("mongoose");
+
+const Customer = mongoose.model(
+    "Customer",
+    new mongoose.Schema({
+        name: {
+            type: String,
+            required: true,
+            minlength: 5,
+            maxlength: 50
+        },
+        idGold: {
+            type: Boolean,
+            default: false
+        },
+        phone: {
+            type: String,
+            required: true,
+            minlength: 5,
+            maxlength: 50
+        }
+    })
+);
+
+function validateCustomer(customer) {
+    const schema = {
+        name: Joi.string()
+            .min(5)
+            .max(50)
+            .required(),
+        phone: Joi.string()
+            .min(5)
+            .max(50)
+            .required(),
+        isGold: Joi.boolean()
+    };
+
+    return Joi.validate(customer, schema);
+}
+
+exports.Customer = Customer;
+exports.validate = validateCustomer;
+/* ============== 104.Modelling Relationships (Моделирование отношений) ================== */
+//Trade off between query performance vs consistency (Компромисс между производительностью запросов и согласованностью)
+
+// Usning References (Normalization) - Использование ссылок (нормализация)
+let author = {
+	name: 'Maxim'
+}
+let course = {
+	author: 'id',
+	authors: [
+		'id1',
+		'id2'
+	]
+}
+//Using Embedded Documents (Denormalization) - Использование встроенных документов (денормализация)
+let course = {
+	author: {
+		name: 'Maxim'
+	}
+}
+
+//Hybrid (Гибридный)
+let author = {
+	name: 'Maxim'
+	// 50 other properties (50 других свойств)
+}
+
+let course = {
+	author: {
+		id: 'ref',
+		name: 'Maxim'
+	}
+}
+/* ============== 105.Modelling Relationships (Моделирование отношений) ================== */
+//population.js
+const mongoose = require("mongoose");
+
+mongoose
+    .connect("mongodb://localhost/playground")
+    .then(() => console.log("Connected to MongoDB..."))
+    .catch(err => console.error("Could not connect to MongoDB...", err));
+
+const Author = mongoose.model(
+    "Author",
+    new mongoose.Schema({
+        name: String,
+        bio: String,
+        website: String
+    })
+);
+
+const Course = mongoose.model(
+    "Course",
+    new mongoose.Schema({
+        name: String,
+        author: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Author"
+        }
+    })
+);
+
+async function createAuthor(name, bio, website) {
+    const author = new Author({
+        name,
+        bio,
+        website
+    });
+
+    const result = await author.save();
+    console.log(result);
+}
+
+async function createCourse(name, author) {
+    const course = new Course({
+        name,
+        author
+    });
+
+    const result = await course.save();
+    console.log(result);
+}
+
+async function listCourses() {
+    const courses = await Course.find().select("name");
+    console.log(courses);
+}
+
+// createAuthor('Mosh', 'My bio', 'My Website');
+
+createCourse("Node Course", "5d1b7dfbedc2d201e8bda5eq");
+
+// listCourses();
+/* ============== 106.Population (Население) ================== */
+//https://mongoosejs.com/docs/populate.html
+const mongoose = require("mongoose");
+
+mongoose
+    .connect("mongodb://localhost/playground")
+    .then(() => console.log("Connected to MongoDB..."))
+    .catch(err => console.error("Could not connect to MongoDB...", err));
+
+const Author = mongoose.model(
+    "Author",
+    new mongoose.Schema({
+        name: String,
+        bio: String,
+        website: String
+    })
+);
+
+const Course = mongoose.model(
+    "Course",
+    new mongoose.Schema({
+        name: String,
+        author: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Author"
+        }
+    })
+);
+
+async function createAuthor(name, bio, website) {
+    const author = new Author({
+        name,
+        bio,
+        website
+    });
+
+    const result = await author.save();
+    console.log(result);
+}
+
+async function createCourse(name, author) {
+    const course = new Course({
+        name,
+        author
+    });
+
+    const result = await course.save();
+    console.log(result);
+}
+
+async function listCourses() {
+    const courses = await Course
+        .find()
+        .populate('author', 'name -_id')
+        .populate('category', 'name')
+        .select("name author");
+    console.log(courses);
+}
+
+// createAuthor('Mosh', 'My bio', 'My Website');
+
+// createCourse("Node Course", "5d1b7dfbedc2d201e8bda5eq");
+
+listCourses();
+/* ============== 107.Embedding Documents (Встраивание документов) ================== */
+//embedding.js
+const mongoose = require("mongoose");
+
+mongoose
+    .connect("mongodb://localhost/playground")
+    .then(() => console.log("Connected to MongoDB..."))
+    .catch(err => console.error("Could not connect to MongoDB...", err));
+
+const authorSchema = new mongoose.Schema({
+    name: String,
+    bio: String,
+    website: String
+});
+
+const Author = mongoose.model("Author", authorSchema);
+
+const Course = mongoose.model(
+    "Course",
+    new mongoose.Schema({
+        name: String,
+        // author: authorSchema
+        author: {
+            type: authorSchema,
+            retuired: true
+        }
+    })
+);
+
+async function createCourse(name, author) {
+    const course = new Course({
+        name,
+        author
+    });
+
+    const result = await course.save();
+    console.log(result);
+}
+
+async function listCourses() {
+    const courses = await Course.find();
+    console.log(courses);
+}
+
+async function updateAuthor(courseId) {
+    // await course = await Course.findById(courseId);
+    // await course = await Course.update({ _id: courseId }, {
+    //   $set: {
+    //     'author.name': 'John Smith'
+    //   }
+    // });
+    await course = await Course.update({ _id: courseId }, {
+        $unset: {
+            'author': ''
+        }
+    });
+    // course.author.name = 'Maxim Fedorov';
+    // course.save();
+}
+// createCourse("Node Course", new Author({ name: "Mosh" }));
+updateAuthor('5d1e22296650e61738ba800c');
+/* ============== 108.Using an Array of Sub-documents (Использование массива поддокументов) ================== */
+//embedding.js
+const mongoose = require("mongoose");
+
+mongoose
+    .connect("mongodb://localhost/playground")
+    .then(() => console.log("Connected to MongoDB..."))
+    .catch(err => console.error("Could not connect to MongoDB...", err));
+
+const authorSchema = new mongoose.Schema({
+    name: String,
+    bio: String,
+    website: String
+});
+
+const Author = mongoose.model("Author", authorSchema);
+
+const Course = mongoose.model(
+    "Course",
+    new mongoose.Schema({
+        name: String,
+        author: [authorSchema]
+    })
+);
+
+async function createCourse(name, authors) {
+    const course = new Course({
+        name,
+        authors
+    });
+
+    const result = await course.save();
+    console.log(result);
+}
+
+async function listCourses() {
+    const courses = await Course.find();
+    console.log(courses);
+}
+
+async function updateAuthor(courseId) {
+    // await course = await Course.findById(courseId);
+    // await course = await Course.update({ _id: courseId }, {
+    //   $set: {
+    //     'author.name': 'John Smith'
+    //   }
+    // });
+    // await course = await Course.update({ _id: courseId }, {
+    //   $unset: {
+    //     'author': ''
+    //   }
+    // });
+    // course.author.name = 'Maxim Fedorov';
+    // course.save();
+}
+async function addAAuthor(courseId, author) {
+    const course = await Course.findById(courseId);
+    course.authors.push(author);
+    course.save();
+}
+
+async function removeAuthor(courseId, authorId) {
+    const course = await Course.findById(courseId);
+    const author = course.authors.id(authorId);
+    author.remove();
+    course.save();
+}
+
+removeAuthor('5d1e253e3d5ff4005c85017f', '5d1e253e3d5ff4005c85017f');
+
+// addAAuthor('5d1e253e3d5ff4005c85017f', new Author({name: 'amy'}));
+// createCourse("Node Course", [
+//     new Author({ name: 'Maxim' }),
+//     new Author({ name: 'Ivan' })
+// ]);
+/* ============== 109.Project - Build the Movies API (Project - создание API фильмов) ================== */
+//vidly
+//movie.js
+const Joi = require('joi');
+const mongoose = require('mongoose');
+const {genreSchema} = require('./genre');
+
+const Movie = mongoose.model('Movies', new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 5,
+        maxlength: 255
+    },
+    genre: {
+        type: genreSchema,
+        required: true
+    },
+    numberInStock: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 255
+    },
+    dailyRentalRate: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 255
+    }
+}));
+
+function validateMovie(movie) {
+    const schema = {
+        title: Joi.string().min(5).max(50).required(),
+        genreId: Joi.string().required(),
+        numberInStock: Joi.number().min(0).required(),
+        dailyRentalRate: Joi.number().min(0).required()
+    };
+
+    return Joi.validate(movie, schema);
+}
+
+exports.Movie = Movie;
+exports.validate = validateMovie;
+//movies.js
+const {Movie, validate} = require('../models/movie');
+const {Genre} = require('../models/genre');
+const mongoose = require('mongoose');
+const express = require('express');
+const router = express.Router();
+
+router.get('/', async (req, res) => {
+    const movies = await Movie.find().sort('name');
+    res.send(movies);
+});
+
+router.post('/', async (req, res) => {
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const genre = await Genre.findById(req.body.genreId);
+    if (!genre) return res.status(400).send('Invalid genre.');
+
+    let movie = new Movie({
+        title: req.body.title,
+        genre: {
+            _id: genre._id,
+            name: genre.name
+        },
+        numberInStock: req.body.numberInStock,
+        dailyRentalRate: req.body.dailyRentalRate
+    });
+    movie = await movie.save();
+
+    res.send(movie);
+});
+
+router.put('/:id', async (req, res) => {
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const genre = await Genre.findById(req.body.genreId);
+    if (!genre) return res.status(400).send('Invalid genre.');
+
+    const movie = await Movie.findByIdAndUpdate(req.params.id,
+        {
+            title: req.body.title,
+            genre: {
+                _id: genre._id,
+                name: genre.name
+            },
+            numberInStock: req.body.numberInStock,
+            dailyRentalRate: req.body.dailyRentalRate
+        }, { new: true });
+
+    if (!movie) return res.status(404).send('The movie with the given ID was not found.');
+
+    res.send(movie);
+});
+
+router.delete('/:id', async (req, res) => {
+    const movie = await Movie.findByIdAndRemove(req.params.id);
+
+    if (!movie) return res.status(404).send('The movie with the given ID was not found.');
+
+    res.send(movie);
+});
+
+router.get('/:id', async (req, res) => {
+    const movie = await Movie.findById(req.params.id);
+
+    if (!movie) return res.status(404).send('The movie with the given ID was not found.');
+
+    res.send(movie);
+});
+
+module.exports = router;
+/* ============== 110.Project - Build the Rentals API (Проект - Построить API Арендной платы) ================== */
+// Create a new rental (Создать новый прокат)
+// POST /api/rentals
+
+// Get the list of rentals (Получить список аренды)
+// GET /api/rentals
+//vidly
+//rental.js
+const Joi = require('joi');
+const mongoose = require('mongoose');
+
+const Rental = mongoose.model('Rental', new mongoose.Schema({
+    customer: {
+        type: new mongoose.Schema({
+            name: {
+                type: String,
+                required: true,
+                minlength: 5,
+                maxlength: 50
+            },
+            isGold: {
+                type: Boolean,
+                default: false
+            },
+            phone: {
+                type: String,
+                required: true,
+                minlength: 5,
+                maxlength: 50
+            }
+        }),
+        required: true
+    },
+    movie: {
+        type: new mongoose.Schema({
+            title: {
+                type: String,
+                required: true,
+                trim: true,
+                minlength: 5,
+                maxlength: 255
+            },
+            dailyRentalRate: {
+                type: Number,
+                required: true,
+                min: 0,
+                max: 255
+            }
+        }),
+        required: true
+    },
+    dateOut: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    dateReturned: {
+        type: Date
+    },
+    rentalFee: {
+        type: Number,
+        min: 0
+    }
+}));
+
+function validateRental(rental) {
+    const schema = {
+        customerId: Joi.string().required(),
+        movieId: Joi.string().required()
+    };
+
+    return Joi.validate(rental, schema);
+}
+
+exports.Rental = Rental;
+exports.validate = validateRental;
+//rentals.js
+const {Rental, validate} = require('../models/rental');
+const {Movie} = require('../models/movie');
+const {Customer} = require('../models/customer');
+const mongoose = require('mongoose');
+const express = require('express');
+const router = express.Router();
+
+router.get('/', async (req, res) => {
+    const rentals = await Rental.find().sort('-dateOut');
+    res.send(rentals);
+});
+
+router.post('/', async (req, res) => {
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const customer = await Customer.findById(req.body.customerId);
+    if (!customer) return res.status(400).send('Invalid customer.');
+
+    const movie = await Movie.findById(req.body.movieId);
+    if (!movie) return res.status(400).send('Invalid movie.');
+
+    if (movie.numberInStock === 0) return res.status(400).send('Movie not in stock.');
+
+    let rental = new Rental({
+        customer: {
+            _id: customer._id,
+            name: customer.name,
+            phone: customer.phone
+        },
+        movie: {
+            _id: movie._id,
+            title: movie.title,
+            dailyRentalRate: movie.dailyRentalRate
+        }
+    });
+    rental = await rental.save();
+
+    movie.numberInStock--;
+    movie.save();
+
+    res.send(rental);
+});
+
+router.get('/:id', async (req, res) => {
+    const rental = await Rental.findById(req.params.id);
+
+    if (!rental) return res.status(404).send('The rental with the given ID was not found.');
+
+    res.send(rental);
+});
+
+module.exports = router;
+/* ============== 111.Transactions (операции) ================== */
+//Это группа операций...
+//Two Phase Commit (Двухфазный коммит)
+//https://docs.mongodb.com/v3.4/tutorial/perform-two-phase-commits/
+//npm i fawn
+//https://www.npmjs.com/package/fawn
+//rentals.js
+const { Rental, validate } = require("../models/rental");
+const { Movie } = require("../models/movie");
+const { Customer } = require("../models/customer");
+const mongoose = require("mongoose");
+const Fawn = require("fawn");
+const express = require("express");
+const router = express.Router();
+
+Fawn.init(mongoose);
+
+router.get("/", async (req, res) => {
+    const rentals = await Rental.find().sort("-dateOut");
+    res.send(rentals);
+});
+
+router.post("/", async (req, res) => {
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const customer = await Customer.findById(req.body.customerId);
+    if (!customer) return res.status(400).send("Invalid customer.");
+
+    const movie = await Movie.findById(req.body.movieId);
+    if (!movie) return res.status(400).send("Invalid movie.");
+
+    if (movie.numberInStock === 0)
+        return res.status(400).send("Movie not in stock.");
+
+    let rental = new Rental({
+        customer: {
+            _id: customer._id,
+            name: customer.name,
+            phone: customer.phone
+        },
+        movie: {
+            _id: movie._id,
+            title: movie.title,
+            dailyRentalRate: movie.dailyRentalRate
+        }
+    });
+
+    try {
+        new Fawn.Task()
+            .save("rentals", rental)
+            .update(
+                "movies",
+                { _id: movie._id },
+                {
+                    $inc: { numberInStock: -1 }
+                }
+            )
+            .run();
+
+        res.send(rental);
+    } catch (ex) {
+        res.status(500).send("Something failed.");
+    }
+});
+
+router.get("/:id", async (req, res) => {
+    const rental = await Rental.findById(req.params.id);
+
+    if (!rental)
+        return res.status(404).send("The rental with the given ID was not found.");
+
+    res.send(rental);
+});
+
+module.exports = router;
+/* ============== 112.ObjectID ================== */
+
+
+
 
 
 
