@@ -3306,8 +3306,216 @@ router.get("/:id", async (req, res) => {
 
 module.exports = router;
 /* ============== 112.ObjectID ================== */
+//https://docs.mongodb.com/manual/reference/method/ObjectId/
+// _id: 5d0e4d252f8f2905240cf830
+// 12 bytes
+// 4 bytes: timestap
+// 3 bytes: machine identifier (идентификатор машины)
+// 2 bytes: process identifier (идентификатор процесса)
+// 3 bytes: counter (счетчик)
 
+// 1 byte = 8 bits
+// 2 ^ 8 = 256
+// 2 ^ 24 = 16M
 
+// Driver -> MongoDB
+
+const mongoose = require('mongoose');
+const id = new mongoose.Types.ObjectId();
+console.log(id);
+/* ============== 113.Validating Object ID`s (Проверка идентификаторов объектов) ================== */
+if (mongoose.Types.ObjectId.isValid(req.body.customerId))
+return res.status(400).send('Invalid customer.');
+//https://www.npmjs.com/package/joi-objectid
+//npm i joi-objectid
+//rental.js
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
+const mongoose = require('mongoose');
+
+const Rental = mongoose.model('Rental', new mongoose.Schema({
+  customer: { 
+    type: new mongoose.Schema({
+      name: {
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 50
+      },
+      isGold: {
+        type: Boolean,
+        default: false
+      },
+      phone: {
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 50
+      }      
+    }),  
+    required: true
+  },
+  movie: {
+    type: new mongoose.Schema({
+      title: {
+        type: String,
+        required: true,
+        trim: true, 
+        minlength: 5,
+        maxlength: 255
+      },
+      dailyRentalRate: { 
+        type: Number, 
+        required: true,
+        min: 0,
+        max: 255
+      }   
+    }),
+    required: true
+  },
+  dateOut: { 
+    type: Date, 
+    required: true,
+    default: Date.now
+  },
+  dateReturned: { 
+    type: Date
+  },
+  rentalFee: { 
+    type: Number, 
+    min: 0
+  }
+}));
+
+function validateRental(rental) {
+  const schema = {
+    customerId: Joi.objectId().required(),
+    movieId: Joi.objectId().required()
+  };
+
+  return Joi.validate(rental, schema);
+}
+
+exports.Rental = Rental; 
+exports.validate = validateRental;
+/* ============== 114.A Better Implementation (Лучшая реализация) ================== */
+//index.js
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
+/* ============== 115.Introduction (Вступление) ================== */
+//Authentication and Authorization (Аунтификация и Авторизация)
+// /api/genres
+// /api/movies
+// /api/customers
+// /api/rentals
+
+// Authentication
+// Authorization
+
+// Register: POST /api/users {name, email, password}
+// Login: POST /api/logins
+
+// email: {
+// 	type: String,
+// 	unique: true
+// }
+/* ============== 116.Creating the user Model (Создать пользовательскую модель) ================== */
+//user.js
+const Joi = require('joi');
+const mongoose = require('mongoose');
+
+const User = mongoose.model('User', new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 50
+  },
+  email: {
+    type: String,
+    required: true,
+    minlength: 5,
+		maxlength: 255,
+		unique: true
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 5,
+		maxlength: 1024
+  }
+})
+);
+
+function validateUser(user) {
+  const schema = {
+    name: Joi.string().min(5).max(50).required(),
+		email: Joi.string().min(5).max(255).required().email(),
+		password: Joi.string().min(5).max(255).required()
+  };
+
+  return Joi.validate(user, schema);
+}
+
+exports.User = User; 
+exports.validate = validateUser;
+/* ============== 117.Registering Users (Регистрация пользователей) ================== */
+//index.js
+const users = require('./routes/users');
+app.use('/api/users', users);
+//users.js
+const {User, validate} = require('../models/user');
+const mongoose = require('mongoose');
+const express = require('express');
+const router = express.Router();
+
+router.post('/', async (req, res) => {
+	const { error } = validate(req.body); 
+  if (error) return res.status(400).send(error.details[0].message);
+
+	let user = await User.findOne({ email: req.body.email });
+	if (user) return res.status(400).send('User already registered.');
+
+	user = new User({
+		name: req.body.name,
+		email: req.body.email,
+		password: req.body.password
+	});
+  
+	await user.save();
+  
+  res.send(user);
+});
+
+module.exports = router;
+/* ============== 118.Using Lodash (Использование Lodash) ================== */
+//https://lodash.com/
+//npm i lodash
+//joi-password-compexity
+//https://www.npmjs.com/package/joi-password-complexity
+//users.js
+const _ = require('lodash');
+const {User, validate} = require('../models/user');
+const mongoose = require('mongoose');
+const express = require('express');
+const router = express.Router();
+
+router.post('/', async (req, res) => {
+	const { error } = validate(req.body); 
+  if (error) return res.status(400).send(error.details[0].message);
+
+	let user = await User.findOne({ email: req.body.email });
+	if (user) return res.status(400).send('User already registered.');
+
+	user = new User(_.pick(req.body, ['name', 'email', 'password']));
+  
+	await user.save();
+
+  res.send(_.pick(user, ['_id', 'name', 'email']));
+});
+
+module.exports = router;
+/* ============== 119.Hashing Passwords (Хеширование паролей) ================== */
 
 
 
