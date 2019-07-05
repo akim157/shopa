@@ -3516,6 +3516,84 @@ router.post('/', async (req, res) => {
 
 module.exports = router;
 /* ============== 119.Hashing Passwords (Хеширование паролей) ================== */
+//npm i bcrypt - Библиотека, которая поможет вам хэшировать пароли
+// 1234 -> abcd
+const bcrypt = require('bcrypt');
+
+async function run() {
+    const salt = await bcrypt.genSalt();
+    const hashed = await bcrypt.hash('1234', salt);
+}
+
+run();
+//users.js
+const bcrypt = require('bcrypt');
+//...
+user = new User(_.pick(req.body, ['name', 'email', 'password']));
+const salt = await bcrypt.genSalt();
+user.password = await bcrypt.hash(user.password, salt);
+/* ============== 120.Authenticating Users (Аунтификация пользователя) ================== */
+//auth.js
+const bcrypt = require('bcrypt');
+const _ = require('lodash');
+const {User} = require('../models/user');
+const mongoose = require('mongoose');
+const express = require('express');
+const router = express.Router();
+
+router.post('/', async (req, res) => {
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    let user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send('Invalid email or password.');
+
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!validPassword) return res.status(400).send('Invalid email or password');
+
+    res.send(true);
+});
+
+function validate(req) {
+    const schema = {
+        email: Joi.string().min(5).max(255).required().email(),
+        password: Joi.string().min(5).max(255).required()
+    };
+
+    return Joi.validate(req, schema);
+}
+
+module.exports = router;
+/* ============== 121.Testing the Authentication (Тестирование аунтификации) ================== */
+/* ============== 122.JSON Web Tokens ================== */
+//https://jwt.io/
+//AUTHENTICATION
+//Client -> Login <- JWT Server
+/* ============== 123.Generating Authentication Tokens (Генерация токенов аутентификации) ================== */
+//npm i jsonwebtoken
+//auth.js
+const token = jwt.sign({ _id: user._id }, 'jwtPrivateKey');
+res.send(token);
+/* ============== 124.Storing Secrets in Environment Variables (Хранение секретов в переменных среды) ================== */
+//npm i config
+//https://www.npmjs.com/package/config
+//index.js
+if (!config.get('jwtPrivateKey')) {
+    console.log('FATAL ERROR: jwtPrivateKey is not defined.');
+    process.exit(1);
+}
+//auth.js
+const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
+res.send(token);
+//set vidly_jwtPrivateKey=mySecret
+/* ============== 125.Setting Response Headers (Настройка заголовков ответа) ================== */
+//users.js
+const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
+res.header('z-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
+/* ============== 126.Encapsulating Logic in Mongoose Models (Инкапсулирующая логика в моделях Mongoose) ================== */
+
+
+
 
 
 
