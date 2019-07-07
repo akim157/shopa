@@ -3591,6 +3591,913 @@ res.send(token);
 const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
 res.header('z-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
 /* ============== 126.Encapsulating Logic in Mongoose Models (Инкапсулирующая логика в моделях Mongoose) ================== */
+//Information Expert Principle (Информационный Экспертный Принцип)
+//user.js
+userShema.methods.generateAuthToken = function() {
+	const token = jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'));
+	return token;
+};
+//auth.js/users.js
+const token = user.generateAuthToken();
+/* ============== 127.Authorization Middleware (Средство авторизации) ================== */
+//middleware/auth.js
+const jwt = require('jsonwebtoken');
+const config = require('config');
+
+module.exports = function auth(req, res, next) {
+	const token = req.header('z-auth-token');
+	if (!token) res.status(401).send('Access denied. No token provided.');
+
+	try {
+		const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
+		req.user = decoded;
+		next();		
+	}	
+	catch(ex) {
+		res.status(400).send('Invalid token.');
+	}
+}
+/* ============== 128.Protecting Routes (Защита маршрутов) ================== */
+//genres.js
+const auth = require('../middleware/auth');
+//...
+router.post('/', auth,async (req, res) => {	
+
+  const { error } = validate(req.body); 
+  if (error) return res.status(400).send(error.details[0].message);
+
+  let genre = new Genre({ name: req.body.name });
+  genre = await genre.save();
+  
+  res.send(genre);
+});
+/* ============== 129.Getting the Current User (Получение текущего пользователя) ================== */
+//users.js
+router.get('/me', auth, async (req, res) => {
+	const user = await User.findById(req.user._id).select('-password');
+	res.send(user);
+});
+/* ============== 130.Logging Out Users (Выход из системы пользователей) ================== */
+/* ============== 131.Role Based Authorization (Ролевая авторизация) ================== */
+//middleware/admin.js
+module.exports = function (req, res, next) {
+	// req.user
+	// 401 Unathorized (неразрешенный)
+	// 403 Forbidden (запрещено)
+	if (!req.user.isAdmin) return res.status(403).send('Access denied.');
+	next();
+}
+//genres.js
+router.delete('/:id', [auth, admin], async (req, res) => {
+  const genre = await Genre.findByIdAndRemove(req.params.id);
+
+  if (!genre) return res.status(404).send('The genre with the given ID was not found.');
+
+  res.send(genre);
+});
+//user.js
+const userShema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 50
+  },
+  email: {
+    type: String,
+    required: true,
+    minlength: 5,
+		maxlength: 255,
+		unique: true
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 5,
+		maxlength: 1024
+	},
+	isAdmin: Boolean,	
+});
+
+userShema.methods.generateAuthToken = function() {
+	const token = jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, config.get('jwtPrivateKey'));
+	return token;
+};
+/* ============== 132.Testing the Authorization (Тестирование аунтификации) ================== */
+/* ============== 133.Introduction (Вступление) ================== */
+// Handling and Logging Errors (Обработка и регистрация ошибок)
+// HANDLING ERRORS (ОШИБКИ ОБРАЩЕНИЯ)
+// Send a friendly error (Отправить дружескую ошибку)
+// Log the exception (Зарегистрировать исключение)
+/* ============== 134.Handling Rejected Promises (Обработка отклоненных обещаний) ================== */
+//genres.js
+router.get('/', async (req, res) => {
+
+	try {
+		const genres = await Genre.find().sort('name');
+  res.send(genres);
+	} catch(ex) {
+		// Log the exception (Зарегистрировать исключение)
+		res.status(500).send('Something failed.');
+	}
+});
+/* ============== 135.Express Error Middleware (Промежуточное По Экспресс-Ошибок) ================== */
+//genres.js
+router.get('/', async (req, res, next) => {
+	try {
+		const genres = await Genre.find().sort('name');
+  res.send(genres);
+	} catch(ex) {		
+		next(ex);
+	}
+});
+//index.js
+app.use(error);
+//middleware/error.js
+module.exports = function(err, req, res, next) {
+	res.status(500).send('Something failed.');
+};
+/* ============== 136.Removing Try_Catch docs (Удаление документов Try_Catch) ================== */
+//middleware/async.js
+module.exports = function (handler) {
+	return async (req, res, next) => {
+		try {
+			await handler(req, res);
+		} catch (ex) {
+			next(ex);
+		}
+	};	
+}
+//genres.js
+router.get('/', asyncMiddleware(async (req, res) => {
+	const genres = await Genre.find().sort('name');
+	res.send(genres);
+}));
+/* ============== 137.Express Async Errors (Экспресс асинхронные ошибки) ================== */
+// npm i express-async-errors - https://www.npmjs.com/package/express-async-errors
+//index.js
+require('express-async-errors');
+/* ============== 138.Logging Errors (Ошибки регистрации) ================== */
+//npm i winston - https://www.npmjs.com/package/winston
+//TRANSPORT 
+//console | file | http => MongoDB | CouchDB | Redis | Loggly
+//index.js
+const winston = require('winston');
+
+winston.add(winston.transports.File, { filename: 'logfile.log' });
+//error.js
+const winston = require('winston');
+
+module.exports = function(err, req, res, next) {
+	winston.error(err.message, err);
+	// error
+	// warn
+	// info
+	// verbose
+	// debug
+	// silly 
+	res.status(500).send('Something failed.');
+};
+//genres.js
+router.get('/', async (req, res) => {
+	throw new Error('Could not get gendres.');
+	const genres = await Genre.find().sort('name');
+	res.send(genres);
+});
+/* ============== 139.Logging to MongoDB (Вход в MongoDB) ================== */
+//npm i winston-mongodb - https://www.npmjs.com/package/winston-mongodb
+//index.js
+requrie('winston-mongodb');
+winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/vidly' });
+//
+winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/vidly', level: 'error' });
+/* ============== 140.Uncaught Exceptions (Неучитанные исключения) ================== */
+//index.js
+process.on('uncaughtException', (ex) => {
+	console.log('WE GOT AN UNCAUGHT EXCEPTION');
+	winston.error(ex.message, ex);
+});
+/* ============== 141.Unhandled Promise Rejections (Необработанные отклонения обещания) ================== */
+winston.handleExceptions(new winston.transports.File({ filename: 'uncaughtExceptions.log' }));
+
+process.on('unhandledRejection', (ex) => {
+	winston.error(ex.message, ex);
+	process.exit(1);
+});
+/////
+process.on('unhandledRejection', (ex) => {
+	throw ex;
+});
+/* ============== 142.Error Handling Recap (Повторная обработка ошибок) ================== */
+/* ============== 143.Refactoring Index.js - Extracting Routes (Рефакторинг Index.js - Извлечение маршрутов) ================== */
+//startup/routes.js
+const express = require('express');
+const genres = require('../routes/genres');
+const customers = require('../routes/customers');
+const movies = require('../routes/movies');
+const rentals = require('../routes/rentals');
+const users = require('../routes/users');
+const auth = require('../routes/auth');
+const error = require('../middleware/error');
+
+module.exports = function (app) {
+	app.use(express.json());
+	app.use('/api/genres', genres);
+	app.use('/api/customers', customers);
+	app.use('/api/movies', movies);
+	app.use('/api/rentals', rentals);
+	app.use('/api/users', users);
+	app.use('/api/auth', auth);
+
+	app.use(error);
+}
+//index.js
+require('./startup/routes')(app);
+/* ============== 144.Extracting the DB Logic (Извлечение логики БД) ================== */
+//startup/db.js
+const winston = require('winston');
+const mongoose = require('mongoose');
+
+module.exports = function() {
+	mongoose.connect('mongodb://localhost/vidly')
+	.then(() => winston.info('Connected to MongoDB...'));	
+}
+//index.js
+require('./startup/db')();
+/* ============== 145.Logging (логирование) ================== */
+//startup/logging.js
+const winston = require('winston');
+require('winston-mongodb');
+require('express-async-errors');
+
+module.exports = function(){
+	winston.handleExceptions(
+		new winston.transports.File({ filename: 'uncaughtExceptions.log' })
+	);
+	
+	process.on('unhandledRejection', (ex) => {
+		throw ex;
+	});
+	
+	const p = Promise.reject(new Error('something failed miserably!'));
+	p.then(() => console.log('Done'));
+	
+	winston.add(winston.transports.File, { filename: 'logfile.log' });
+	winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/vidly', level: 'error' });
+}
+//index.js
+const config = require('config');
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
+const express = require('express');
+const app = express();
+
+require('./startup/logging');
+require('./startup/routes')(app);
+require('./startup/db')();
+
+process.on('uncaughtException', (ex) => {
+	winston.error(ex.message, ex);
+	process.exit(1);
+});
+
+if (!config.get('jwtPrivateKey')) {
+	console.log('FATAL ERROR: jwtPrivateKey is not defined.');
+	process.exit(1);
+}
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
+/* ============== 146.Extracting the Config Logic (Извлечение логики конфигурации) ================== */
+//index.js
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
+const express = require('express');
+const app = express();
+
+require('./startup/logging');
+require('./startup/routes')(app);
+require('./startup/db')();
+require('./startup/config')();
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
+//startup/config.js
+const config = require('config');
+
+module.exports = function() {		
+	if (!config.get('jwtPrivateKey')) {
+		throw new Error('FATAL ERROR: jwtPrivateKey is not defined.');				
+	}
+}
+/* ============== 147.Extracting the Validation Logic (Извлечение логики проверки) ================== */
+//index.js
+const winston = require('winston');
+const express = require('express');
+const app = express();
+
+require('./startup/logging');
+require('./startup/routes')(app);
+require('./startup/db')();
+require('./startup/config')();
+require('./startup/validation')();
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => winston.info(`Listening on port ${port}...`));
+//startup/validation.js
+const Joi = require('joi');
+
+module.exports = function() {
+	Joi.objectId = require('joi-objectid')(Joi);
+}
+/* ============== 148.Showing Unhandled Exceptions on the Console (Отображение необработанных исключений на консоли) ================== */
+//startup/logging.js
+const winston = require('winston');
+require('winston-mongodb');
+require('express-async-errors');
+
+module.exports = function(){
+	winston.handleExceptions(
+		new winston.transports.Console({ colorize: true, prettyPrint: true }),
+		new winston.transports.File({ filename: 'uncaughtExceptions.log' })
+	);
+	
+	process.on('unhandledRejection', (ex) => {
+		throw ex;
+	});
+	
+	const p = Promise.reject(new Error('something failed miserably!'));
+	p.then(() => console.log('Done'));
+	
+	winston.add(winston.transports.File, { filename: 'logfile.log' });
+	winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/vidly', level: 'error' });
+}
+/* ============== 149.What is Automated Testing? (Что такое автоматизированное тестирование?) ================== */
+//Is it a replacement for manual testing? (Это замена для ручного тестирования?)
+// Do I really need it? (Мне действительно это нужно?)
+// How should i do it? (Как я должен это делать?)
+// Test first (TDD) or code first? (Сначала проверить (TDD) или сначала код?)
+// Mosh, I don`t know what to test! (Мош, я не знаю что тестировать!)
+// What is automated testing? (Что такое автоматизированное тестирование?)
+// The practice of writing code to test our code, and then run those tests in an automated fashion. (Практика написания кода для тестирования нашего кода, а затем автоматического запуска этих тестов.)
+// CODE -> PRODUCTION CODE | TEST CODE
+//publc float CalculateTax(int input) {
+// 	if (x) return ...;
+// 	if (y) return ...;
+// 	return ...;
+// }
+//MANUAL TESTING (РУЧНОЕ ИСПЫТАНИЕ)
+// Launch the app (Запустите приложение)
+// Login (Логин)
+// Navigate (Навигация)
+// Fill out a form (Заполнить форму)
+// Submit it (Отправить это)
+// Verify the result (Проверьте результат)
+//TESTING COST (СТОИМОСТЬ ИСПЫТАНИЙ)
+//Without Automation (Без автоматизации)
+//With Atomation (С автомазацией)
+//AUTOMATED TESTING (АВТОМАТИЗИРОВАННОЕ ИСПЫТАНИЕ)
+var result = CalculateTax(1);
+Verify(result == 1.5f);
+//Automated tests are repeatable (Автоматизированные тесты повторяемы)
+/* ============== 150.Benefits of Automated Testing (Преимущества автоматизированного тестирования) ================== */
+// BENEFITS OF AUTOMATED TESTING (ПРЕИМУЩЕСТВА АВТОМАТИЗИРОВАННОГО ИСПЫТАНИЯ)
+// Test your code frequently, in less time (Проверяйте свой код часто, за меньшее время)
+// Catch bugs before deploying (Ловить ошибки перед развертыванием)
+// Deploy with confidence (Развертывание с уверенностью)
+// Refactor with confidence (Рефакторинг с уверенностью)
+// Refactoring means changing the structure of the code without changing its behavior. (Рефакторинг означает изменение структуры кода без изменения его поведения.)
+// Focus more on the quality (Фокус больше на качество)
+/* ============== 151.Types of Test (Типы Тестов) ================== */
+//Unit (Единица измерения) | Integration (интеграция) | End-to-end (Концы с концами)
+//UNIT TEST (МОДУЛЬНЫЙ ТЕСТ)
+// Tests a unit of an application without its external fependencies (Тестирует единицу приложения без внешних зависимостей)
+// Cheap to write (Дешево написать)
+// Execute fast (Выполнить быстро)
+// Don`t give a lot of confidence (Не давай много уверенности)
+//INTEGRATION TEST (ИНТЕГРАЦИОННЫЙ ТЕСТ)
+// Tests the application with its external dependencies (Тестирует приложение с его внешними зависимостями)
+// Take longer to execute (Займет больше времени, чтобы выполнить)
+// Give more confidence (Дай больше уверенности)
+// An alternative (poor) definition (Альтернативное (плохое) определение)
+// Class A | Class B
+//END-TO-END TEST (КОНЕЦ-КОНЕЦ ТЕСТ)
+// Drives an application through its UI. (Управляет приложением через его интерфейс.)
+// Give you thegreatest confidence (Дать вам большую уверенность)
+// Very slow (Очень медленно)
+// Very brittle (Очень хрупкий)
+/* ============== 152.Test Pyramid (Тестовая пирамида) ================== */
+// TYPES OF TESTS (ВИДЫ ИСПЫТАНИЙ)
+// Unit | Integration | End-to-end
+// TEST PYRAMID
+////
+//1 E2E
+//2 Integration
+//3	Unit
+// The actual ratio between unit, integration and end-to-end tests depends on yout project. (Фактическое соотношение между модульными, интеграционными и сквозными тестами зависит от вашего проекта.)
+// TAKEAWAYS
+// Favour unit test to e2e tests. (Избранные юнит-тесты на e2e тесты.)
+// Cover unit test gaps with integration tests. (Закрывайте пробелы в модульных тестах.)
+// Use end-to-end tests sparingly. (Используйте сквозные тесты экономно.)
+/* ============== 153.Tooling (механическая обработка) ================== */
+// LIBRARY (БИБЛИОТЕКА) | TEST RUNNER
+// FRAMEWORKS
+// Jasmine | Mocha - Chai - Sinon (node)| Jest (react)
+// Focus on the fundamentals not the tooling (Сосредоточьтесь на основах, а не на инструментах)
+/* ============== 154.Writing Your First Unit Test (Написание вашего первого модульного теста) ================== */
+//npm i jest --save-dev - https://www.npmjs.com/package/jest
+//npm test
+//package.json
+// "scripts": {
+// 	"test": "jest"
+// }
+//node_modules/.bin/jest
+//tests/lib.test.js
+test('Our first test', () => {
+	throw new Error('something error');
+});
+//npm test
+/* ============== 155.Testing Numbers (Тестирование чисел) ================== */
+//https://jestjs.io/
+//https://jestjs.io/docs/en/using-matchers
+//https://github.com/facebook/jest
+//lib.test.js
+const lib = require('../lib');
+
+test('absolute - shuld return a positive number if inpout is positive', () => {
+	const result = lib.absolute(1);
+	expect(result).toBe(1);
+});
+
+test('absolute - shuld return a positive number if inpout is negative', () => {
+	const result = lib.absolute(-1);
+	expect(result).toBe(1);
+});
+
+test('absolute - shuld return 0 if inpout is 0', () => {
+	const result = lib.absolute(0);
+	expect(result).toBe(1);
+});
+/* ============== 156.Grouping Tests (Группировка тестов) ================== */
+// Tests are first-class citizens in your source code (Тесты первоклассные граждане в вашем исходном коде)
+//lib.test.js
+const lib = require('../lib');
+
+describe('absolute', () => {
+	it('shuld return a positive number if inpout is positive', () => {
+		const result = lib.absolute(1);
+		expect(result).toBe(1);
+	});
+
+	it('shuld return a positive number if inpout is negative', () => {
+		const result = lib.absolute(-1);
+		expect(result).toBe(1);
+	});
+
+	it('shuld return 0 if inpout is 0', () => {
+		const result = lib.absolute(0);
+		expect(result).toBe(1);
+	});
+});
+/* ============== 157.Refactorign with Confidence (Рефакторинг с уверенностью) ================== */
+//lib.js
+module.exports.absolute = function(number) {
+	return (number >= 0) ? number : -number;  
+}
+/* ============== 158.Testing Strings (Тестовые строки) ================== */
+//lib.test.js
+describe('greet', () => {
+	it('should return the greeting message', () => {
+		const result = lib.greet('Maxim');
+		expect(result).toBe('Welcome Maxim');
+	});
+});
+/////
+describe('greet', () => {
+	it('should return the greeting message', () => {
+		const result = lib.greet('Maxim');
+		expect(result).toMatch(/Maxim/);
+		expect(result).toContain('Maxim');
+
+	});
+});
+/* ============== 159.Testing Arrays (Тестирование массива) ================== */
+describe('getCurrencies', () => {
+	it('should return supported currencies', () => {
+		const result = lib.getCurrencies();
+		// Too general
+		expect(result).toBeDefined();
+		expect(result).not.toBeNull();
+		// Too specific
+		expect(result[0]).toBe('USD');
+		expect(result[1]).toBe('AUD');
+		expect(result[2]).toBe('EUR');
+		expect(result.length).toBe(3);
+		// Proper way
+		expect(result).toContain('USD');
+		expect(result).toContain('AUD');
+		expect(result).toContain('EUR');
+		// Ideal way
+		expect(result).toEqual(expect.arrayContaining(['EUR', 'USD', 'AUD']));
+	});
+});
+/* ============== 160.Testing Objects (Тестирование Объекта) ================== */
+describe('getProduct', () => {
+	it('should return the product eith the given id', () => {
+		const result = lib.getProduct(1);
+		expect(result).toEqual({ id: 1, price: 10 });
+		expect(result).toMatchObject({ id: 1, price: 10 });
+		expect(result).toHaveProperty( 'id', '1');
+	});
+});
+/* ============== 161.Testing Exceptons (Тестирование исключений) ================== */
+describe('registerUser', () => {
+	it('should throw if username is falsy', () => {
+		// Null
+		// undefined
+		// NaN
+		// ''
+		// 0
+		// false				
+		const args = [null, undefined, NaN, '', 0, false];
+		args.forEach(a => {
+			expect(() => { lib.registerUser(a) }).toThrow();
+		});
+	});
+
+	it('should return a user object if valid username is passed', () => {
+		const result = lib.registerUser('maxim');
+		expect(result).toMatchObject({ username: 'maxim' });		
+		expect(result.id).toBeGreaterThan(0);		
+	});
+});
+/* ============== 162.Continually Running Tests (Постоянно запущенные тесты) ================== */
+//package.json
+// "scripts": {
+// 	"test": "jest --watchAll"
+// }
+//npm test
+/* ============== 163.Exercise - Testing the FizzBuzz (Упражнение - Тестирование FizzBuzz) ================== */
+//exercise.js
+
+module.exports.fizzBuzz = function(input) { 
+  if (typeof input !== 'number') 
+    throw new Error('Input should be a number.');
+    
+  if ((input % 3 === 0) && (input % 5) === 0)
+    return 'FizzBuzz';
+
+  if (input % 3 === 0)
+    return 'Fizz';
+
+  if (input % 5 === 0)
+    return 'Buzz'; 
+
+  return input; 
+}
+//exercise1.test.js
+const lib = require('../exercise1');
+
+describe('fizzbuzz', () => {
+	it('should throw an exception if input is not a number', () => {
+		lib.fizzBuzz('a');
+		expect(() => { lib.fizzBuzz('a') }).toThrow();
+		expect(() => { lib.fizzBuzz(null) }).toThrow();
+		expect(() => { lib.fizzBuzz(undefined) }).toThrow();
+		expect(() => { lib.fizzBuzz({}) }).toThrow();
+	});
+
+	it('should return FizzBuzz if input is divisible by 3 and 5', () => {
+		const result = lib.fizzBuzz(15);
+		expect(result).toBe('FizzBuzz');
+	});
+	
+	it('should return Fizz if input is divisible by 3', () => {
+		const result = lib.fizzBuzz(3);
+		expect(result).toBe('Fizz');
+	});
+	
+	it('should return Buzz if input is divisible by 5', () => {
+		const result = lib.fizzBuzz(5);
+		expect(result).toBe('Buzz');
+	});
+	
+	it('should return input if input is divisible by 3 or 5', () => {
+		const result = lib.fizzBuzz(1);
+		expect(result).toBe(1);
+	});
+});
+/* ============== 164.Creating Simple Mock Functions (Создание простых макетных функций) ================== */
+describe('applyDiscount', () => {
+	it('should apply 10% discount if customer has more than 10 points', () => {
+		db.getCustomerSync = function(customerId) {
+			console.log('Fake reading customer...');
+			return { id: customerId, points: 20 };
+		}
+		const order = { customerId: 1, totalPrice: 10 };
+		lib.applyDiscount(order);
+		expect(order.totalPrice).toBe(9);
+	});
+});
+/* ============== 165.Interaction Testing (Тестирование взаимодействия) ================== */
+describe('notifyCustomer', () => {
+	it('should send an email to the customer', () => {
+		db.getCustomerSync = function (customerId) {
+			return { email: 'a' }
+		}
+
+		let mailSent = false;
+		mail.send = function (email, message) {
+			mailSent = true;
+		}
+
+		lib.notifyCustomer({ customerId: 1 });
+
+		expect(mailSent).toBe(true);
+	});
+});
+/* ============== 166.Jest Mock Functions ================== */
+describe('notifyCustomer', () => {
+	it('should send an email to the customer', () => {
+		db.getCustomerSync = jest.fn().mockRejectedValue({ email: 'a' });
+
+		mail.send = jest.fn();
+
+		// const mockFucnction = jest.fn();
+		// // mockFucnction.mockReturnValue(1);
+		// // mockFucnction.mockResolvedValue(1);
+		// mockFucnction.mockRejectedValue(new Error('...'));
+		// const result = mockFucnction();
+
+		// db.getCustomerSync = function (customerId) {
+		// 	return { email: 'a' }
+		// }
+
+		// let mailSent = false;
+		// mail.send = function (email, message) {
+		// 	mailSent = true;
+		// }
+
+		lib.notifyCustomer({ customerId: 1 });
+
+		// expect(mail.send).toHaveBeenCalled();
+		expect(mail.send.mock.calls[0][0]).toBe('a');
+		expect(mail.send.mock.calls[0][1]).toMatch(/order/);
+		// expect(mail.send).toHaveBeenCalledWith('a', '...');
+	});
+});
+/* ============== 167.What to Unit Test (Что для модульного теста) ================== */
+/* ============== 168.Exercise (Упражнение) ================== */
+//vidly
+//npm i jest --save-dev
+//"test": "jest --watchAll"
+//user.test.js
+const { User } = require('../../../models/user');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+const mongoose = require('mongoose');
+
+describe('user.generaAuthToken', () => {
+	it('should return a valid JWT', () => {
+		const payload = { _id: new mongoose.Types.ObjectId(), isAdmin: true };
+		const user = new User();
+		const token = user.generateAuthToken();
+		const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
+		expect(decoded).toMatchObject(payload);
+	});
+});
+/* ============== 169.Introduction (Вступление) ================== */
+/* ============== 170.Preparing the app (Подготовка приложения) ================== */
+//index.js
+require('./startup/logging')();
+//package.json
+//"test": "jest --watchAll --verbose"
+//logging.js
+//// winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/vidly', level: 'error' });
+/* ============== 171.Setting Up the Test DB (Настройка тестовой БД) ================== */
+//db.js
+const winston = require('winston');
+const mongoose = require('mongoose');
+const config = require('config');
+
+module.exports = function() {
+	const db = config.get('db');
+	mongoose.connect(config.get('db'))
+	.then(() => winston.info(`Connected to ${db}...`));	
+}
+//test.json
+// {
+// 	"jwtPrivateKey": "1234",
+// 	"db": "mongodb://localhost/test_vidly"
+// }
+//NODE_ENV=test node index.js
+/* ============== 172.Your First Integration Test (Ваш первый интеграционный тест) ================== */
+//npm i supertest --save-dev
+//index.js
+const winston = require('winston');
+const express = require('express');
+const app = express();
+
+require('./startup/logging')();
+require('./startup/routes')(app);
+require('./startup/db')();
+require('./startup/config')();
+require('./startup/validation')();
+
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => winston.info(`Listening on port ${port}...`));
+
+module.exports = server;
+//genres.test.js
+const request = require('supertest');
+let server;
+
+describe('/api/genres', () => {
+	beforeEach(() => { server = require('../../index'); })
+	afterEach(() => { server.close(); });
+
+	describe('GET /', () => {
+		it('should return all genres', async () => {
+			const res = await request(server).get('/api/genres');
+			expect(res.status).toBe(200);
+		});
+	});
+});
+/* ============== 173.Populating the Test DB (Заполнение тестовой базы данных) ================== */
+//genres.test.js
+const request = require('supertest');
+const { Genre } = require('../../models/genre');
+let server;
+
+describe('/api/genres', () => {
+	beforeEach(() => { server = require('../../index'); })
+	afterEach(async () => {
+		server.close();
+		await Genre.remove({});
+	});
+
+	describe('GET /', () => {
+		it('should return all genres', async () => {
+			await Genre.collection.insertMany([
+				{ name: 'genre1' },
+				{ name: 'genre2' },
+			]);
+			const res = await request(server).get('/api/genres');
+			expect(res.status).toBe(200);
+			expect(res.body.length).toBe(2);
+			expect(res.body.some(g => g.name === 'genre1')).toBeTruthy();
+			expect(res.body.some(g => g.name === 'genre2')).toBeTruthy();
+		});
+	});
+});
+/* ============== 174.Testing Routes with Parameters (Тестирование маршрутов с параметрами) ================== */
+//genres.test.js
+const request = require('supertest');
+const { Genre } = require('../../models/genre');
+let server;
+
+describe('/api/genres', () => {
+	beforeEach(() => { server = require('../../index'); })
+	afterEach(async () => {
+		server.close();
+		await Genre.remove({});
+	});
+
+	describe('GET /', () => {
+		it('should return all genres', async () => {
+			await Genre.collection.insertMany([
+				{ name: 'genre1' },
+				{ name: 'genre2' },
+			]);
+			const res = await request(server).get('/api/genres');
+			expect(res.status).toBe(200);
+			expect(res.body.length).toBe(2);
+			expect(res.body.some(g => g.name === 'genre1')).toBeTruthy();
+			expect(res.body.some(g => g.name === 'genre2')).toBeTruthy();
+		});
+	});
+
+	describe('GET /:id', () => {
+		it('should return a genre if valid id is passed', async () => {
+			const genre = new Genre({ name: 'genre1' });
+			await genre.save();
+
+			const res = await request(sever).get('/api/genres/' + genre._id);
+			expect(res.status).toBe(200);
+			// expect(res.body).toMatchObject(genre);
+			expect(res.body).toHaveProperty('name', genre.name);
+		});
+	});
+});
+/* ============== 175.Validating Object ID`s (Проверка идентификаторов объектов) ================== */
+//genres.js
+router.get('/:id', async (req, res) => {
+	if (!mongoose.Types.ObjectId.isValid(rq.params.id))
+		return res.status(404).send('Invalid ID.');
+
+	const genre = await Genre.findById(req.params.id);
+
+	if (!genre) return res.status(404).send('The genre with the given ID was not found.');
+
+	res.send(genre);
+});
+//genres.test.js
+it('should return 404 if invalid id is passed', async () => {			
+	const res = await request(sever).get('/api/genres/1');
+	expect(res.status).toBe(404);						
+});
+/* ============== 176.Refactoring with Confidence (Рефакторинг с уверенностью) ================== */
+//middleware/validateObjectId.js
+const mongoose = require('mongoose');
+
+module.exports = function (req, res, next) {
+	if (!mongoose.Types.ObjectId.isValid(rq.params.id))
+		return res.status(404).send('Invalid ID.');
+	next();
+}
+//genres.js
+router.get('/:id', validateObjectId, async (req, res) => {
+
+
+	const genre = await Genre.findById(req.params.id);
+
+	if (!genre) return res.status(404).send('The genre with the given ID was not found.');
+
+	res.send(genre);
+});
+/* ============== 177.Testing the Authorization (Тестирование авторизации) ================== */
+//genres.test.js
+describe('POST /', () => {
+	it('should return 401 if client is not logged in', async () => {
+		const res = await request(server).post('/api/genres').send({ name: 'genre1' });
+		expect(res.status).toBe(401);
+	});
+});
+/* ============== 178.Testing Invalid Inputs (Тестирование неверных входов) ================== */
+it('should return 400 if genre is less than 5 characters', async () => {
+	const token = new User().generateAuthToken();
+
+	const res = await request(server)
+		.post('/api/genres')
+		.set('x-auth-token', token)
+		.send({ name: '1234' });
+	expect(res.status).toBe(400);
+});
+
+it('should return 400 if genre is more than 50 characters', async () => {
+	const token = new User().generateAuthToken();
+
+	const name = new Array(52).join('a');
+	const res = await request(server)
+		.post('/api/genres')
+		.set('x-auth-token', token)
+		.send({ name: name });
+	expect(res.status).toBe(400);
+});
+/* ============== 179.Testing the Happy Paths (Тестирование счастливых путей) ================== */
+it('should save the genre if it is valid', async () => {
+	const token = new User().generateAuthToken();
+	
+	const res = await request(server)
+		.post('/api/genres')
+		.set('x-auth-token', token)
+		.send({ name: 'genre1' });
+
+	const genre = await Genre.find({ name: 'genre1' });
+
+	expect(genre).not.toBeNull();
+});
+
+it('should return the genre if it is valid', async () => {
+	const token = new User().generateAuthToken();
+	
+	const res = await request(server)
+		.post('/api/genres')
+		.set('x-auth-token', token)
+		.send({ name: 'genre1' });
+
+	expect(res.body).toHaveProperty('_id');
+	expect(res.body).toHaveProperty('name', 'genre1');
+});
+/* ============== 180.Writing Clean Tests (Написание чистых тестов) ================== */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
