@@ -4480,6 +4480,884 @@ it('should return the genre if it is valid', async () => {
 	expect(res.body).toHaveProperty('name', 'genre1');
 });
 /* ============== 180.Writing Clean Tests (Написание чистых тестов) ================== */
+// Define the happy path, and then in each test, we change (Определите счастливый путь, и затем в каждом тесте мы меняем)
+// one parameter that clearly aligns with the name of the (один параметр, который четко совпадает с именем)
+// test.
+/* ============== 181.Testing the Auth Middleware (Тестирование Auth Middleware) ================== */
+//auth.test.js
+const {User} = require('../../models/user');
+const supertest = require('supertest');
+
+describe('auth middleware', () => {
+    beforeEach(() => { server = require('../../index'); });
+    afterEach(async () => {
+        await Genre.remove({});
+        server.close();
+    });
+
+    let token;
+    const exec = async () => {
+        await request(server)
+            .post('/api/genres')
+            .set('x-auth-token', token)
+            .send({ name: 'genre1' });
+    };
+
+    beforeEach(() => {
+        token = new User().generateAuthToken();
+    });
+
+    it('should return 401 if no token is provided', async () => {
+        token = '';
+        const res = await exec();
+        expect(res.status).toBe(401);
+    });
+
+    it('should return 400 if token is invalid', async () => {
+        token = 'a';
+        const res = await exec();
+        expect(res.status).toBe(400);
+    });
+
+    it('should return 200 if token is invalid', async () => {
+        const res = await exec();
+        expect(res.status).toBe(200);
+    });
+});
+/* ============== 182.Unit Testing the Auth Middleware (Модульное тестирование промежуточного программного обеспечения ================== */
+//middleware/auth.test.js
+const {User} = require('../../../models/user');
+const auth = require('../../../middleware/auth');
+const mongoose = require('mongoose');
+
+describe('auth middleware', () => {
+    it('should populate req.user with the payload of a valid JWT', () => {
+        const user = { _id: mongoose.Types.ObjectId().toHexString(), isAdmin: true };
+        const token = new User().generateAuthToken();
+        const req = {
+            header: jest.fn().mockReturnValue(token)
+        };
+        const res = {};
+        const next = jest.fn();
+
+        auth(req, res, next);
+
+        expect(req.user).toMatchObject(user);
+    });
+});
+/* ============== 183.Code Coverage (Покрытие кода) ================== */
+//package.json
+// "test": "jest --watchAll --verbose --coverage"
+//npm test
+/* ============== 184.Exercise (Упражнение) ================== */
+/* ============== 185.What is Test-driver Development(TDD)? (Что такое разработка тест-драйвера?) ================== */
+//With TDD you write your tests before writing the production code (С TDD вы пишете свои тесты перед написанием производственного кода)
+//Test-driven Development
+//Write a failing test. (Напишите провальный тест.)
+//Write the simplest code to make the test pass. (Напишите самый простой код для прохождения теста.)
+//Refactor if necessary. (Рефакторинг при необходимости.)
+//Benefits of TDD (Преимущества TDD)
+//Testable Source Code (Тестируемый исходный код)
+//Full Coverage by Tests (Полное покрытие тестами)
+//Simpler Implementation (Упрощенная реализация)
+//Test first / code first (Сначала проверь / сначала код)
+/* ============== 186.Implementing the Returns (Реализация возвращений) ================== */
+// POST /api/returns {customerId, movieId}
+/* ============== 187.Test Cases (Тестовые случаи) ================== */
+// Return 401 if client is not logged in
+// Return 400 if customerId is not provided
+// Return 400 if movieId is not provided
+// Return 404 if no rental found for this cutomer/movie
+// Return 400 if rental already processed
+// Return 200 if valid request
+// Set the return date
+// Calculate the rental fee
+// Increase the stock
+// Return the rental
+/* ============== 188.Populating the Database (Заполнение базы данных) ================== */
+//returns.test.js
+const {Rental} = require('../../models/rental');
+const mongoose = require('mongoose');
+
+describe('/api/returns', () => {
+    let server;
+    let customerId;
+    let movieId;
+    let rental;
+
+    beforeEach(async () => {
+        serve = require('../../index');
+
+        customerId = mongoose.Types.ObjectId();
+        movieId = mongoose.Types.ObjectId();
+
+        rental = new Rental({
+            customer: {
+                _id: customerId,
+                name: '12345',
+                phone: '12345'
+            },
+            movie: {
+                _id: movieId,
+                title: '12345',
+                dailyRentalRate: 2
+            }
+        });
+        await rental.save();
+    });
+    afterEach(async () => {
+        server.close();
+        await Rental.remove({});
+    });
+
+    it('should work!', async () => {
+        const result = await Rental.findById(rental.id);
+        expect(result).not.toBeNull();
+    })
+});
+/* ============== 189.Testing the Authorization (Тестирование авторизации) ================== */
+//returns.test.js
+it('should return 401 if client is not logged in!', async () => {
+    const res = await request(server)
+        .post('/api/returns')
+        .send({ customerId, movieId });
+
+    expect(res.status).toBe(401);
+
+})
+//returns.js
+const express = require('express');
+const router = express.Router();
+
+router.post('/', async (req, res) => {
+    res.status(401).send('Unauthorized');
+});
+
+module.exports = router;
+/* ============== 190.Testing the Input (Тестирование Ввода) ================== */
+//returns.js
+const express = require('express');
+const router = express.Router();
+
+router.post('/', async (req, res) => {
+    if (!req.body.customerId) return res.status(400).send('customerId not provider');
+    if (!req.body.movieId) return res.status(400).send('movieId not provider');
+    res.status(401).send('Unauthorized');
+});
+
+module.exports = router;
+//returns.test.js
+it('should return 400 if customerId is not provided', async () => {
+
+    const token = new User().generateAuthToken();
+    const res = await request(server)
+        .post('/api/returns')
+        .set('x-auth-token', token)
+        .send({ customerId, movieId });
+
+    expect(res.status).toBe(400);
+
+});
+
+it('should return 400 if movieId is not provided', async () => {
+
+    const token = new User().generateAuthToken();
+    const res = await request(server)
+        .post('/api/returns')
+        .set('x-auth-token', token)
+        .send({ customerId });
+
+    expect(res.status).toBe(400);
+
+});
+/* ============== 191.Refactoring Tests (Рефакторин тестов) ================== */
+//returns.test.js
+const request = require('supertest');
+const {Rental} = require('../../models/rental');
+const {User} = require('../../models/user');
+const mongoose = require('mongoose');
+
+describe('/api/returns', () => {
+    let server;
+    let customerId;
+    let movieId;
+    let rental;
+    let token;
+
+    const exec = () => {
+        return request(server)
+            .post('/api/returns')
+            .set('x-auth-token', token)
+            .send({ customerId, movieId });
+    };
+
+    beforeEach(async () => {
+        serve = require('../../index');
+
+        customerId = mongoose.Types.ObjectId();
+        movieId = mongoose.Types.ObjectId();
+        token = new User().generateAuthToken();
+
+        rental = new Rental({
+            customer: {
+                _id: customerId,
+                name: '12345',
+                phone: '12345'
+            },
+            movie: {
+                _id: movieId,
+                title: '12345',
+                dailyRentalRate: 2
+            }
+        });
+        await rental.save();
+    });
+    afterEach(async () => {
+        server.close();
+        await Rental.remove({});
+    });
+
+    it('should return 401 if client is not logged in!', async () => {
+        const res = await request(server)
+            .post('/api/returns')
+            .send({ customerId, movieId });
+
+        expect(res.status).toBe(401);
+
+    });
+
+    it('should return 400 if customerId is not provided', async () => {
+
+        customerId = '';
+
+        const res = await exec();
+
+        expect(res.status).toBe(400);
+
+    });
+
+    it('should return 400 if movieId is not provided', async () => {
+
+        movieId = '';
+        const res = await exec();
+        expect(res.status).toBe(400);
+
+    });
+});
+/* ============== 192.Looking Up an Object (Поиск объекта) ================== */
+//returns.js
+const {Rental} = require('../models/rental');
+const express = require('express');
+const router = express.Router();
+
+router.post('/', async (req, res) => {
+    if (!req.body.customerId) return res.status(400).send('customerId not provider');
+    if (!req.body.movieId) return res.status(400).send('movieId not provider');
+
+    Rental.findOne({
+        'customer._id': req.body.customerId,
+        'movie._id': req.body.movieId,
+    });
+    if (!rental) return res.status(404).send('');
+
+    res.status(401).send('Unauthorized');
+});
+
+module.exports = router;
+/* ============== 193.Testing if Rental Processed (Тестирование если прокат обработан) ================== */
+//returns.test.js
+it('should return 400 if return is already processed', async () => {
+    reantal.dateReturned = new Date();
+    await rental.save();
+
+    const res = await exec();
+
+    expect(res.status).toBe(400);
+
+});
+//returns.js
+if (rental.dateReturned) return res.status(400).send('Return already');
+/* ============== 194.Testing the Valid Request (Тестирование действительного запроса) ================== */
+//returns.test.js
+it('should return 200 if we have a valid request', async () => {
+    const res = await exec();
+
+    expect(res.status).toBe(200);
+
+});
+//returns.js
+return res.status(200).send();
+/* ============== 195.Testing the Return Date (Тестирование возвратной даты) ================== */
+//returns.test.js
+it('should set the returnDate id input is valid', async () => {
+    const res = await exec();
+
+    const retalInDb = await Rental.findById(rental._id);
+    const diff = new Date() - retalInDb.dateReturned;
+    expect(diff).toBeDefined(10 * 1000);
+
+});
+/* ============== 196.Testing the Return Fee (Тестирование возвратной плата) ================== */
+//npm i moment
+//returns.js
+rental.dateReturned = new Date();
+const rentalDays = moment().diff(rental.dateOut, 'days');
+rental.rentalFee = rentalDays * rental.movie.dailyRentalRate;
+//returns.test.js
+it('should set the returnFee if input is valid', async () => {
+    // dateOut (current time)
+    rental.dateOut = moment().add(-7, 'days').toDate();// 7 days ago
+    await rental.save();
+    const res = await exec();
+
+    const retalInDb = await Rental.findById(rental._id);
+    expect(retalInDb.rentalFee).toBeDefined(14);
+
+});
+/* ============== 197.Testing the Movie Stock (Тестирование фильма) ================== */
+//returns.test.js
+const moment = require('moment');
+const request = require('supertest');
+const {Rental} = require('../../models/rental');
+const {User} = require('../../models/user');
+const {Movie} = require('../../models/movie');
+const mongoose = require('mongoose');
+
+describe('/api/returns', () => {
+    let server;
+    let customerId;
+    let movieId;
+    let rental;
+    let token;
+    let movie;
+
+    const exec = () => {
+        return request(server)
+            .post('/api/returns')
+            .set('x-auth-token', token)
+            .send({ customerId, movieId });
+    };
+
+    beforeEach(async () => {
+        serve = require('../../index');
+
+        customerId = mongoose.Types.ObjectId();
+        movieId = mongoose.Types.ObjectId();
+        token = new User().generateAuthToken();
+
+        movie = new Movie({
+            _id: movieId,
+            title: '12345',
+            dailyRentalRate: 2,
+            genre: { name: '12345' },
+            numberInStock: 10
+        });
+        await movie.save();
+
+        rental = new Rental({
+            customer: {
+                _id: customerId,
+                name: '12345',
+                phone: '12345'
+            },
+            movie: {
+                _id: movieId,
+                title: '12345',
+                dailyRentalRate: 2
+            }
+        });
+        await rental.save();
+    });
+    afterEach(async () => {
+        server.close();
+        await Rental.remove({});
+        await Movie.remove({});
+    });
+
+    it('should return 401 if client is not logged in!', async () => {
+        const res = await request(server)
+            .post('/api/returns')
+            .send({ customerId, movieId });
+
+        expect(res.status).toBe(401);
+
+    });
+
+    it('should return 400 if customerId is not provided', async () => {
+
+        customerId = '';
+
+        const res = await exec();
+
+        expect(res.status).toBe(400);
+
+    });
+
+    it('should return 400 if movieId is not provided', async () => {
+
+        movieId = '';
+        const res = await exec();
+        expect(res.status).toBe(400);
+
+    });
+
+    it('should return 404 if no rental found for the customer/movie', async () => {
+        await Rental.remove({});
+        movieId = '';
+        const res = await exec();
+        expect(res.status).toBe(400);
+
+    });
+
+    it('should return 400 if return is already processed', async () => {
+        reantal.dateReturned = new Date();
+        await rental.save();
+
+        const res = await exec();
+
+        expect(res.status).toBe(400);
+
+    });
+
+    it('should return 200 if we have a valid request', async () => {
+        const res = await exec();
+
+        expect(res.status).toBe(200);
+
+    });
+
+    it('should set the returnDate id input is valid', async () => {
+        const res = await exec();
+
+        const retalInDb = await Rental.findById(rental._id);
+        const diff = new Date() - retalInDb.dateReturned;
+        expect(diff).toBeDefined(10 * 1000);
+
+    });
+
+    it('should set the returnFee if input is valid', async () => {
+        // dateOut (current time)
+        rental.dateOut = moment().add(-7, 'days').toDate();// 7 days ago
+        await rental.save();
+        const res = await exec();
+
+        const retalInDb = await Rental.findById(rental._id);
+        expect(retalInDb.rentalFee).toBeDefined(14);
+
+    });
+
+    it('should increase the movie stock if input is valid', async () => {
+        const res = await exec();
+
+        const movieInDb = await Movie.findById(movieId._id);
+        expect(movieInDb.numberInStock).toBe(movie.numberInStock + 1);
+
+    });
+});
+//returns.js
+const moment = require('moment');
+const {Rental} = require('../models/rental');
+const {Movie} = require('../models/movie');
+const auth = require('../middleware/auth');
+const express = require('express');
+const router = express.Router();
+
+router.post('/', async (req, res) => {
+    if (!req.body.customerId) return res.status(400).send('customerId not provider');
+    if (!req.body.movieId) return res.status(400).send('movieId not provider');
+
+    Rental.findOne({
+        'customer._id': req.body.customerId,
+        'movie._id': req.body.movieId,
+    });
+    if (!rental) return res.status(404).send('');
+
+    if (rental.dateReturned) return res.status(400).send('Return already');
+
+    rental.dateReturned = new Date();
+    const rentalDays = moment().diff(rental.dateOut, 'days');
+    rental.rentalFee = rentalDays * rental.movie.dailyRentalRate;
+    await rental.save();
+
+    await Movie.update({ _id: rental.movie._id }, {
+        $inc: { numberInStock: 1 }
+    });
+    return res.status(200).send();
+
+});
+
+module.exports = router;
+/* ============== 198.Testing the Response (Тестирование ответа) ================== */
+it('should return the rental if input is valid', async () => {
+    const res = await exec();
+    const rentalInDb = await Rental.findById(rental._id);
+    expect(res.body).toHaveProperty('dateOut');
+    expect(res.body).toHaveProperty('dateReturned');
+    expect(res.body).toHaveProperty('rentalFee');
+    expect(res.body).toHaveProperty('customer');
+    expect(res.body).toHaveProperty('movie');
+
+    expect(Object.keys(res.body)).toEqual(expect.arrayContaining(['dateOut', 'dateReturned', 'rentalFee', 'customer', 'movie']));
+});
+/* ============== 199.Refactoring the Validation Logic (Рефакторинг логику валидации) ================== */
+//returns.js
+const Joi = require('joi');
+const moment = require('moment');
+const validate = require('../middleware/validate');
+const {Rental} = require('../models/rental');
+const {Movie} = require('../models/movie');
+const auth = require('../middleware/auth');
+const express = require('express');
+const router = express.Router();
+
+router.post('/', [auth, validate(validateReturn)], async (req, res) => {
+    const rental = await Rental.findOne({
+        'customer._id': req.body.customerId,
+        'movie._id': req.body.movieId,
+    });
+    if (!rental) return res.status(404).send('');
+
+    if (rental.dateReturned) return res.status(400).send('Return already');
+
+    rental.dateReturned = new Date();
+    const rentalDays = moment().diff(rental.dateOut, 'days');
+    rental.rentalFee = rentalDays * rental.movie.dailyRentalRate;
+    await rental.save();
+
+    await Movie.update({ _id: rental.movie._id }, {
+        $inc: { numberInStock: 1 }
+    });
+    return res.status(200).send();
+
+});
+
+function validateReturn(req) {
+    const schema = {
+        name: Joi.objectId().required(),
+        movieId: Joi.objectId().required()
+    };
+    return Joi.validate(req, schema);
+}
+
+module.exports = router;
+//validate.js
+module.exports = (validator) => {
+    return (req, res, next) => {
+        const { error } = validateReturn(req.body);
+        if (error) return res.status(400).send(error.details[0].message);
+        next();
+    }
+};
+/* ============== 200.Mongoose Static Methods (Мангуст Статические Методы) ================== */
+//rental.js
+const Joi = require('joi');
+const mongoose = require('mongoose');
+
+const rentalSchema = new mongoose.Schema({
+    customer: {
+        type: new mongoose.Schema({
+            name: {
+                type: String,
+                required: true,
+                minlength: 5,
+                maxlength: 50
+            },
+            isGold: {
+                type: Boolean,
+                default: false
+            },
+            phone: {
+                type: String,
+                required: true,
+                minlength: 5,
+                maxlength: 50
+            }
+        }),
+        required: true
+    },
+    movie: {
+        type: new mongoose.Schema({
+            title: {
+                type: String,
+                required: true,
+                trim: true,
+                minlength: 5,
+                maxlength: 255
+            },
+            dailyRentalRate: {
+                type: Number,
+                required: true,
+                min: 0,
+                max: 255
+            }
+        }),
+        required: true
+    },
+    dateOut: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    dateReturned: {
+        type: Date
+    },
+    rentalFee: {
+        type: Number,
+        min: 0
+    }
+});
+
+rentalSchema.statics.lookup = function(customerId, movieId) {
+    return this.findOne({
+        'customer._id': customerId,
+        'movie._id': movieId,
+    });
+}
+
+const Rental = mongoose.model('Rental', rentalSchema);
+
+function validateRental(rental) {
+    const schema = {
+        customerId: Joi.objectId().required(),
+        movieId: Joi.objectId().required()
+    };
+
+    return Joi.validate(rental, schema);
+}
+
+exports.Rental = Rental;
+exports.validate = validateRental;
+//returns.js
+const Joi = require('joi');
+const moment = require('moment');
+const validate = require('../middleware/validate');
+const {Rental} = require('../models/rental');
+const {Movie} = require('../models/movie');
+const auth = require('../middleware/auth');
+const express = require('express');
+const router = express.Router();
+
+router.post('/', [auth, validate(validateReturn)], async (req, res) => {
+    // Static: Rental.lookup
+    // Instance: new User().generateAuthToken()
+
+    const rental = await Rental.lookup(req.body.customerId, req.body.movieId);
+
+    if (!rental) return res.status(404).send('');
+
+    if (rental.dateReturned) return res.status(400).send('Return already');
+
+    rental.dateReturned = new Date();
+    const rentalDays = moment().diff(rental.dateOut, 'days');
+    rental.rentalFee = rentalDays * rental.movie.dailyRentalRate;
+    await rental.save();
+
+    await Movie.update({ _id: rental.movie._id }, {
+        $inc: { numberInStock: 1 }
+    });
+    return res.status(200).send();
+
+});
+
+function validateReturn(req) {
+    const schema = {
+        name: Joi.objectId().required(),
+        movieId: Joi.objectId().required()
+    };
+    return Joi.validate(req, schema);
+}
+
+module.exports = router;
+/* ============== 201.Refactoring the Domain Logic (Рефакторинг доменной логики) ================== */
+//rental.js
+const Joi = require('joi');
+const mongoose = require('mongoose');
+const moment = require('moment');
+
+
+const rentalSchema = new mongoose.Schema({
+    customer: {
+        type: new mongoose.Schema({
+            name: {
+                type: String,
+                required: true,
+                minlength: 5,
+                maxlength: 50
+            },
+            isGold: {
+                type: Boolean,
+                default: false
+            },
+            phone: {
+                type: String,
+                required: true,
+                minlength: 5,
+                maxlength: 50
+            }
+        }),
+        required: true
+    },
+    movie: {
+        type: new mongoose.Schema({
+            title: {
+                type: String,
+                required: true,
+                trim: true,
+                minlength: 5,
+                maxlength: 255
+            },
+            dailyRentalRate: {
+                type: Number,
+                required: true,
+                min: 0,
+                max: 255
+            }
+        }),
+        required: true
+    },
+    dateOut: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    dateReturned: {
+        type: Date
+    },
+    rentalFee: {
+        type: Number,
+        min: 0
+    }
+});
+
+rentalSchema.statics.lookup = function(customerId, movieId) {
+    return this.findOne({
+        'customer._id': customerId,
+        'movie._id': movieId,
+    });
+}
+
+rentalSchema.methods.return = function () {
+    this.dateReturned = new Date();
+
+    const rentalDays = moment().diff(this.dateOut, 'days');
+    this.rentalFee = rentalDays * this.movie.dailyRentalRate;
+}
+
+const Rental = mongoose.model('Rental', rentalSchema);
+
+function validateRental(rental) {
+    const schema = {
+        customerId: Joi.objectId().required(),
+        movieId: Joi.objectId().required()
+    };
+
+    return Joi.validate(rental, schema);
+}
+
+exports.Rental = Rental;
+exports.validate = validateRental;
+//returns.js
+const Joi = require('joi');
+const validate = require('../middleware/validate');
+const {Rental} = require('../models/rental');
+const {Movie} = require('../models/movie');
+const auth = require('../middleware/auth');
+const express = require('express');
+const router = express.Router();
+
+router.post('/', [auth, validate(validateReturn)], async (req, res) => {
+    // Static: Rental.lookup
+    // Instance: new User().generateAuthToken()
+
+    const rental = await Rental.lookup(req.body.customerId, req.body.movieId);
+
+    if (!rental) return res.status(404).send('');
+
+    if (rental.dateReturned) return res.status(400).send('Return already');
+
+    // Information Expert Principle
+    rental.return();
+    await rental.save();
+
+    await Movie.update({ _id: rental.movie._id }, {
+        $inc: { numberInStock: 1 }
+    });
+    return res.status(200).send();
+
+});
+
+function validateReturn(req) {
+    const schema = {
+        name: Joi.objectId().required(),
+        movieId: Joi.objectId().required()
+    };
+    return Joi.validate(req, schema);
+}
+
+module.exports = router;
+/* ============== 202.Introduction (Вступление) ================== */
+// Deployment (развертывание)
+//DEPLOYMENT OPTIONS (ВАРИАНТЫ РАЗВЕРТЫВАНИЯ)
+//Paas | Docker
+//Heroku
+//Google Cloud Platform
+//AWS
+//Azure
+/* ============== 203.Preparing the App for Production (Подготовка приложения к производству) ================== */
+//npm i helmet
+//npm i compression
+//startup/prod.js
+const helmet = requrie('helmet');
+const compression = require('compression');
+
+module.exports = function(app) {
+    app.use(helmet());
+    app.use(compression());
+}
+//index.js
+const winston = require('winston');
+const express = require('express');
+const app = express();
+
+require('./startup/logging')();
+require('./startup/routes')(app);
+require('./startup/db')();
+require('./startup/config')();
+require('./startup/validation')();
+require('./startup/prod')(app);
+
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => winston.info(`Listening on port ${port}...`));
+
+module.exports = server;
+/* ============== 204.Getting Started With Heroku (Начало работы с Heroku) ================== */
+//https://www.heroku.com/
+//https://devcenter.heroku.com/articles/heroku-cli
+//heroku login
+//(export|set) HTTP_PROXY=http://proxy.serve.com:1234
+/* ============== 205.Preparing the App for Deployment (Подготовка приложения к развертыванию) ================== */
+//package.json
+//"start": "node index.js"
+//npm start
+//"engines": {
+//     "node": "8.9.1"
+//   },
+/* ============== 206.Adding the Code to a Git Repository (Добавление кода в репозиторий Git) ================== */
+//git --version
+//git init
+//.gitignore
+//node_modules/
+//coverage/
+//git add .
+// git commit -m "First commit."
+/* ============== 207.Deploying to Heroku (Развертывание в Heroku) ================== */
+//heroku create
+//GIT
+//Local | -> Push -> | Heroku
+//git remote -v
+//git push heroku master
+/* ============== 208.Viewing Logs (Просмотр журналов) ================== */
+//heroku logs
 
 
 
