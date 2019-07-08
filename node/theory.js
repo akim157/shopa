@@ -5358,6 +5358,13 @@ module.exports = server;
 //git push heroku master
 /* ============== 208.Viewing Logs (Просмотр журналов) ================== */
 //heroku logs
+/* ============== 209.Setting Environment Variables (Установка переменных среды) ================== */
+//heroku config:set vidly_jwtPrivateKey=1234
+//heroku config:set NODE_ENV=production
+/* ============== 210.MongoDB in the Cloud (MongoDB в облаке) ================== */
+
+
+
 
 
 
