@@ -84,7 +84,40 @@ function Circle(radius) {
 }
 
 const another = new Circle(1);
+/* ========= 10.Constructor Property (Свойство конструктора)============== */
+//another.constructor - возвращает функцию
+//circle.constructor - возвращает объект (new Object())
+new String(); // '',"",``
+new Boolean(); // true, false
+new Number(); //1,2,3,...
+//У каждого объекта есть свойство конструктор, который ссылается на функцию, которая использовалась для создания этого объекта.
+/* ========= 11.Functions are Objects (Функции являются объектами)============== */
+//Фиолетовые - это методы call, bind, apply
+//Синие - являются свойствами
+//Конструктор Function()
+new Function();
+///////
+const Circle1 = new Function('radius', `
+	this.radius = radius;
+	this.draw = function() {
+		console.log('draw');
+	}
+`);
 
+const circle = new Circle1(1);
+///////////
+function Circle(radius) {
+    this.radius = radius;
+    this.draw = function() {
+        console.log('draw');
+    }
+}
+
+Circle.call({}, 1,2,3);
+Circle.apply({}, [1,2,3]);
+/* ========= 12.Value vs Reference Types (Значение по сравнению с ссылочными типами)============== */
+//Value Types (Примитивные типы) | Reference Types (Ссылочные типы)
+//Number, String, Boolean, Symbol, undefined, null | Object, Function, Array
 
 
 
