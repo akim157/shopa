@@ -118,6 +118,78 @@ Circle.apply({}, [1,2,3]);
 /* ========= 12.Value vs Reference Types (Значение по сравнению с ссылочными типами)============== */
 //Value Types (Примитивные типы) | Reference Types (Ссылочные типы)
 //Number, String, Boolean, Symbol, undefined, null | Object, Function, Array
+/* ========= 13.Adding or Removing Properties (Добавление или удаление свойств)============== */
+function Circle(radius) {
+	this.radius = radius;
+	this.draw = function() {
+		console.log('draw');
+	}
+}
+
+const circle = new Circle(10);
+
+circle.location = { x: 1 };
+
+const propertyName = 'center-location';
+circle[propertyName] = { x: 1 };
+console.log(circle);
+
+delete circle.location;
+/* ========= 14.Enumerating Properties (Перечисление свойств)============== */
+function Circle(radius) {
+	this.radius = radius;
+	this.draw = function() {
+		console.log('draw');
+	}
+}
+
+const circle = new Circle(10);
+
+for (let key in circle) {
+	if (typeof circle[key] !== 'function')
+		console.log(key, circle[key]);
+}
+
+const keys = Object.keys(circle); //вернет все ключи в виде массива
+console.log(keys);
+
+if ('radius' in circle)
+	console.log('Circle has a radius.');
+/* ========= 15.Abstraction (Абстракция)============== */
+// Hide the details Show the essentials (Скрыть детали Показать основы)
+function Circle(radius) {
+	this.radius = radius;
+	this.defaultLocation = { x: 0, y: 0 };
+	this.computeOptimumLocation = function(factor) {
+		// ...
+	}
+	this.draw = function() {
+		this.computeOptimumLocation(0.1);
+		console.log('draw');
+	}
+}
+
+const circle = new Circle(10);
+circle.draw();
+/* ========= 16.Private Properties and Methods (Частная собственность и методы)============== */
+function Circle(radius) {
+	this.radius = radius;
+	let defaultLocation = { x: 0, y: 0 };
+	let computeOptimumLocation = function(factor) {
+		// ...
+	}
+	this.draw = function() {	
+		computeOptimumLocation(0.1);
+		// defaultLocation
+		// this.radius
+		console.log('draw');
+	}
+}
+
+const circle = new Circle(10);
+circle.draw();
+
+
 
 
 
