@@ -313,6 +313,7 @@ function Circle(radius) {
 Circle.prototype
 
 const circle = new Circle(1);
+/* ========= 26.Prototype vs. Instance Members (Прототип против Экземпляров памяти)============== */
 
 
 

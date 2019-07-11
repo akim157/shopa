@@ -1,11 +1,23 @@
-Object.getPrototypeOf(myObj);
-
-// myObj.__proto__ (parent of myObj)
-
 function Circle(radius) {
-    this.radius = radius;
+	// Instance members
+	this.radius = radius;	
+
+	this.move = function() {
+		this.draw();
+		console.log('move');
+	}
 }
 
-Circle.prototype
+// Circle.prototype === c1.__proto__
 
-const circle = new Circle(1);
+// Prototype members
+Circle.prototype.draw = function() {
+	console.log('draw');
+}
+
+const c1 = new Circle(1);
+const c2 = new Circle(1);
+
+Circle.prototype.toString = function() {
+	return 'Circle with radius ' + this.radius;
+}
