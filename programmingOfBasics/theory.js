@@ -188,6 +188,134 @@ function Circle(radius) {
 
 const circle = new Circle(10);
 circle.draw();
+/* ========= 17.Getters and Setters (Добытчики и сеттеры)============== */
+function Circle(radius) {
+    this.radius = radius;
+    let defaultLocation = { x: 0, y: 0 };
+    this.getDefaultLocation = function() {
+        return defaultLocation;
+    };
+    this.draw = function() {
+        console.log('draw');
+    };
+    Object.defineProperty(this, 'defaultLocation', {
+        get: function() {
+            return defaultLocation;
+        },
+        set: function(value) {
+            if (!value.x || !value.y)
+                throw new Error('Invalid location')
+            defaultLocation = value;
+        }
+    });
+}
+
+const circle = new Circle(10);
+circle.defaultLocation = 1;
+console.log(circle);
+// circle.getDefaultLocation();
+// circle.getDefaultLocation;
+/* ========= 19.Exercise- Stop Watch (Упражнение - Секундомер)============== */
+function Stopwatch() {
+    let startTime, endTime, running, duration = 0;
+    this.start = function() {
+        if (running)
+            throw new Error('Stopwatch has already started.');
+        running = true;
+        startTime = new Date();
+    };
+    this.stop = function() {
+        if (!running)
+            throw new Error('Stopwatch is not started.');
+        running = false;
+        endTime = new Date();
+        const seconds = (endTime.getTime() - startTime.getTime()) / 1000;
+        duration += seconds;
+    };
+    this.reset = function() {
+        startTime = null;
+        endTime = null;
+        running = false;
+        duration = 0;
+    };
+    Object.defineProperty(this,'duration',{
+        get: function() {
+            return duration;
+        }
+    });
+}
+
+
+
+// const sw = new Stopwatch();
+// sw.start(); //Stopwatch has already started. (Секундомер уже запущен)
+// sw.stop();
+// sw.reset();
+// sw.duration; //продолжительность
+/* ========= 21.Inheritance (Вступление)============== */
+//Наследование
+//Shape //Base/Super/Parent//(computeOptimumLocation()) -> Circle //Derived(Прямой)|Sub(Подкласс)|Child(Дочерний)// | Square
+//IS-A (Отношения)
+//В JS нет классов, есть только объекты
+//Classical vs Prototypical
+/* ========= 22.Prototypes and Prototypical Inheritance (Прототипы и прототипическое наследование)============== */
+//Prototype - родитель другого объекта. (Родитель)
+//обычный объект в пямяти, каждый объект имеет прототип или родитель, кроме корневого объекта.
+//__proto__ - это свойство устарело и мы не должны името к нему прямой доступ
+//хранятся свойства и методы родителя
+//constructor - который ссылается на функцию, которая использовалась для создания это объекта
+//__proto__.toString
+//x.toString();
+let x = {};
+let y = {};
+//objectBase -> x | y
+Object.getPrototypeOf(x) === Object.getPrototypeOf(y) //true
+x.__proto__ === y.__proto__ // true - это свойство устарело
+x.toString() //"[object Object]"
+//JS движок сначала ищет запрашиваемое свойство на самом объекте. Если не находит, то смотрит на прототайпе для этого объекта
+// до коренового объекта родительского объекта
+/* ========= 23.Multi-level Inheritance (Многоуровневое наследование)============== */
+let arr = []; //new Array() -> new Object();
+//myArray -> arrayBase -> objectBase - многоуровневое наследование
+//new Circle - создается прототайп для всех всех объектов круга, которые мы создаем, используя наш круг
+// Object created by a given constructor will have the same protorype. (Объект, созданный данным конструктором, будет иметь такой же прототип.)
+//circle -> circleBase -> objectBase
+/* ========= 24.Property Descriptors (Дескрипторы свойств)============== */
+let person = { name: 'Maxim' };
+
+let objectBase = Object.getPrototypeOf(person);
+Object.getOwnPropertyDescriptor(objectBase, 'toString');
+//configurable: true - можно удалить этого участника
+//enumerable: false - не можем увидить метод toString в person
+//writable: true - мы можем переписать этот метод, изменить его реализацию, а затем установить его значение.
+let person = { name: 'Maxim' };
+
+Object.defineProperty(person, 'name', {
+    writable: false,
+    enumerable: false,
+    configurable: false
+});
+
+person.name = 'John';
+delete person.name;
+
+console.log(person); // имя не изменяется
+console.log(Object.keys(person)); //
+/* ========= 25.Constructor Prototypes (Конструктор Прототипы)============== */
+Object.getPrototypeOf(myObj);
+
+// myObj.__proto__ (parent of myObj)
+
+function Circle(radius) {
+    this.radius = radius;
+}
+
+Circle.prototype
+
+const circle = new Circle(1);
+
+
+
 
 
 

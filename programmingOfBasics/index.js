@@ -1,16 +1,11 @@
+Object.getPrototypeOf(myObj);
+
+// myObj.__proto__ (parent of myObj)
+
 function Circle(radius) {
-	this.radius = radius;
-	let defaultLocation = { x: 0, y: 0 };
-	let computeOptimumLocation = function(factor) {
-		// ...
-	}
-	this.draw = function() {	
-		computeOptimumLocation(0.1);
-		// defaultLocation
-		// this.radius
-		console.log('draw');
-	}
+    this.radius = radius;
 }
 
-const circle = new Circle(10);
-circle.draw();
+Circle.prototype
+
+const circle = new Circle(1);
