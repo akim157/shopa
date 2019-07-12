@@ -1,23 +1,9 @@
-function Circle(radius) {
-	// Instance members
-	this.radius = radius;	
+Array.prototype.shuffle = function() {
+    // ...
+};
 
-	this.move = function() {
-		this.draw();
-		console.log('move');
-	}
-}
+const array = [];
 
-// Circle.prototype === c1.__proto__
+array.shuffle();
 
-// Prototype members
-Circle.prototype.draw = function() {
-	console.log('draw');
-}
-
-const c1 = new Circle(1);
-const c2 = new Circle(1);
-
-Circle.prototype.toString = function() {
-	return 'Circle with radius ' + this.radius;
-}
+// Don`t modify objects you don`t own! (Не изменяйте объекты, которыми вы не владеете!)

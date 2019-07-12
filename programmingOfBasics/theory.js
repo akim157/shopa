@@ -314,6 +314,122 @@ Circle.prototype
 
 const circle = new Circle(1);
 /* ========= 26.Prototype vs. Instance Members (Прототип против Экземпляров памяти)============== */
+function Circle(radius) {
+    // Instance members
+    this.radius = radius;
+
+    this.move = function() {
+        this.draw();
+        console.log('move');
+    }
+}
+
+// Circle.prototype === c1.__proto__
+
+// Prototype members
+Circle.prototype.draw = function() {
+    console.log('draw');
+}
+
+const c1 = new Circle(1);
+const c2 = new Circle(1);
+
+Circle.prototype.toString = function() {
+    return 'Circle with radius ' + this.radius;
+}
+/* ========= 27.Iterating Instance and Prototype Members (Итерация элементов экземпляра и прототипа)============== */
+function Circle(radius) {
+    // Instance members
+    this.radius = radius;
+
+    this.move = function() {
+        console.log('move');
+    }
+}
+
+const c1 = new Circle(1);
+
+// Prototype members
+Circle.prototype.draw = function() {
+    console.log('draw');
+}
+
+// Returns instance members
+console.log(Object.keys(c1)); //['radius', 'move']
+
+// Returns all members (instance + prototype)
+for (let key in c1) console.log(key); // radius, move, draw
+
+// c1.hasOwnProperty('radius') - true
+// c1.hasOwnProperty('draw') - false
+/* ========= 28.Avoid Extending the Built-in Objects (Избегайте расширения встроенных объектов)============== */
+Array.prototype.shuffle = function() {
+    // ...
+};
+
+const array = [];
+
+array.shuffle();
+
+// Don`t modify objects you don`t own! (Не изменяйте объекты, которыми вы не владеете!)
+/* ========= 30.Exercise (Упражнение)============== */
+function Stopwatch() {
+    let startTime, endTime, running, duration = 0;
+    Object.defineProperty(this, 'duration', {
+        get: function() {
+            return duration;
+        },
+        set: function(value) {
+            duration = value;
+        }
+    });
+    Object.defineProperty(this, 'startTime', {
+        get: function() {
+            return startTime;
+        }
+    });
+    Object.defineProperty(this, 'endTime', {
+        get: function() {
+            return endTime;
+        }
+    });
+    Object.defineProperty(this, 'running', {
+        get: function() {
+            return running;
+        },
+        set: function (value) {
+            running = value;
+        }
+    });
+}
+
+Stopwatch.prototype.start = function() {
+    if (this.running)
+        throw new Error('Секундомер уже запущен');
+    this.running = true;
+    this.startTime = new Date();
+};
+Stopwatch.prototype.stop = function() {
+    if (!this.running)
+        throw new Error('Секундомер уже остановлен');
+    this.running = false;
+    this.endTime = new Date();
+    const result = (endTime.getTime() - startTime.getTime()) / 1000;
+    this.duration += result;
+};
+Stopwatch.prototype.reset = function() {
+    this.duration = 0;
+    this.startTime = null;
+    this.endTime = null;
+    this.running = null;
+};
+
+// Premature optimization is the root of all evils (Преждевременная оптимизация - корень всех зол)
+
+
+
+
+
 
 
 
