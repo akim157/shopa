@@ -425,6 +425,627 @@ Stopwatch.prototype.reset = function() {
 };
 
 // Premature optimization is the root of all evils (Преждевременная оптимизация - корень всех зол)
+/* ========= 32.Creating Your Own Prototypical Inheritance (Создание собственного прототипического наследования)============== */
+
+function Shape() {}
+
+Shape.prototype.duplicate = function() {
+	console.log('duplicate');
+}
+
+function Circle(radius) {
+	this.radius = radius;
+}
+
+// Circle.prototype = Object.create(Object.prototype); //objectBase
+Circle.prototype = Object.create(Shape.prototype);
+
+Circle.prototype.draw = function() {
+	console.log('draw');
+}
+
+const s = new Shape();
+const c = new Circle(1);
+
+//c -> circleBase(Circle.prototype) -> objectBase
+//s -> shapeBase(Shape.prototype) -> objectBase
+/* ========= 33.Resetting the Constructor (Сброс Конструктора)============== */
+function Shape() {}
+
+Shape.prototype.duplicate = function() {
+	console.log('duplicate');
+}
+
+function Circle(radius) {
+	this.radius = radius;
+}
+
+// Circle.prototype.constructor = Circle;
+// new Circle.prototype.constructor() => new Circle();
+//new Circle.prototype.constructor - Shape потому что мы сбросили прототайп Circle
+Circle.prototype = Object.create(Shape.prototype);
+Circle.prototype.constructor = Circle;
+
+Circle.prototype.draw = function() {
+	console.log('draw');
+}
+
+const s = new Shape();
+const c = new Circle(1);
+
+// new Circle.prototype.constructor(1) === new Circle(1)
+/* ========= 34.Calling the Super Constructor (Вызов Супер Конструктора)============== */
+function Shape(color) {
+	this.color = color;
+}
+
+Shape.prototype.duplicate = function() {
+	console.log('duplicate');
+}
+
+function Circle(radius, color) {
+	// Shape(color);
+	Shape.call(this, color);
+	this.radius = radius;
+}
+
+Circle.prototype = Object.create(Shape.prototype);
+Circle.prototype.constructor = Circle;
+
+Circle.prototype.draw = function() {
+	console.log('draw');
+}
+
+const s = new Shape();
+const c = new Circle(1, 'red');
+/* ========= 35.Intermediate Function Inheritance (Наследование промежуточных функций)============== */
+function Shape(color) {
+	this.color = color;
+}
+
+Shape.prototype.duplicate = function() {
+	console.log('duplicate');
+}
+
+function extend(Child, Parent) {
+	Child.prototype = Object.create(Parent.prototype);
+	Child.prototype.constructor = Circle;
+}
+
+function Circle(radius, color) {
+	Shape.call(this, color);
+	this.radius = radius;
+}
+
+extend(Circle, Shape);
+
+Circle.prototype.draw = function() {
+	console.log('draw');
+}
+
+function Square(size) {
+	this.size = size;
+}
+
+extend(Square, Shape);
+
+// Square.prototype = Object.create(Shape.prototype);
+// Square.prototype.constructor = Square;
+
+const s = new Shape();
+const c = new Circle(1, 'red');
+/* ========= 36.Method Overriding (Переопределение метода)============== */
+function extend(Child, Parent) {
+	Child.prototype = Object.create(Parent.prototype);
+	Child.prototype.constructor = Circle;
+}
+
+function Shape() {}
+
+Shape.prototype.duplicate = function() {
+	console.log('duplicate');
+}
+
+function Circle() {}
+
+extend(Circle, Shape);
+
+Circle.prototype.duplicate = function() {
+	Shape.prototype.duplicate.call(this);
+	console.log('duplicate cirle');
+}
+
+const c = new Circle();
+/* ========= 37.Polymorphism (Полиморфизм)============== */
+//Много форм
+function extend(Child, Parent) {
+	Child.prototype = Object.create(Parent.prototype);
+	Child.prototype.constructor = Circle;
+}
+
+function Shape() {}
+
+Shape.prototype.duplicate = function() {
+	console.log('duplicate');
+}
+
+function Circle() {}
+
+extend(Circle, Shape);
+
+Circle.prototype.duplicate = function() {	
+	console.log('duplicate cirle');
+}
+
+function Square() {}
+
+extend(Square, Shape);
+
+Square.prototype.duplicate = function() {
+	console.log('duplicate square');
+}
+
+const shapes = [
+	new Circle(),
+	new Square()
+];
+
+for (let shape of shapes)
+	shape.duplicate();
+
+// for (let shape of shapes) {
+// 	if (shape.type === 'circle')
+// 		duplicateCircle();
+// 	else if (shape.type === 'square')
+// 		duplicateSquare();
+// 	else
+// 		duplicateShare();
+// }
+/* ========= 38.When to Use Inheritance (Когда использовать наследование) ============== */
+// Composition - Состав
+// objectAnimal - methodEat(), methodWalk()
+// objectPerson | objectDog | objectGoldfish
+/////////////////
+// objectAnimal - eat();
+// Mammal - walk() | Fish - swim()
+// Person - Dog | Goldfish
+// Avoid creating inheritance hierarchies - Избегайте создания иерархий наследования
+// Favor Composition over Inheritance - Фавор состав по наследству
+/////////////
+//canWalk, canEat, canSwim
+//Mixins
+/* ========= 39.Mixins (Примеси) ============== */
+function mixin(target, ...sources) {
+	Object.assign(target, ...sources);
+}
+
+const canEat = {
+	eat: function() {
+		this.hunger--;
+		console.log('eating');
+	}
+};
+
+const canWalk = {
+	walk: function() {
+		console.log('walking');
+	}
+};
+
+const canSwim = {
+	swim: function() {
+		console.log('swim');
+	}
+};
+
+function Person() {}
+
+mixin(Person.prototype, canEat, canWalk);
+
+const person = new Person();
+console.log(person);
+
+function goldFish() {}
+
+mixin(goldFish.prototype, canEat, canSwim);
+
+const goldfish = new goldFish();
+console.log(goldfish);
+/* ========= 41.Exercise Prototypical Inheritence (Осуществление прототипического наследования) ============== */
+function HtmlElement() {
+	this.click = function() {
+		console.log('click');
+	}
+}
+
+HtmlElement.prototype.focus = function() {
+	console.log('focus');
+};
+
+function HtmlSelectElement(items = []) {		
+	this.items = items;
+
+	this.addItem = function(item) {
+		this.items.push(item);
+	};
+
+	this.removeItem = function(item) {
+		this.items.splice(this.items.indexOf(item), 1);
+	}
+}
+
+HtmlSelectElement.prototype = new HtmlElement();
+HtmlSelectElement.prototype.constructor = HtmlSelectElement;
+/* ========= 43.Exercise - Polymorphism (Задача - Полиморфизм) ============== */
+function HtmlElement() {
+	this.click = function() {
+		console.log('click');
+	}
+}
+
+HtmlElement.prototype.focus = function() {
+	console.log('focus');
+};
+
+function HtmlSelectElement(items = []) {		
+	this.items = items;
+
+	this.addItem = function(item) {
+		this.items.push(item);
+	};
+
+	this.removeItem = function(item) {
+		this.items.splice(this.items.indexOf(item), 1);
+	}
+
+	this.render = function() {	
+		return `<select>
+						${
+							this.items.map(n => 
+							`<option>${n}</option>`).join('')
+						}
+					</select>`;
+	}
+}
+
+HtmlSelectElement.prototype = new HtmlElement();
+HtmlSelectElement.prototype.constructor = HtmlSelectElement;
+
+function HtmlImageElement(src) {
+	this.src = src;
+	this.render = function() {			
+			return `<img src="${this.src}" />`;				
+	}
+}
+
+HtmlImageElement.prototype = new HtmlElement();
+HtmlImageElement.prototype.constructor = HtmlImageElement;
+
+const elements = [
+	new HtmlSelectElement([1,2,3]),
+	new HtmlImageElement('http://')
+];
+
+for (let element of elements)
+	console.log(element.render());
+/* ========= 45.ES6 Classes (ES6 Классы) ============== */
+//https://babeljs.io/
+//typeof Circle - function
+// function Circle(radius) {
+// 	this.radius = radius;
+
+// 	this.draw = function() {
+// 		console.log('draw');
+// 	}
+// }
+
+class Circle {
+	constructor(radius) {
+		this.radius = radius;
+		this.move = function() {
+			console.log('move');
+		}
+	}
+
+	draw() {
+		console.log('draw');
+	}
+}
+
+const c = new Circle(1);
+/* ========= 46.Hoisting (Подъемно) ============== */
+// Function Declaration
+function name() {}
+
+// Function Expression
+const sayGood = function() {};
+
+// Class Declaration
+class Circle {}
+// Class Expression
+const Square = class {};
+/* ========= 47.Static Methods (Статические Методы) ============== */
+class Circle {
+	constructor(radius) {
+		this.radius = radius;
+	}
+
+	// Instance Method - Метод экземпляра (__proto__)
+	draw() {}
+	// Static Method
+	static parse(str) {
+		const radius = JSON.parse(str).radius;
+		return new Circle(radius);
+	}
+}
+
+// const circle = new Circle(10);
+// Circle.parse(); //его нету в объекте, мы работаем напрямую через класс
+const circle = Circle.parse('{ "radius": 1 }');
+console.log(circle);
+//////////////
+class Math2 {
+	static abs(value) {
+		//...
+	}
+}
+
+Math2.abs();
+/* ========= 48.The This Keyword (Это ключевое слово) ============== */
+'use strict'; //window - undefined
+
+const Circle = function() {
+	this.draw = function() {
+		console.log(this);
+	}
+}
+
+const c = new Circle();
+// Method Call
+c.draw(); //вызов метода на объекте
+
+const draw = c.draw;
+// Function Call
+draw(); //вызов функции, котоаря не является частью объекта, по этому this будет ссылаться на глобальны объект window
+//////////////////
+class Circle {
+	draw() {
+		console.log(this);
+	}
+}
+
+const c = new Circle();
+const draw = c.draw;
+draw(); // undefined - класс всегда работает по умолчанию как strict,
+// чтобы не менять глобальный объект window
+/* ========= 49.Private Members Using Symbols (Частные пользователи, использующие символы) ============== */
+// Абстракция - скрытие и показаны только основные
+// Symbol - это функция, которая мы вызываем для генерации символа.
+// Символ - это уникальный идентификатор.
+const _radius = Symbol();
+const _draw = Symbol();
+class Circle {
+	constructor(radius) {
+		// this.radius = radius;
+		// this['radius'] = radius;
+		this[_radius] = radius; //Symbol
+	}	
+	[_draw]() {}
+}
+
+const c = new Circle(1);
+// console.log(Object.getOwnPropertyNames(c));
+// console.log(Object.getOwnPropertySymbols(c));
+const key = Object.getOwnPropertySymbols(c)[0];
+console.log(c[key]); //1
+/* ========= 50.Private Members Using WeakMaps (Частные пользователи, использующие WeakMaps) ============== */
+// WeakMap - словарь где ключи являются объектами, а значения могут быть устранены.
+// Ключи слабые, если нет ссылок на эти ключи они будут удалены уборщиком мусора.
+const _radius = new WeakMap();
+const _move = new WeakMap();
+const privateProps = new WeakMap();
+class Circle {
+	constructor(radius) {
+		// privateProps.set(this,{
+			// 	radius: radius,
+			// 	move: () => {}
+			// });
+			// privateProps.get(this).radius;
+			
+			_radius.set(this, radius);
+			_move.set(this, () => {
+				console.log('move', this);
+			});
+		}		
+		draw() {
+			// console.log(_radius.get(this));
+			_move.get(this)();
+		}
+	}
+	
+	const c = new Circle(1);
+	
+	/* ========= 51.Getters and Setters (Добытчики и сеттеры) ============== */
+	const _radius = new WeakMap();
+class Circle {
+	constructor(radius) {		
+		_radius.set(this, radius);		
+
+		// Object.defineProperties(this, 'radius', {
+		// 	get: function() {},
+		// 	set: function() {}
+		// });
+	}	
+	
+	get radius() {
+		return _radius.get(this);
+	}
+
+	set radius(value) {
+		if (value <= 0) throw new Error('Invalid radius.');		
+		_radius.set(this, value);
+	}
+}
+
+const c = new Circle(1);
+	/* ========= 52.Inheritance (наследование) ============== */
+	class Shape {
+		constructor(color) {
+			this.color = color;
+		}
+		move() {
+			console.log('move');
+		}
+	}
+	
+	class Circle extends Shape {
+		constructor(color, radius) {
+			super(color);
+			this.radius = radius;
+		}
+		draw() {
+			console.log('draw');
+		}
+	}
+	
+	const c = new Circle('red', 23);
+	/* ========= 53.Method Riding (Метод верховой езды) ============== */
+	class Shape {
+		move() {
+			console.log('move');
+		}
+	}
+	
+	class Circle extends Shape {
+		move() {
+			super.move();
+			console.log('circle move');
+		}
+	}
+	
+	const c = new Circle();
+	/* ========= 55.Exercise (Задача) ============== */
+	// STACK - это особый вид стурктуры данных, как физический стек, или труба
+	const _items = new WeakMap();
+	class Stack {
+		constructor() {
+			_items.set(this,[]);
+		}
+		push(obj) {
+			_items.get(this).push(obj);
+		}
+		pop() {
+			const items = _items.get(this);
+			if (items.length === 0) throw new Error('Stack is empty.');
+			return items.pop();
+		}
+		peek() {
+			const items = _items.get(this);
+			if (items.length === 0) throw new Error('Stack is empty.');
+			// return items.slice(-1)[0];		
+			return items[items.length - 1];		
+		}
+		get count() {
+			return _items.get(this).length;
+		}
+	}
+	
+	const stack = new Stack();
+/* ========= 57.Modules (Модули) ============== */
+// MODULARITY
+// Maintainability
+// Reuse
+// Abstract
+/////////////
+// No modules in ES5
+// MODULES
+// AMD - асинхронный модуль, в основном используется в приложениях браузера
+// CommonJS - используется в Node
+// UMD - универсальный определение модуля, можно использовать как в Browser / Node.js
+// ES6 Modules - native поддерживает формат модуля.
+// CommonJS (Node.js)	| ES6 Modules (Browser)
+const _radius = new WeakMap();
+
+class Circle {
+	constructor(radius) {
+		_radius.set(this, radius);
+	}
+	draw() {
+		console.log('Circle with radius ' + _radius.get(this));
+	}
+}
+
+const c = new Circle(10);
+console.log(_radius.get(c));
+c.draw();
+/* ========= 58.CommonJS Modules (Модуль CommonJS) ============== */
+// Things that are highly related should go together (Вещи, которые тесно связаны, должны идти вместе)
+// Cohesion - сплаченость
+// circle.js
+// Implementation Detail
+const _radius = new WeakMap();
+
+// Public Interface
+class Circle {
+	constructor(radius) {
+		_radius.set(this, radius);
+	}
+	draw() {
+		console.log('Circle with radius ' + _radius.get(this));
+	}
+}
+
+// module.exports.Circle = Circle;
+module.exports = Circle;
+// index.js
+const Circle = require('./circle');
+
+const c = new Circle(10);
+c.draw();
+/* ========= 59.ES6 Modules (Модуль ES6) ============== */
+// circlees6.js
+const _radius = new WeakMap();
+
+export class Circle {
+	constructor(radius) {
+		_radius.set(this, radius);
+	}
+	draw() {
+		console.log('Circle with radius ' + _radius.get(this));
+	}
+}
+//index.js
+import { Circle } from './circlees6.js';
+
+const c = new Circle(10);
+c.draw();
+//index.html
+<script type="module" src="index.js"></script>
+/* ========= 60.ES6 Tooling (ES6 Инструменты) ============== */
+// Transpiler (транспортер) | Bundler (упаковщик)
+// Transpiler - переводчик и компилятор. (Modern -> |BABEL| -> ES5)
+// Bundler - упаковывает все файлы js в одни файл bundler (.js.js.js -> | WEBPACK | -> .js)
+/* ========= 61.Babel ============== */
+// npm i babel-cli babel-core babel-preset-env --save-dev
+// babel-cli - это интерфейс командной сторки Babel
+// babel-core - это ядро вся логика реализации кода.
+// babel-preset-env - это комбинация всех плагинов для ES6, он понимает все новые функции в JS
+// --save-dev - они будут частью нашего приложения, и находятся исключительно на машине разработки
+// code . - запускает VSCode
+// package.json
+// "scripts": {
+// 	"babel": "babel --presets env index.js -o build/index.js"
+// }
+// balbe - это интерфейс командной строки Babel, которую мы запускаем из терминала
+// нужно создать директорию build
+/* ========= 62.Webpack ============== */
+// npm i -g webpack-cli
+// webpack-cli init
+// uglifyjs - сокращение имени
+//"build": "webpack --config webpack.config.js"
+// npm run build
+//"build": "webpack --w" - автоматически изменять 
+
 
 
 
