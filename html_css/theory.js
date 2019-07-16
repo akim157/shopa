@@ -104,8 +104,38 @@
 // tabindex="-1" - исключаем из интерактивности элемент
 // Семантика - использование элементов по смыслу
 // Диватоз)
-
-
+// <details>
+//<summary>Подробнее</summary>
+//<p>Если их не покрасить...</p>
+//</details>
+{/* <label>
+	Цвет холодильника
+	<input list="fridges">
+</label>
+<detalist id="fridges">
+	<oprtion value="Фиолетовый">
+	<oprtion value="Красный">
+	<oprtion value="Оранжевый">
+	<oprtion value="Желтый">
+	<oprtion value="Зеленый">
+	<oprtion value="Голубой">
+	<oprtion value="Синий">
+</detalist> */}
+//<a href>Главная</a> - содержимое элемента
+//<legend>Адрес</legend> - Заголовок группы
+//<nav aria-label="Содержимое">
+//.visually-hidden {
+// 	position: absolute;
+// 	width: 1px;
+// 	height: 1px;
+// 	margin: -1px;
+// 	border: 0;
+// 	padding: 0;
+// 	clip: rect(0 0 0 0);
+// 	overflow: hidden;
+// }
+//ARIA
+//<fieldset> - группировка объектов формы
 
 
 
