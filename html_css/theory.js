@@ -187,6 +187,36 @@
 //display: flex - гибикие или флексы
 //display: grid - гридовые
 //display: table - табличные
+//Тонкости блочной модели
+//схлопывание внешних отступов (margin) - в вертикальном направлении внешний отступы (margin) не складываются, а выбирается максимальный из доступных
+//выпадание внешних отступов (margin) - в вертикальном направлении внешний отступ (margin) вложенного блока может выпадать из родительского и отталквивать оба блока.
+// - Родительскому блоку можно задать одно из следующих свойств:
+// - overlflow: hidden; // использовать осторожно
+// - padding-top: 1px; или padding-bottom: 1px;
+// - botder-top: 1px solid transparent; или border-bottom: 1px solid transparent;
+//как расположить элемент по центру.
+// - div { width: [меньше чем ширина родителя]px; margin-left: auto; margin-right: auto;}
+// - margin: 0 auto; //часто пишут так
+//Ширина по умочанию и 100%
+// - width: auto; (padding дочерный блок сужается) - width: 100% (padding выезжает за родительский блок)
+//box-sizing
+// - box-sizing: content-box - обычное поведение блока при ширине 100%
+// - box-sizing: border-box; - padding уже не выезжает за границу блока
+// *, *::before, *::after {
+// 	box-sizing: inherit;
+// }
+// html {
+// 	box-sizing: border-box;
+// }
+// .content-box-component {
+// 	box-sizing: content-box;
+// }
+//flexbox
+//display: flex;
+//flex-direction: row;
+//flex-direction: column;
+//flex-direction: row-reverse;
+//flex-direction: column-reverse;
 
 
 
