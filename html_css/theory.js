@@ -136,6 +136,65 @@
 // }
 //ARIA
 //<fieldset> - группировка объектов формы
+/* ================== 14.CSS =============== */
+// Селектор {
+// свойство: значение;
+// }
+//Псевдокласс - усиливают
+//:link | :hover | :active | :focus | :visited
+//:root | :first-child | :last-child | :nth-child()
+//:valid | :invalid | :required | :optional | :checked | :disabled | :enabled
+//Псевдоэлементы - создают виртуальные теги для дополнителеной стилизации
+//::after | ::before | ::first-letter | ::first-line
+// <li class="login-item">
+//     <::before>Иконка входа</::before>
+//     <a href="/login">Вход</a>
+// </li>
+// .login-item::before {
+//     content: 'Иконка входа'
+// }
+//Каскадность - к одному и тожу же элементу может примениться несколько css-правил.
+//Определение приоритетов
+//width: 100vw; - от ширины вьюпорта (видмой части браузера)
+//height: 100vh; - от высоты вьюпорта
+//font-size: 2em; от размера шрифта родителя
+//font-size: 2rem; от размера шрифта body
+//color: #f00;
+//color: #ff0000;
+//color: rgb(255, 0, 0);
+//color: rgba(255, 0, 0, 0.5);
+//color: hsl(0, 100%, 50%);
+//color: hsla(0, 100%, 50%, 0.5);
+//content: attr(href); - получает содержимое атрибута
+//width: calc(100% - 100px); - любые расчеты
+//background-image: linear-gradient(45deg, yellow, green); - линейный градиент
+//css-директивы
+//@fon-face {
+// font-family: "Open Sans";
+// src:
+//     url("OpenSans-Regular.woff2") format("woff2"),
+//     url("OpenSans-Regular.woff") format("woff"),
+// }
+//@media (max-width: 600px) {}
+//Нормализация стилей
+//Normalize.css - это небольшой CSS-файл, который обеспечивает для HTML-элементов лучшую кроссбраузреность в стилях по умолчанию.
+//font: inherit; - для кнопки в форме принудительно от родителя
+/* ================== 17.Сетки =============== */
+//Поток - порядок отрисовки документов
+//display: block - блочные
+//display: inline - строчные
+//display: inline - блочно-строчные
+//display: flex - гибикие или флексы
+//display: grid - гридовые
+//display: table - табличные
+
+
+
+
+
+
+
+
 
 
 
