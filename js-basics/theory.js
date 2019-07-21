@@ -117,7 +117,7 @@ console.log(x ** y);
 console.log(++x); //11 префиксная форма
 console.log(x++); //10 постфиксная форма
 console.log(x); //11
-//Decrement (++)
+//Decrement (--)
 console.log(--x); //9
 console.log(x--);
 //Assignment Operators (Оператор присваивания)
