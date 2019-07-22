@@ -1,19 +1,19 @@
-const User = function(name) {
-    this.name = name || 'New User';
-};
+$(document).ready(function(){
+	$('button').on('click', function(){
+		makeReqest();
+	});
 
-User.prototype = {
-    age: 20,
-    getName: function() {
-        console.log('This name', this.name);
-    },
-    get: function(filed) {
-        const self = this;
-        setTimeout(function(){
-            console.log('GET:', self[filed]);
-        },1000);
-    }
-};
-
-const user = new User('Maxim');
-user.get('name');
+	function makeReqest() {
+		$.ajax({
+			type: 'GET',
+			url: 'http://ip.jsontest.com',
+			crossDomain: true,
+			success: function(data, status, xhr) {
+				console.log('IP: ', data);
+			},
+			error: function() {
+				console.log('Error', arguments);
+			}
+		});
+	}
+});

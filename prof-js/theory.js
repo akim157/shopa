@@ -164,4 +164,50 @@ User.prototype = {
 
 const user = new User('Maxim');
 user.get('name');
+/* ============ 8.Протипированное наследование ============ */
+const Animal = function(name) {
+	this.name = name;	
+};
+
+Animal.prototype = {
+	legsCount: 4,
+	headsCount: 1,
+	tailExists: false
+};
+
+const Cat = function() {
+	this.isCat = true;
+};
+
+Cat.prototype = new Animal('Tom');
+
+const cat = new Cat();
+console.log(cat instanceof Cat);
+/* ============ 8.Jquery ajax ============ */
+//npm i jquery
+//index.html
+<button>Click</button>
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+//index.js
+$(document).ready(function(){
+	$('button').on('click', function(){
+		makeReqest();
+	});
+
+	function makeReqest() {
+		$.ajax({
+			type: 'GET',
+			url: 'http://ip.jsontest.com',
+			crossDomain: true,
+			success: function(data, status, xhr) {
+				console.log('IP: ', data);
+			},
+			error: function() {
+				console.log('Error', arguments);
+			}
+		});
+	}
+});
+/* ============ 9.Eslint ============ */
+//следить за чистатой и качествой кода
 
