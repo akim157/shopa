@@ -166,7 +166,7 @@ const user = new User('Maxim');
 user.get('name');
 /* ============ 8.Протипированное наследование ============ */
 const Animal = function(name) {
-	this.name = name;	
+	this.name = name;
 };
 
 Animal.prototype = {
@@ -210,4 +210,146 @@ $(document).ready(function(){
 });
 /* ============ 9.Eslint ============ */
 //следить за чистатой и качествой кода
+/* ============ 10.ES2015 ============ */
+//Babel - компилятор для js
+//Диструктуризация
+//Стрелочные функции
+//МОДУЛИ
+import $ from 'jquery';
+import * as newJq from 'jquery';
+import { TEST_NAME } from './a';
+// import {User} from './b';
+// import User from './b';
+// import User, { TEST2 } from './b';
+import * as b from './b';
+import {EEE} from './r/index';
+
+console.log(EEE);
+console.log(b.TEST2);
+const user = new b.User();
+console.log(TEST_NAME);
+$.ajax();
+newJq.ajax();
+//a.js
+export const TEST_NAME = 'TEST NAME';
+console.log(TEST_NAME);
+// export TEST_NAME;
+//b.js
+// export class User {}
+export default class User {}
+export const TEST2 = 'test2';
+//index.js
+import {TEST_NAME} from '../a';
+export const EEE = 'da';
+//ПРОМИСЫ
+const apiCall = new Promise(function(resolve, reject) {
+    $.ajax({
+        url: 'http://ip.jsontest.com/',
+        type: 'GET',
+        crossDomain: true,
+        success: function(data){
+            resolve(data.ip);
+        },
+        error: function(){
+            reject();
+        }
+    });
+});
+
+apiCall.then(function(ip){
+    console.log('ip: ', ip);
+}).catch(function(){
+    console.log('error');
+});
+
+///////////////
+const delay = (ms = 1000) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(), ms);
+    });
+};
+
+delay(3000).then(()=>{
+
+});
+/* ============ 11.Структура ============ */
+//GIT
+//Project
+//src - храниться исходный код проекта, js файлы и стиливые файлы (sass, less - препроцессоры)
+//ProjectConfig - конфигурация проекта
+//GULP/WEBPACK - СБОРЩИК проекта
+//package.json | bower.json - инстуркции для библиотек
+//Libraries/Modules - библиотеки и модули
+//bundle.js - хранятся все библиотеки используемые в проекта и src файлы
+/* ============ 12.webpack ============ */
+//webpack src/index.js --output dist/bundle.js
+//npm i webpack -g
+//index.js
+const $ = require('jquery');
+const str = require('./constan');
+const App = function() {
+    console.log(str);
+    $('body').html(str);
+};
+
+const app = new App();
+//constan.js
+module.exports = 'App: init!!!!!!!!';
+//НАСТРОЙКИ
+//webpack.config.json
+const webpack = require('webpack');
+module.exports = {
+    entry: './src/index.js',
+    output: {
+        path: __dirname + '/public',
+        filename: 'bundle.js'
+    }
+};
+//"build": "webpack",
+//"start": "webpack ./src/index.js --output ./public/build.js"
+/* ============ 12.ESLINT ============ */
+//.eslintrc - файл создается в корне проекта, в нем описываются правила проверки кода
+//npm i eslint --save-dev
+//eslint ./src - прописываем команду в терминале для проверки скриптов
+//"lint": "eslint ./src" - прописываем команду в package.json
+/* ============ 13.LESS ============ */
+//npm i --save-dev style-loader css-loader less-loader less
+//webpack.config.js
+//module: {
+//         rules: [
+//             {
+//                 test: /\.less$/,
+//                 loader: 'less-loader', // compiles Less to CSS
+//             },
+//         ],
+//     }
+//less/index.js
+require('./main.less');
+//src/index.js
+require('./less');
+//main.less
+body {
+    background-color: red;
+}
+
+@font-size: 40px;
+
+.b-test {
+    margin-top: 50px;
+    padding: 30px;
+    background: #fff;
+
+&__heading {
+        font-size: @font-size;
+        color: blue;
+    & > div {
+            width: 25px;
+            height: 25px;
+            background: yellowgreen;
+        }
+    }
+}
+
+
+
 
