@@ -349,6 +349,293 @@ body {
         }
     }
 }
+/* ============ 14.React - Создание первого компонента ============ */
+//npm i react react-dom --save //react - библиотеки, react-dom - работает с shadow-dom
+//index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class App extends React.Component {
+    render() {
+        return (
+            <div>
+                <h1>App works!</h1>
+                <h3>it`s really working!</h3>
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(
+    <App />,
+    document.getElementById('app')
+);
+//index.html
+<div id="app"></div>
+/* ============ 15.JSX ============ */
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class App extends React.Component {
+    btnOnClick(event) {
+        console.log('Button Click', event.target);
+    }
+    render() {
+        return (
+            <div style={{ backgroundColor: 'red' }} className="test">
+                <h1>App works!</h1>
+                <h3>it`s really working!</h3>
+                <button onClick={this.btnOnClick}>{ this.props.children }</button>
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(
+    <App>It`s prop!</App>,
+    document.getElementById('app')
+);
+/* ============ 16.Props ============ */
+import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
+
+class App extends React.Component {
+
+    static propTypes = {
+        btnText: PropTypes.string.isRequired,
+        h1text: PropTypes.string.isRequired,
+        newArray: PropTypes.array.isRequired
+        // newArray: React.PropTypes.array.isRequired
+    };
+
+    static defaultProps = {
+        btnText: 'default props text'
+    };
+
+    btnOnClick(event) {
+        console.log('Button Click', event.target);
+    }
+    render() {
+        console.log('array', this.props.newArray);
+        console.log('This', this);
+        console.log('Props', this.props);
+        return (
+            <div style={{ backgroundColor: 'red' }} className="test">
+                <h1>{ this.props.h1text }</h1>
+                <h3>it`s really working!</h3>
+                <button onClick={this.btnOnClick}>{ this.props.btnText || 'Default Text' }</button>
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(
+    <App btnText="click on me" h1text="this is h1 text" newArray={[1,2,3]}/>,
+    document.getElementById('app')
+);
+/* ============ 17.State ============ */
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            text: 'test'
+        }
+    }
+    inputOnChange(event) {
+        const text = event.target.value;
+        this.setState({ text });
+    }
+    render() {
+        return (
+            <div className="test">
+                <h1>Hello</h1>
+                <input type="text" value={ this.state.text } onChange={ this.inputOnChange.bind(this) }/>
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(
+    <App />,
+    document.getElementById('app')
+);
+/* ============ 18.Связь компонентов ============ */
+//index.js
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import NewComponent from './new';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>Hello</h1>
+                <NewComponent text="hello from app" />
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(
+    <App />,
+    document.getElementById('app')
+);
+//new.js
+import React, { Component } from 'react';
+
+export default class NewComponent extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div style={{ backgroundColor: 'red' }}>
+                <h3>New Component</h3>
+                <p>{ this.props.text }</p>
+            </div>
+        );
+    }
+}
+/* ============ 19.Жизненный цикл компонента ============ */
+//index.js
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import NewComponent from './new';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            timer: 0
+        };
+    }
+
+    componentWillMount() {
+        setInterval(() => {
+            this.setState({ timer: this.state.timer + 1 });
+        }, 100);
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>Hello</h1>
+                { this.state.timer < 50 ? <NewComponent text="hello from app" /> : null }
+                <p>{ this.state.timer }</p>
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(
+    <App />,
+    document.getElementById('app')
+);
+//new.js
+import React, { Component } from 'react';
+
+export default class NewComponent extends Component {
+    constructor(props) {
+        super(props);
+        console.log('Constructor 1'); //отрабатывает при вызове компонента
+    }
+    componentWillMount() {
+        console.log('componentWillMount 2'); //отрабатывает до добавления в DOM html компонентов
+    }
+    componentDidMount() {
+        console.log('componentDidMount 4'); //отрабатывает после рендеринга
+    }
+    componentWillUnmount() {
+        console.log('componentWillUnmount 5'); //работает как __destruct при удалении компонента
+    }
+    render() {
+        console.log('Render 3'); //добавляем в DOM html компоненты
+        return (
+            <div style={{ backgroundColor: 'red' }}>
+                <h3>New Component</h3>
+                <p>{ this.props.text }</p>
+            </div>
+        );
+    }
+}
+/* ============ 20.Коллекции ============ */
+//index.js
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import NewComponent from './new';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            array: [
+                {
+                    id: 1,
+                    text: 'item 1'
+                },
+                {
+                    id: 2,
+                    text: 'item 2'
+                },
+                {
+                    id: 3,
+                    text: 'item 3'
+                }
+            ]
+        };
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>Hello</h1>
+                <NewComponent array={ this.state.array } />
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(
+    <App />,
+    document.getElementById('app')
+);
+//new.js
+import React, { Component } from 'react';
+
+export default class NewComponent extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    renderItem(item, idx) {
+        return (
+            <li key={ idx }> <b>{ item.text }</b> - { item.id } </li>
+        );
+    }
+
+    render() {
+        return (
+            <ul>
+                { this.props.array.map(this.renderItem.bind(this))}
+            </ul>
+        );
+    }
+}
+/* ============ 21.Роутеры ============ */
+//npm i react-router --save
+
+
+
+
+
 
 
 
