@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Router, Route } from 'react-router';
+import { Route, Switch, BrowserRouter } from "react-router-dom";
 import ReactDOM from 'react-dom';
 import NewComponent from './new';
 
@@ -11,16 +11,18 @@ class App extends Component {
     render() {
         return (
             <div>
-                <h1>App component</h1>
+                <h1>App component1</h1>
             </div>
         );
     }
 }
 
 ReactDOM.render(
-    <Router>
-        <Route path={'/'} component={ App }/>
-        <Route path={'new'} component={ NewComponent }/>
-    </Router>,
+	<BrowserRouter>
+	  <Switch>
+        <Route path="/" component={ App }/>
+        <Route path="/new2" component={ NewComponent }/>
+    </Switch>
+	</BrowserRouter>,
     document.getElementById('app')
 );

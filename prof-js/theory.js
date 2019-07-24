@@ -631,6 +631,58 @@ export default class NewComponent extends Component {
 }
 /* ============ 21.Роутеры ============ */
 //npm i react-router --save
+//npm install --save react-router-dom
+import React, { Component } from 'react';
+import { Route, Switch, BrowserRouter } from "react-router-dom";
+import ReactDOM from 'react-dom';
+import NewComponent from './new';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>App component1</h1>
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(
+	<BrowserRouter>
+	  <Switch>
+        <Route path="/" component={ App }/>
+        <Route path="/new2" component={ NewComponent }/>
+    </Switch>
+	</BrowserRouter>,
+    document.getElementById('app')
+);
+/* ============ 21.Redux ============ */
+//Это паттерн, замене MVC
+//Redux - это контейнер с предсказуемым состоянием для приложений JavaScript.
+//Отслеживает потоки данных в приложении
+//https://redux.js.org/introduction/getting-started
+//UI view -> onClick (events) user interaction
+//action creator - создается функция, объект, которая возвращает данные такие как тип, дату.
+//dispatch action (edit post, add new comment) - отрабатывает отправка (редактирование поста, добавления нового комментария)
+//store - поподает хранилище - это глобальное хранилище для всего приложения состояний (глобальный объект)
+//reducer (редуктор) - после store поподает сюда, это функция где есть switch case где проходит проверка, 
+//потом он создает новый объект с новым хешом и заменяется в store
+//updated state (new state) - как состояние в хранилище изменяется меняется и уже ui view
+//умные и глупые компоненты 
+//умные компоненты - это те, которые следят за изменения store
+//глупые компоненты не смотрят за изменением store, а просто принимают входящие параметры и зависимости от них меняются
+
+
+
+
+
+
+
+
 
 
 
