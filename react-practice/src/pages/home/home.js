@@ -2,8 +2,17 @@ import React, { PropTypes } from 'react';
 import Input from '../../components/ui/input';
 import { bindAll } from 'lodash';
 import { connect } from 'react-redux';
-import { addTodo, likeTodo } from './actions';
+import { 
+	addTodo, 
+	likeTodo, 
+	deleteTodo,
+	getTodos,
+	saveTodos
+} from './actions';
+// import Input from '../../components/ui/input';
+import Loader from '../../components/ui/loader';
 import classnames from 'classnames';
+import { LS } from '../../utils';
 import './styles.less';
 
 class HomePage extends React.Component {
@@ -75,15 +84,18 @@ class HomePage extends React.Component {
     deleteTodo(todo) {
 		    this.props.dispatch();
     }
-    render() {
+    render() {			
         // const { todoName, todos, error } = this.state;
         const { todoName } = this.state;
-        const { todos, error } = this.props.home;
+				const { todos, error } = this.props.home;
+				LS.set('todos', todos);							
         return (
             <div className='row b-home'>
                 <div className='col-xs-12'>
 									<ul>
-										{ todos.map(this.renderTodos) }
+										{ todos.length === 0 ? <Loader />:
+											todos.map(this.renderTodos) 
+										}
 									</ul>
 									<div className='col-xs-4'>
 										{/* <input type='text' className='form-control' value={ todoName } onChange={ this.inputOnChange.bind(this) }/> */}
@@ -99,7 +111,13 @@ class HomePage extends React.Component {
             </div>
         );
     }
-
+		componentWillMount() {
+			this.props.dispatch(getTodos());
+		}
+		// componentWillUnmount() {
+		// 	this.props.dispatch( saveTodos(this.props.todos) );
+		// 	LS.set('todos', this.props.todos);
+		// }
 }
 
 function mapStateToProps(state) {

@@ -1196,6 +1196,11 @@ export function deleteTodo(todo) {
         outline: none !important;
     }
 }
+/* ============ 29.Эмуляция асинхронности ============ */
+//localstorage - глобальный объект js приложения, который может содержать различные поля
+//cookie, после закрытие браузора они остаются и не удаляются
+//npm i --save-dev redux-thunk
+
 
 
 
