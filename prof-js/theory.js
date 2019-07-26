@@ -809,6 +809,46 @@ export default function configureStore(initialState) {
 
 
 
+/* ============ 22.404 ============ */
+//pages/error/index.js
+import React from 'react';
+import { Link } from 'react-router';
+
+export default class ErrorPage extends React.Component {
+	render() {
+		return (
+			<div className='alert alert-danger'>
+				<h3>Страница не найдена</h3>
+				<p>Перейти на <Link to='/'>главную</Link>	страницу.</p>
+			</div>
+		);
+	};
+}
+//routes.js
+import React from 'react';
+import { Route, IndexRoute } from 'react-router';
+import App from './app';
+import { HomePage, HomeRouters } from './pages/home';
+import { ContactPage, ContactRouters } from './pages/contact';
+import ErrorPage from './pages/error';
+
+
+export default (
+    <Route component={ App } path={ App.path } >
+        <IndexRoute component={ HomePage } />
+        { HomeRouters }
+				{ ContactRouters }
+				<Route path='*' component={ ErrorPage } />
+    </Route>
+);
+/* ============ 23.Главная страница ============ */
+//npm i --save classnames
+//npm i --save lodash
+//https://www.npmjs.com/package/lodash
+
+
+
+
 
 
 
