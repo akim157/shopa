@@ -996,6 +996,206 @@ export default combineReducers({
     ...HomeReducer
 });
 /* ============ 28.Добавление фукционала ============ */
+//home/home.js
+import React, { PropTypes } from 'react';
+import Input from '../../components/ui/input';
+import { bindAll } from 'lodash';
+import { connect } from 'react-redux';
+import { addTodo, likeTodo } from './actions';
+import classnames from 'classnames';
+import './styles.less';
+
+class HomePage extends React.Component {
+    static path = '/';
+    static propTypes = {
+        home: PropTypes.object.isRequired,
+        dispatch: PropTypes.func.isRequired
+    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            todoName: ''
+            // todos: [
+            // 	{ id: 1, name: 'Todo 1'}
+            // ],
+            // error: ''
+        };
+
+        bindAll(this, ['renderTodos','inputOnChange','addTodo']);
+    }
+    // inputOnChange(event) {
+    // 	const todoName = event.target.value;
+    // 	this.setState({ todoName });
+    // }
+    inputOnChange(value) {
+        this.setState({ todoName: value });
+    }
+    addTodo() {
+        // if (this.state.todoName === '') {
+        // 	this.setState({ error: 'Поле не должно быть пустым;' });
+        // 	return;
+        // }
+        // const id = this.state.todos[this.state.todos.length - 1].id + 1;
+        // const name = this.state.todoName;
+        // const todos = this.state.todos;
+        // todos.push({id, name});
+        // this.setState({ todos });
+        // this.setState({ todoName: '', error: '' });
+        const { todos } = this.props.home;
+        const id = todos[this.state.todos.length - 1].id + 1;
+        const name = this.state.todoName;
+        this.props.dispatch( addTodo(id, name));
+        this.setState({ todoName: '' });
+    }
+    renderTodos(item, idx) {
+        const todoClasses = classnames('b-home-todo', {
+            'is-liked': item.liked
+        });
+        const btnClasses = classnames('btn', {
+            'active': item.liked
+        });
+        return (
+            <li key={ idx }>
+                    <span className={ todoClasses }>
+                        { item.name }
+                    </span>
+                <button className="btn" onClick={ this.deleteTodo.bind(this, item)}>
+                    <i className='glyphicon glyphicon-remove'></i>
+                </button>
+                <button className={ btnClasses } onclick={ this.likeTodo.bind(this, item) }>
+                    <i className='glyphicon glyphicon-heart'></i>
+                </button>
+            </li>
+        );
+    }
+    likeTodo(todo) {
+        this.props.dispatch( likeTodo(todo) );
+    }
+    deleteTodo(todo) {
+        this.props.dispatch();
+    }
+    render() {
+        // const { todoName, todos, error } = this.state;
+        const { todoName } = this.state;
+        const { todos, error } = this.props.home;
+        return (
+            <div className='row b-home'>
+                <div className='col-xs-12'>
+                    <ul>
+                        { todos.map(this.renderTodos) }
+                    </ul>
+                    <div className='col-xs-4'>
+                        {/* <input type='text' className='form-control' value={ todoName } onChange={ this.inputOnChange.bind(this) }/> */}
+                        <Input
+                            onChange={ this.inputOnChange }
+                            value={ todoName }
+                            // error={ error }
+                            error={ this.state.error }
+                        />
+                        <button className='btn btn-primary' onClick={ this.addTodo }>Add todo</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+}
+
+function mapStateToProps(state) {
+    return {
+        home: state.home
+    };
+}
+
+export default connect(mapStateToProps)(HomePage);
+//home/reducers.js
+import {ADD_TODO, LIKE_TODO, DELETE_TODO } from './actions';
+
+const initialState = {
+    todos: [
+        { id: 1, name: 'Todo 1', liked: false }
+    ],
+    error: ''
+};
+
+function homeReducer(state = initialState, action) {
+    switch (action.type) {
+        case ADD_TODO:
+            let todos = state.todos;
+            if (!action.error) {
+                todos.push({ id: action.id, name: action.name, liked: false });
+            }
+            return Object.assign({}, state, {
+                error: action.error,
+                todos
+            });
+        case LIKE_TODO:
+            const idx = state.todos.findIndex(todo => todo.id === action.todo.id);
+            state.todos[idx].liked = action.liked;
+            return Object.assign({}, state, { todos: state.todos });
+        case DELETE_TODO:
+            const todosD = state.todos.filter(todo => todo.id !== action.todo.id);
+            return Object.assign({}, state, { todos: todosD });
+        default:
+            return state;
+    }
+}
+
+const HomeReducer = {
+    home: homeReducer
+};
+
+export default HomeReducer;
+//home/actions.js
+export const ADD_TODO = 'ADD_TODO';
+export const LIKE_TODO = 'LIKE_TODO';
+export const DELETE_TODO = 'DELETE_TODO';
+
+export function addTodo(id, name) {
+    let error = '';
+    if(!name) {
+        error = 'Необъодимо ввести название';
+    }
+    return {
+        type: ADD_TODO,
+        id,
+        name,
+        error
+    };
+}
+
+export function likeTodo(todo) {
+    const liked = !todo.liked;
+    return {
+        type: LIKE_TODO,
+        todo,
+        liked
+    }
+}
+
+export function deleteTodo(todo) {
+    return {
+        type: DELETE_TODO,
+        todo
+    };
+}
+//home/styles.less
+.b-home {
+    margin: 15px;
+& button {
+        margin: 15px 0;
+    }
+&-todo {
+        margin-right: 10px;
+        font-size: 15px;
+    &.is-liked {
+            color: red;
+        }
+    }
+* {
+        outline: none !important;
+    }
+}
 
 
 
