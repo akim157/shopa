@@ -669,12 +669,146 @@ ReactDOM.render(
 //action creator - создается функция, объект, которая возвращает данные такие как тип, дату.
 //dispatch action (edit post, add new comment) - отрабатывает отправка (редактирование поста, добавления нового комментария)
 //store - поподает хранилище - это глобальное хранилище для всего приложения состояний (глобальный объект)
-//reducer (редуктор) - после store поподает сюда, это функция где есть switch case где проходит проверка, 
+//reducer (редуктор) - после store поподает сюда, это функция где есть switch case где проходит проверка,
 //потом он создает новый объект с новым хешом и заменяется в store
 //updated state (new state) - как состояние в хранилище изменяется меняется и уже ui view
-//умные и глупые компоненты 
+//умные и глупые компоненты
 //умные компоненты - это те, которые следят за изменения store
 //глупые компоненты не смотрят за изменением store, а просто принимают входящие параметры и зависимости от них меняются
+/* ============ 22.React настройка Redux ============ */
+//npm install react redux react-router react-dom react-redux react-router-redux react-router-dom --save
+//index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Router, browserHistory } from 'react-router';
+import { Provider } from 'react-redux';
+import { syncHistoryWithStore } from 'react-router-redux';
+import configureStore from './store';
+import routes from './routes';
+
+const store = configureStore();
+const history = syncHistoryWithStore(browserHistory, store);
+
+ReactDOM.render((
+        <Provider store={ store }>
+            <Router history={ history }>
+                { routes }
+            </Router>
+        </Provider>
+    ),
+    document.querySelector('#app'));
+
+//store.js
+import { createStore, applyMiddleware, compose } from 'redux';
+import rootReducer from './reducers';
+
+function _applyMiddleware() {
+    const middleware = [];
+    return applyMiddleware(...middleware);
+}
+
+export default function configureStore(initialState) {
+    const store = compose(
+        _applyMiddleware()
+    )(createStore)(rootReducer, initialState);
+    return store;
+}
+//reducers.js
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
+
+export default combineReducers({
+    routing: routerReducer
+});
+//routers.js
+import React from 'react';
+import { Route } from 'react-router';
+import App from './app';
+
+export default (
+    <Route component={ App } path={ App.path }>
+
+    </Route>
+);
+//app.js
+import { Component } from 'react';
+
+export default class App extends Component {
+    static path = '/';
+    render() {
+        return (
+            <h1>Hello world!</h1>
+        );
+    }
+}
+/* ============ 23.DevTools настройка ============ */
+//npm i --save redux-devtools redux-devtools-dock-monitor redux-devtools-log-monitor
+//utils/devtools.js
+import React from 'react';
+import { createDevTools } from 'redux-devtools';
+import DockMonitor from 'redux-devtools-dock-monitor';
+import LogMonitor from 'redux-devtools-log-monitor';
+
+const DevTools = createDevTools(
+    <DockMonitor
+        toggleVisibilityKey='ctrl-h'
+        changeMonitorKey='ctrl-q'
+        defaultIsVisible={ true }
+    >
+        <LogMonitor theme='tomorrow' />
+    </DockMonitor>
+);
+
+export default DevTools;
+//utils/index.js
+export DevTools from './devtools';
+//app.js
+import React from 'react';
+import { DevTools } from './utils';
+
+export default class App extends React.Component {
+
+    static path = '/';
+
+    render() {
+        return (
+            <div>
+                <h1>Hello</h1>
+                { process.env.NODE_ENV !== 'production' ? <DevTools /> : null }
+            </div>
+        );
+    }
+
+}
+//store.js
+import { createStore, applyMiddleware, compose } from 'redux';
+import rootReducer from './reducers';
+import { DevTools } from './utils';
+
+
+function _applyMiddleware() {
+    const middleware = [
+
+    ];
+
+    return applyMiddleware(...middleware);
+}
+
+
+export default function configureStore(initialState) {
+    const store = compose(
+        _applyMiddleware(),
+        DevTools.instrument()
+    )(createStore)(rootReducer, initialState);
+
+    return store;
+}
+/* ============ 24.Создание роутеров ============ */
+//npm i bootstrap
+//Alt + J
+
+
+
 
 
 
