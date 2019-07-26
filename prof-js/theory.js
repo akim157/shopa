@@ -809,7 +809,7 @@ export default function configureStore(initialState) {
 
 
 
-/* ============ 22.404 ============ */
+/* ============ 25.404 ============ */
 //pages/error/index.js
 import React from 'react';
 import { Link } from 'react-router';
@@ -841,10 +841,162 @@ export default (
 				<Route path='*' component={ ErrorPage } />
     </Route>
 );
-/* ============ 23.Главная страница ============ */
+/* ============ 26.Главная страница ============ */
 //npm i --save classnames
 //npm i --save lodash
 //https://www.npmjs.com/package/lodash
+/* ============ 27.Главная страница и Redux ============ */
+//home.js
+import React, { PropTypes } from 'react';
+import Input from '../../components/ui/input';
+import { bindAll } from 'lodash';
+import { connect } from 'react-redux';
+import { addTodo } from './actions';
+import './styles.less';
+
+class HomePage extends React.Component {
+    static path = '/';
+    static propTypes = {
+        home: PropTypes.object.isRequired,
+        dispatch: PropTypes.func.isRequired
+    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            todoName: ''
+            // todos: [
+            // 	{ id: 1, name: 'Todo 1'}
+            // ],
+            // error: ''
+        };
+
+        bindAll(this, ['renderTodos','inputOnChange','addTodo']);
+    }
+    // inputOnChange(event) {
+    // 	const todoName = event.target.value;
+    // 	this.setState({ todoName });
+    // }
+    inputOnChange(value) {
+        this.setState({ todoName: value });
+    }
+    addTodo() {
+        // if (this.state.todoName === '') {
+        // 	this.setState({ error: 'Поле не должно быть пустым;' });
+        // 	return;
+        // }
+        // const id = this.state.todos[this.state.todos.length - 1].id + 1;
+        // const name = this.state.todoName;
+        // const todos = this.state.todos;
+        // todos.push({id, name});
+        // this.setState({ todos });
+        // this.setState({ todoName: '', error: '' });
+        const { todos } = this.props.home;
+        const id = todos[this.state.todos.length - 1].id + 1;
+        const name = this.state.todoName;
+        this.props.dispatch( addTodo(id, name));
+        this.setState({ todoName: '' });
+    }
+    renderTodos(item, idx) {
+        return (
+            <li key={ idx }>{ item.name }</li>
+        );
+    }
+    render() {
+        // const { todoName, todos, error } = this.state;
+        const { todoName } = this.state;
+        const { todos, error } = this.props.home;
+        return (
+            <div className='row b-home'>
+                <div className='col-xs-12'>
+                    <ul>
+                        { todos.map(this.renderTodos) }
+                    </ul>
+                    <div className='col-xs-4'>
+                        {/* <input type='text' className='form-control' value={ todoName } onChange={ this.inputOnChange.bind(this) }/> */}
+                        <Input
+                            onChange={ this.inputOnChange }
+                            value={ todoName }
+                            // error={ error }
+                            error={ this.state.error }
+                        />
+                        <button className='btn btn-primary' onClick={ this.addTodo }>Add todo</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+}
+
+function mapStateToProps(state) {
+    return {
+        home: state.home
+    };
+}
+
+export default connect(mapStateToProps)(HomePage);
+//home/reducers.js
+import { ADD_TODO } from './actions';
+
+const initialState = {
+    todos: [
+        { id: 1, name: 'Todo 1' }
+    ],
+    error: ''
+};
+
+function homeReducer(state = initialState, action) {
+    switch (action.type) {
+        case ADD_TODO:
+            let todos = state.todos;
+            if (!action.error) {
+                todos.push({ id: action.id, name: action.name });
+            }
+            return Object.assign({}, state, {
+                error: action.error,
+                todos
+            });
+        default:
+            return state;
+    }
+}
+
+const HomeReducer = {
+    home: homeReducer
+};
+
+export default HomeReducer;
+//home/actions.js
+export const ADD_TODO = 'ADD_TODO';
+
+export function addTodo(id, name) {
+    let error = '';
+    if(!name) {
+        error = 'Необъодимо ввести название';
+    }
+    return {
+        type: ADD_TODO,
+        id,
+        name,
+        error
+    };
+}
+//home/index.js
+export HomePage from './home';
+export HomeRouters from './routes';
+export HomeReducer from './reducers';
+//reducers.js
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
+
+import { HomeReducer } from './pages/home/index';
+
+export default combineReducers({
+    routing: routerReducer,
+    ...HomeReducer
+});
+/* ============ 28.Добавление фукционала ============ */
+
 
 
 
