@@ -32,6 +32,7 @@ class HomePage extends React.Component {
 			};
 
 			bindAll(this, ['renderTodos','inputOnChange','addTodo']);
+			this.props.dispatch(getTodos());
 		}
 		// inputOnChange(event) {
 		// 	const todoName = event.target.value;
@@ -40,21 +41,8 @@ class HomePage extends React.Component {
 		inputOnChange(value) {
 			this.setState({ todoName: value });
 		}
-		addTodo() {
-			// if (this.state.todoName === '') {
-			// 	this.setState({ error: 'Поле не должно быть пустым;' });
-			// 	return;
-			// }
-			// const id = this.state.todos[this.state.todos.length - 1].id + 1;
-			// const name = this.state.todoName;
-			// const todos = this.state.todos;
-			// todos.push({id, name});
-			// this.setState({ todos });
-			// this.setState({ todoName: '', error: '' });
-            const { todos } = this.props.home;
-            const id = todos[this.state.todos.length - 1].id + 1;
-            const name = this.state.todoName;
-            this.props.dispatch( addTodo(id, name));
+		addTodo() {			
+            this.props.dispatch( addTodo(this.props.home.todos, this.state.todoName));
             this.setState({ todoName: '' });
 		}
 		renderTodos(item, idx) {
@@ -87,15 +75,17 @@ class HomePage extends React.Component {
     render() {			
         // const { todoName, todos, error } = this.state;
         const { todoName } = this.state;
-				const { todos, error } = this.props.home;
+				const { todos, error, isLoading } = this.props.home;
 				LS.set('todos', todos);							
         return (
             <div className='row b-home'>
                 <div className='col-xs-12'>
 									<ul>
-										{ todos.length === 0 ? <Loader />:
-											todos.map(this.renderTodos) 
+										{ 
+											// todos.length === 0 ? <Loader />:
+											// todos.map(this.renderTodos) 
 										}
+										{ isLoading ? <Loader /> : todos.length !== 0 ? todos.map(this.renderTodos) : 'Элементов нет' }
 									</ul>
 									<div className='col-xs-4'>
 										{/* <input type='text' className='form-control' value={ todoName } onChange={ this.inputOnChange.bind(this) }/> */}
@@ -111,9 +101,7 @@ class HomePage extends React.Component {
             </div>
         );
     }
-		componentWillMount() {
-			this.props.dispatch(getTodos());
-		}
+
 		// componentWillUnmount() {
 		// 	this.props.dispatch( saveTodos(this.props.todos) );
 		// 	LS.set('todos', this.props.todos);
