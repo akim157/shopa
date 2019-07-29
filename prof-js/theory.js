@@ -1200,6 +1200,111 @@ export function deleteTodo(todo) {
 //localstorage - глобальный объект js приложения, который может содержать различные поля
 //cookie, после закрытие браузора они остаются и не удаляются
 //npm i --save-dev redux-thunk
+/* ============ 30.Страница списка ============ */
+//header/index.js
+<li className='nav-item'>
+    <Link to='/list'>Список</Link>
+</li>
+//list/index.js
+export ListPage from './list';
+export ListRoutes from './routes';
+//src/routes.js
+{ ListRoutes }
+//list-items.js
+import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
+
+export default class ListItem extends React.Component {
+    static propTypes = {
+        id: PropTypes.number.isRequired
+    };
+    render() {
+        return (
+            <li>
+                <Link to={`/list/${ this.props.id }`}> Item { this.props.id }</Link>
+            </li>
+        );
+    }
+
+}
+//list-details.js
+import React, { PropTypes } from 'react';
+
+export default class ItemDetails extends React.Component {
+
+    static path = '/';
+    static propTypes = {
+        routeParams: PropTypes.any.isRequired
+    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            id: this.props.routeParams.id
+        };
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>Item details { this.state.id } works!</h1>
+            </div>
+        );
+    }
+
+}
+//list/routes.js
+import React from 'react';
+import { Route } from 'react-router';
+import ListPage from './list';
+import ItemDetails from './item-details';
+
+export default (
+    <Route>
+        <Route component={ ListPage } path={ ListPage.path}></Route>
+        <Route component={ ItemDetails } path={ ListPage.path + '/:id' }></Route>
+    </Route>
+);
+//list/list.js
+import React from 'react';
+import { bindAll } from 'lodash';
+import ListItem from './list-item';
+
+export default class ListPage extends React.Component {
+
+    static path = '/list';
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            items: [1,2]
+        };
+        bindAll(this, ['renderItems']);
+    }
+
+    renderItems(item, idx) {
+        return (
+            <ListItem
+                key={ idx }
+                id={ item }
+            />
+        );
+    }
+    render() {
+        return (
+            <div>
+                <h3>List</h3>
+                <ul>
+                    { this.state.items.map(this.renderItems) }
+                </ul>
+            </div>
+        );
+    }
+
+}
+//
+/* ============ 31.Страница детального отображения ============ */
+
+
 
 
 

@@ -8,8 +8,8 @@ export function addTodo(id, name) {
     let error = '';
     if(!name) {
         error = 'Необъодимо ввести название';
-		}
-		let id = 1;
+    }
+		// let id = 1;
 		if (todos.length) {
 			id = todos[todos.length - 1].id + 1;
 		}
