@@ -18,7 +18,7 @@ class Modal extends React.Component {
         this.props.dispatch( clsoeModal() );
     }
     render() {
-        const { isOpen, title, content, btnText } = this.props.modal;
+        const { isOpen, title, content } = this.props.modal;
         if (!isOpen) return null;
         return (
             <div className='modal fade in'>
@@ -30,13 +30,7 @@ class Modal extends React.Component {
                                 <span aria-hidden='true'>&times;</span>
                             </button>
                         </div>
-                        <div className='modal-body'>
-                            { content }
-                        </div>
-                        <div className='modal-footer'>
-                            <button type='button' className='btn btn-secondary' onClick={ this.close }>Закрыть</button>
-                            <button type='button' className='btn btn-primary'>{ btnText }</button>
-                        </div>
+                        { content }
                     </div>
                 </div>
             </div>
