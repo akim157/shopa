@@ -15,7 +15,8 @@ export default class App extends React.Component {
                 <Modal />
                 <Header />
                 { this.props.children }
-                { process.env.NODE_ENV !== 'production' ? <DevTools /> : null }
+                {/*{ process.env.NODE_ENV !== 'production' ? <DevTools /> : null }*/}
+                { NODE_ENV !== 'production' ? <DevTools /> : null }
             </div>
         );
     }

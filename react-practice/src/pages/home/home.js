@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react';
 import Input from '../../components/ui/input';
 import { bindAll } from 'lodash';
 import { connect } from 'react-redux';
-import { 
-	addTodo, 
-	likeTodo, 
+import {
+	addTodo,
+	likeTodo,
 	deleteTodo,
 	getTodos,
 	saveTodos
@@ -41,7 +41,7 @@ class HomePage extends React.Component {
 		inputOnChange(value) {
 			this.setState({ todoName: value });
 		}
-		addTodo() {			
+		addTodo() {
             this.props.dispatch( addTodo(this.props.home.todos, this.state.todoName));
             this.setState({ todoName: '' });
 		}
@@ -72,20 +72,21 @@ class HomePage extends React.Component {
     deleteTodo(todo) {
 		    this.props.dispatch();
     }
-    render() {			
+    render() {
         // const { todoName, todos, error } = this.state;
         const { todoName } = this.state;
 				const { todos, error, isLoading } = this.props.home;
-				LS.set('todos', todos);							
+				LS.set('todos', todos);
         return (
             <div className='row b-home'>
                 <div className='col-xs-12'>
 									<ul>
-										{ 
+										{
 											// todos.length === 0 ? <Loader />:
-											// todos.map(this.renderTodos) 
+											// todos.map(this.renderTodos)
 										}
-										{ isLoading ? <Loader /> : todos.length !== 0 ? todos.map(this.renderTodos) : 'Элементов нет' }
+										{/*{ isLoading ? <Loader /> : todos.length !== 0 ? todos.map(this.renderTodos) : 'Элементов нет' }*/}
+										{ isLoading ? <Loader /> : todos.length ? todos.map(this.renderTodos) : 'Элементов нет' }
 									</ul>
 									<div className='col-xs-4'>
 										{/* <input type='text' className='form-control' value={ todoName } onChange={ this.inputOnChange.bind(this) }/> */}
