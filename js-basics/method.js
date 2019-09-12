@@ -115,10 +115,48 @@ numbers.forEach(function(item, index, array) {
 Object.keys(numbers); //Возвращает новый итератор массива, содержащий ключи каждого индекса в массиве.
 ////////////////////////////////////
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-//{...rest}
+//{...rest} - Spread
 //http://jsraccoon.ru/es6-spread-rest
+//Prototype
+const array = [1,3,4,5];
+Array.prototype.newMethod = () => console.log('Hi! I`a new Method!');
+array.newMethod();
+//Пример:
+const isMomHappy = true;
+
+const willIGetNewPhone = new Promise((resolve, reject) => {
+    if (isMomHappy) {
+        const phone = {
+            brand: 'Samsung',
+            color: 'black'
+        };
+        resolve(phone);
+    } else {
+        const reason = new Error('mom is not happy');
+        reject(reason);
+    }
+});
+
+const showOff = phone => new Promise((resolve, reject) => {
+    const message = `Hey friend, I have a new ${phone.color} ${phone.brand} phone`;
+    resolve(message);
+});
+
+// const showOff = function (phone) {
+//     const message = 'Hey friend, I have a new ' +
+//         phone.color + ' ' + phone.brand + ' phone';
+//     return Promise.resolve(message);
+// };
 
 
+const askMom = () => {
+    willIGetNewPhone
+        .then(showOff)
+        .then((fulfilled) => console.log(fulfilled))
+        .catch((error) => console.log(error.message));
+}
+
+askMom();
 
 
 
